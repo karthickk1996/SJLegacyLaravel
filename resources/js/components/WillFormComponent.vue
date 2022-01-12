@@ -176,7 +176,7 @@ export default {
                 }]
             },
             giftPet: [{
-                pet: "",
+                petDetails: "",
                 firstName: "",
                 middleName: "",
                 lastName: "",
@@ -256,7 +256,7 @@ export default {
                     shareType: "share",
                     share: 0,
                 }]
-            }]
+            }],
         }
     },
     computed: {
@@ -824,6 +824,40 @@ export default {
                         }
                     }
                 }
+            },
+            giftPet: {
+                $each: {
+                    petDetails:{},
+                    firstName: {required},
+                    middleName: {
+                        alpha,
+                        minLength: minLength(4),
+                    },
+                    lastName: {
+                        alpha,
+                        minLength: minLength(4),
+                    },
+                    predeceased: {
+                        required
+                    },
+                    beneficiary: {
+                        required,
+                        firstName: {
+                            required: requiredIf(function (nested) {
+                                return this.giftMoney.predeceased === 'Assign to named beneficiary'
+                            })
+                        },
+                        middleName: {
+                            alpha,
+                            minLength: minLength(4),
+                        },
+                        lastName: {
+                            required: requiredIf(function (nested) {
+                                return this.giftMoney.predeceased === 'Assign to named beneficiary'
+                            })
+                        }
+                    }
+                }
             }
         }
     },
@@ -1096,6 +1130,23 @@ export default {
             axios.post('/api/will', {}).then(response => {
 
             })
+        },
+        AddGiftPet() {
+            this.giftPet.push({
+                pet: "",
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                predeceased: "",
+                beneficiary: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                },
+            })
+        },
+        removeGiftPet(index) {
+            this.giftPet.splice(index, 1)
         }
     }
 }

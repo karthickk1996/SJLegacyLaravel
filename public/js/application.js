@@ -2096,7 +2096,7 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         }]
       },
       giftPet: [{
-        pet: "",
+        petDetails: "",
         firstName: "",
         middleName: "",
         lastName: "",
@@ -2754,6 +2754,42 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
             }
           }
         }
+      },
+      giftPet: {
+        $each: {
+          petDetails: {},
+          firstName: {
+            required: required
+          },
+          middleName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          lastName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          predeceased: {
+            required: required
+          },
+          beneficiary: {
+            required: required,
+            firstName: {
+              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                return this.giftMoney.predeceased === 'Assign to named beneficiary';
+              })
+            },
+            middleName: {
+              alpha: alpha,
+              minLength: minLength(4)
+            },
+            lastName: {
+              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                return this.giftMoney.predeceased === 'Assign to named beneficiary';
+              })
+            }
+          }
+        }
       }
     };
   },
@@ -3025,6 +3061,23 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
     },
     submitFinalForm: function submitFinalForm() {
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/will', {}).then(function (response) {});
+    },
+    AddGiftPet: function AddGiftPet() {
+      this.giftPet.push({
+        pet: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        predeceased: "",
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
+      });
+    },
+    removeGiftPet: function removeGiftPet(index) {
+      this.giftPet.splice(index, 1);
     }
   }
 });
