@@ -20,6 +20,6 @@ Route::get('/', function () {
     return view('dashboard.homepage');
 });
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group([], function () {
     Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.show');
 });

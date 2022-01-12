@@ -1,6 +1,9 @@
 <script>
+import {alphaNum, requiredIf} from "vuelidate/lib/validators";
+
 const {required, alpha, minLength, email, helpers} = require('vuelidate/lib/validators')
 const postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$/)
+import axios from 'axios';
 
 export default {
     name: "WillFormComponent",
@@ -41,7 +44,7 @@ export default {
                 county: ""
             },
             secondExecutor: false,
-            executor: {
+            executor: [{
                 firstName: "",
                 middleName: "",
                 lastName: "",
@@ -53,34 +56,8 @@ export default {
                 city: "",
                 country: "",
                 postal: "",
-            },
-            reserve: {
-                firstName: "",
-                middleName: "",
-                lastName: "",
-                email: "",
-                dob: "",
-                relation: "",
-                line1: "",
-                line2: "",
-                city: "",
-                country: "",
-                postal: "",
-            },
-            giftDetails: {
-                giftTo: "",
-                firstName: "",
-                middleName: "",
-                lastName: "",
-                relation: "",
-                secondApplicantRelation:"",
-                predeceased: "",
-                beneficiary:{
-                    firstName: "",
-                    middleName: "",
-                    lastName: "",
-                }
-            },
+                secondApplicantRelation: "",
+            }],
             reserveExecutor: [{
                 firstName: "",
                 middleName: "",
@@ -95,6 +72,47 @@ export default {
                 postal: "",
                 county: "",
                 secondApplicantRelation: ""
+            }],
+            reserve: {
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                email: "",
+                dob: "",
+                relation: "",
+                line1: "",
+                line2: "",
+                city: "",
+                country: "",
+                postal: "",
+            },
+            giftDetails: [{
+                giftTo: "",
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                relation: "",
+                secondApplicantRelation: "",
+                predeceased: "",
+                beneficiary: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                }
+            }],
+            giftMoney: [{
+                moneyDetails: "",
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                relation: "",
+                secondApplicantRelation: "",
+                predeceased: "",
+                beneficiary: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                }
             }],
             appointGuardian: false,
             hasMoreThanOneChildren: false,
@@ -117,7 +135,7 @@ export default {
                 county: "",
                 secondApplicantRelation: ""
             }],
-            reserveGuardian:[{
+            reserveGuardian: [{
                 firstName: "",
                 middleName: "",
                 lastName: "",
@@ -132,6 +150,93 @@ export default {
                 county: "",
                 secondApplicantRelation: ""
             }],
+            giftCharity: {
+                name: "",
+                reference: "",
+                money: ""
+            },
+            giftBank: {
+                bankName: "",
+                bankReference: "",
+                persons: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    relation: "",
+                    secondApplicantRelation: "",
+                    predeceased: "",
+                    shareType: "share",
+                    share: "",
+                    beneficiary: {
+                        firstName: "",
+                        middleName: "",
+                        lastName: "",
+                    }
+                }
+            },
+            giftPet: [{
+                pet: "",
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                predeceased: "",
+                beneficiary: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                },
+            }],
+            businessAssignment: [{
+                business: "",
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                relation: "",
+                secondApplicantRelation: "",
+                predeceased: "",
+                beneficiary: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                },
+                sharePerson: [{
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    relation: "",
+                    secondApplicantRelation: "",
+                    share: ""
+                }]
+            }],
+            residue: [{
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                relation: "",
+                secondApplicantRelation: "",
+                predeceased: "",
+                beneficiary: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                },
+                sharePerson: [{
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    relation: "",
+                    secondApplicantRelation: "",
+                    share: ""
+                }]
+            }],
+            request: {
+                optOutOfOrganDonation: false,
+                secondApplicantOptOutOfOrganDonation: false,
+                burialType: false,
+                secondApplicantBurialType: false,
+                funeralPlan: "",
+                secondApplicantFuneralPlan: ""
+            }
         }
     },
     validations: {
@@ -221,6 +326,56 @@ export default {
                 required,
                 postal
             },
+        },
+        executor: {
+            required,
+            $each: {
+                firstName: {
+                    required,
+                    alpha,
+                    minLength: minLength(4),
+                },
+                middleName: {
+                    alpha,
+                    minLength: minLength(4),
+                },
+                lastName: {
+                    alpha,
+                    minLength: minLength(4),
+                },
+                email: {
+                    required,
+                    email
+                },
+                dob: {
+                    required,
+                },
+                relation: {
+                    required
+                },
+                line1: {
+                    required
+                },
+                line2: {
+                    required
+                },
+                city: {
+                    required
+                },
+                county: {
+                    required
+                },
+                country: {
+                    required
+                },
+                postal: {
+                    required,
+                    postal
+                },
+                secondApplicantRelation: {
+                    required
+                }
+            }
         },
         reserveExecutor: {
             required,
@@ -437,10 +592,117 @@ export default {
                 }
             }
         },
+        giftDetails: {
+            required,
+            $each: {
+                giftTo: {
+                    required
+                },
+                firstName: {
+                    required,
+                    alpha,
+                    minLength: minLength(4),
+                },
+                middleName: {
+                    alpha,
+                    minLength: minLength(4),
+                },
+                lastName: {
+                    alpha,
+                    minLength: minLength(4),
+                },
+                relation: {
+                    required
+                },
+                secondApplicantRelation: {
+                    required
+                },
+                predeceased: {
+                    required
+                },
+                beneficiary: {
+                    required,
+                    firstName: {
+                        required: requiredIf(function (nested) {
+                            return this.giftDetails.predeceased === 'Assign to named beneficiary'
+                        })
+                    },
+                    middleName: {
+                        alpha,
+                        minLength: minLength(4),
+                    },
+                    lastName: {
+                        required: requiredIf(function (nested) {
+                            return this.giftDetails.predeceased === 'Assign to named beneficiary'
+                        })
+                    }
+                }
+            },
 
+        },
+        giftMoney: {
+            $each: {
+                moneyDetails: {required},
+                firstName: {required},
+                middleName: {
+                    alpha,
+                    minLength: minLength(4),
+                },
+                lastName: {
+                    alpha,
+                    minLength: minLength(4),
+                },
+                relation: {
+                    required
+                },
+                secondApplicantRelation: {},
+                predeceased: {
+                    required
+                },
+                beneficiary: {
+                    required,
+                    firstName: {
+                        required: requiredIf(function (nested) {
+                            return this.giftMoney.predeceased === 'Assign to named beneficiary'
+                        })
+                    },
+                    middleName: {
+                        alpha,
+                        minLength: minLength(4),
+                    },
+                    lastName: {
+                        required: requiredIf(function (nested) {
+                            return this.giftMoney.predeceased === 'Assign to named beneficiary'
+                        })
+                    }
+                }
+            }
+        },
+        giftCharity: {
+            name: alphaNum,
+            reference: alphaNum,
+            money: "",
+        }
     },
     methods: {
         AddExecutor() {
+            this.executor.push({
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                email: "",
+                dob: "",
+                relation: "",
+                line1: "",
+                line2: "",
+                city: "",
+                country: "",
+                postal: "",
+                county: "",
+                secondApplicantRelation: "",
+            })
+        },
+        AddReserveExecutor() {
             this.reserveExecutor.push({
                 firstName: "",
                 middleName: "",
@@ -457,11 +719,14 @@ export default {
                 secondApplicantRelation: "",
             })
         },
-        removeExecutor(index) {
+        RemoveReserveExecutor() {
             this.reserveExecutor.splice(index, 1)
         },
+        removeExecutor(index) {
+            this.executor.splice(index, 1)
+        },
         AddReserveGuardian() {
-            this.reserveExecutor.push({
+            this.reserveGuardian.push({
                 firstName: "",
                 middleName: "",
                 lastName: "",
@@ -478,7 +743,7 @@ export default {
             })
         },
         removeReserveGuardian(index) {
-            this.reserveExecutor.splice(index, 1)
+            this.reserveGuardian.splice(index, 1)
         },
         AddJointGuardian() {
             this.children.push({
@@ -503,33 +768,126 @@ export default {
         removeJointGuardian(index) {
             this.children.splice(index, 1)
         },
+        backFromGift() {
+            if (this.appointGuardian) {
+                this.step = 'children_details';
+            } else {
+                this.step = 'guardian'
+            }
+        },
+        AddGiftDetails() {
+            this.giftDetails.push({
+                giftTo: "",
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                relation: "",
+                secondApplicantRelation: "",
+                predeceased: "",
+                beneficiary: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                }
+            })
+        },
+        removeGiftDetails(index) {
+            this.giftDetails.splice(index, 1)
+        },
+        AddGiftMoney() {
+            this.giftMoney.push({
+                moneyDetails: "",
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                relation: "",
+                secondApplicantRelation: "",
+                predeceased: "",
+                beneficiary: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                }
+            })
+        },
+        removeGiftMoney(index) {
+            this.giftMoney.splice(index, 1)
+        },
         submitForm(form) {
             if (form === 1) {
                 this.$v.form1.$touch();
                 if (this.$v.form1.$invalid) {
                     console.log('invalid entry')
                 } else {
-                    this.step = 2
+                    this.step = 'mirror_select'
                 }
-            } else if (form === 2) {
-                this.step = 3
-            } else if (form === 3) {
+            } else if (form === 'mirror_select') {
+                this.step = 'address'
+            } else if (form === 'address') {
                 this.$v.addressSummary.$touch();
                 if (this.$v.addressSummary.$invalid) {
                     console.log('invalid entry')
                 } else {
-                    this.step = 4
+                    if (this.hasMirrorWill) {
+                        this.step = 'second_applicant';
+                    } else {
+                        this.step = 'executor_summary'
+                    }
                 }
-            } else if (form === 4) {
+            } else if (form === 'second_applicant') {
                 this.$v.secondApplicant.$touch();
                 if (this.$v.secondApplicant.$invalid) {
-                    console.log('invalid entry')
+                    console.log(this.$v.secondApplicant)
                 } else {
-                    this.step = 5
+                    this.step = 'executor_details'
                 }
-            } else if (form === 5) {
-                this.step = 6
+            } else if (form === 'executor_details') {
+                if (this.secondExecutor) {
+                    this.step = 'reserve_executor_details';
+                } else {
+                    this.step = 'executor_summary';
+                }
+            } else if (form === 'executor_summary') {
+                this.step = 'reserve_executor_details';
+            } else if (form === 'reserve_executor_details') {
+                if (this.hasChildrenUnderEighteen) {
+                    this.step = 'guardian';
+                } else {
+                    this.step = 'gift_options';
+                }
+
+            } else if (form === 'guardian') {
+                if (this.appointGuardian) {
+                    this.step = 'children_details';
+                } else {
+                    this.step = 'gift_options';
+                }
+            } else if (form === 'children_details') {
+                //@todo complete children_details form data
+            } else if (form === 'gift_options') {
+                this.step = 'gift_money';
+            } else if (form === 'gift_money') {
+                this.step = 'gift_charity'
+            } else if (form === 'gift_charity') {
+                this.step = 'gift_bank'
+            } else if (form === 'gift_bank') {
+                this.step = 'gift_property'
+            } else if (form === 'gift_property') {
+                this.step = 'gift_pet'
+            } else if (form === 'gift_pet') {
+                this.step = 'business_assignment';
+            } else if (form === 'business_assignment') {
+                this.step = 'residue'
+            } else if (form === 'residue') {
+                this.step = 'request'
+            } else if (form === 'request') {
+                //final form submission
             }
+        },
+        submitFinalForm() {
+            axios.post('/api/will', {}).then(response => {
+
+            })
         }
     }
 }

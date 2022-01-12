@@ -10,4 +10,9 @@ class WillFormController extends Controller
     {
         return view('dashboard.willform.create');
     }
+
+    public function store(Request $request)
+    {
+        
+    }
 }

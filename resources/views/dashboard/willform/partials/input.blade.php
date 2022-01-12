@@ -50,14 +50,14 @@
             </div>
             <div class="form-group">
                 <label class="form-col-form-label h4" for="dob">Date of Birth (required)</label>
-                <input class="datepicker form-control form-control-lg" id="dob"
-                       name="dob"
-                       type="date"
-                       data-parsley-minimumage="18"
-                       v-model.trim="$v.form1.dob.$model"
-                       @blur="$v.form1.dob.$touch"
-                       :class="$v.form1.dob.$anyError ? 'is-invalid':''"
-                       required>
+                <date-picker v-model="$v.form1.dob.$model"
+                             fomat="YYYY-MM-DD"
+                             type="date"
+                             placeholder="YYYY-MM-DD"
+                             @blur="$v.form1.dob.$touch"
+                             input-class="form-control form-control-lg"
+                             :input-class="$v.form1.dob.$anyError ? 'form-control form-control-lg is-invalid':''"
+                ></date-picker>
                 <div class="invalid-feedback" v-if="$v.form1.dob.$anyError">Please provide a valid date of birth</div>
             </div>
 
