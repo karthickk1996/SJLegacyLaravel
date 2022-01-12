@@ -96,8 +96,14 @@
                                 v-model.trim="bank.shareType.$model"
                                 :class="bank.shareType.$anyError ? 'is-invalid':''"
                                 @blur="bank.shareType.$touch">
-                            <option value="share">Share</option>
-                            <option value="fraction">Fraction</option>
+                            <option value="share"
+                                    :selected="giftBank.persons[0].shareType === 'share'"
+                                    :disabled="giftBank.persons[0].shareType !== 'share'"
+                            >Share</option>
+                            <option value="fraction"
+                                    :selected="giftBank.persons[0].shareType === 'fraction'"
+                                    :disabled="giftBank.persons[0].shareType !== 'fraction'"
+                            >Fraction</option>
                         </select>
                     </div>
                     <div class="col-sm-6 inner">

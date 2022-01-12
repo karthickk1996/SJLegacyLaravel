@@ -237,7 +237,26 @@ export default {
                 secondApplicantBurialType: false,
                 funeralPlan: "",
                 secondApplicantFuneralPlan: ""
-            }
+            },
+            giftProperty: [{
+                name: "",
+                line1: "",
+                line2: "",
+                city: "",
+                county: "",
+                country: "",
+                postal: "",
+                persons: [{
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    relation: "",
+                    secondApplicantRelation: "",
+                    predeceased: "",
+                    shareType: "share",
+                    share: 0,
+                }]
+            }]
         }
     },
     computed: {
@@ -755,6 +774,56 @@ export default {
 
                     }
                 }
+            },
+            giftProperty: {
+                $each: {
+                    name: {},
+                    line1: {
+                        required
+                    },
+                    line2: {
+                        required
+                    },
+                    city: {
+                        required
+                    },
+                    county: {
+                        required
+                    },
+                    country: {
+                        required
+                    },
+                    postal: {
+                        required,
+                        postal
+                    },
+                    persons: {
+                        $each: {
+                            firstName: {alpha, required},
+                            middleName: {
+                                alpha,
+                                minLength: minLength(4),
+                            },
+                            lastName: {
+                                alpha,
+                                minLength: minLength(4),
+                            },
+                            relation: {
+                                required
+                            },
+                            secondApplicantRelation: {},
+                            predeceased: {
+                                required
+                            },
+                            shareType: {
+                                required
+                            },
+                            share: {
+                                maxValue: maxValue(this.maxBankShare)
+                            },
+                        }
+                    }
+                }
             }
         }
     },
@@ -983,6 +1052,45 @@ export default {
             } else if (form === 'request') {
                 //final form submission
             }
+        },
+        addBankProperty() {
+            this.giftProperty.push({
+                name: "",
+                line1: "",
+                line2: "",
+                city: "",
+                county: "",
+                country: "",
+                postal: "",
+                persons: [{
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    relation: "",
+                    secondApplicantRelation: "",
+                    predeceased: "",
+                    shareType: "share",
+                    share: 0,
+                }]
+            })
+        },
+        addPropertyPerson(index) {
+            this.giftProperty[index].persons.push({
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                relation: "",
+                secondApplicantRelation: "",
+                predeceased: "",
+                shareType: "share",
+                share: 0,
+            })
+        },
+        removePropertyPerson(main, index) {
+            this.giftProperty[main].persons.splice(index, 1)
+        },
+        removeBankProperty(index) {
+            this.giftProperty.splice(index, 1)
         },
         submitFinalForm() {
             axios.post('/api/will', {}).then(response => {

@@ -2157,7 +2157,26 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         secondApplicantBurialType: false,
         funeralPlan: "",
         secondApplicantFuneralPlan: ""
-      }
+      },
+      giftProperty: [{
+        name: "",
+        line1: "",
+        line2: "",
+        city: "",
+        county: "",
+        country: "",
+        postal: "",
+        persons: [{
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          predeceased: "",
+          shareType: "share",
+          share: 0
+        }]
+      }]
     };
   },
   computed: {
@@ -2682,6 +2701,59 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
             }
           }
         }
+      },
+      giftProperty: {
+        $each: {
+          name: {},
+          line1: {
+            required: required
+          },
+          line2: {
+            required: required
+          },
+          city: {
+            required: required
+          },
+          county: {
+            required: required
+          },
+          country: {
+            required: required
+          },
+          postal: {
+            required: required,
+            postal: postal
+          },
+          persons: {
+            $each: {
+              firstName: {
+                alpha: alpha,
+                required: required
+              },
+              middleName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              lastName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              relation: {
+                required: required
+              },
+              secondApplicantRelation: {},
+              predeceased: {
+                required: required
+              },
+              shareType: {
+                required: required
+              },
+              share: {
+                maxValue: maxValue(this.maxBankShare)
+              }
+            }
+          }
+        }
       }
     };
   },
@@ -2911,6 +2983,45 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         this.step = 'request';
       } else if (form === 'request') {//final form submission
       }
+    },
+    addBankProperty: function addBankProperty() {
+      this.giftProperty.push({
+        name: "",
+        line1: "",
+        line2: "",
+        city: "",
+        county: "",
+        country: "",
+        postal: "",
+        persons: [{
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          predeceased: "",
+          shareType: "share",
+          share: 0
+        }]
+      });
+    },
+    addPropertyPerson: function addPropertyPerson(index) {
+      this.giftProperty[index].persons.push({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        shareType: "share",
+        share: 0
+      });
+    },
+    removePropertyPerson: function removePropertyPerson(main, index) {
+      this.giftProperty[main].persons.splice(index, 1);
+    },
+    removeBankProperty: function removeBankProperty(index) {
+      this.giftProperty.splice(index, 1);
     },
     submitFinalForm: function submitFinalForm() {
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/will', {}).then(function (response) {});
