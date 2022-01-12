@@ -2114,19 +2114,14 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         lastName: "",
         relation: "",
         secondApplicantRelation: "",
-        predeceased: "",
-        beneficiary: {
-          firstName: "",
-          middleName: "",
-          lastName: ""
-        },
-        sharePerson: [{
+        persons: [{
           firstName: "",
           middleName: "",
           lastName: "",
           relation: "",
           secondApplicantRelation: "",
-          share: ""
+          shareType: "share",
+          share: 0
         }]
       }],
       residue: [{
@@ -2790,6 +2785,56 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
             }
           }
         }
+      },
+      businessAssignment: {
+        $each: {
+          business: {},
+          firstName: {
+            required: required,
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          middleName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          lastName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          relation: {
+            required: required
+          },
+          secondApplicantRelation: {
+            required: required
+          },
+          persons: {
+            $each: {
+              firstName: {
+                alpha: alpha,
+                required: required
+              },
+              middleName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              lastName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              relation: {
+                required: required
+              },
+              secondApplicantRelation: {},
+              shareType: {
+                required: required
+              },
+              share: {
+                maxValue: maxValue(this.maxBankShare)
+              }
+            }
+          }
+        }
       }
     };
   },
@@ -3062,6 +3107,21 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
     submitFinalForm: function submitFinalForm() {
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/will', {}).then(function (response) {});
     },
+    removeBusinessPerson: function removeBusinessPerson(main, index) {
+      this.businessAssignment[main].persons.splice(index, 1);
+    },
+    addBusinessPerson: function addBusinessPerson(index) {
+      this.businessAssignment[index].persons.push({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        shareType: "share",
+        share: 0
+      });
+    },
     AddGiftPet: function AddGiftPet() {
       this.giftPet.push({
         pet: "",
@@ -3078,6 +3138,29 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
     },
     removeGiftPet: function removeGiftPet(index) {
       this.giftPet.splice(index, 1);
+    },
+    removeBusinessAssignment: function removeBusinessAssignment(index) {
+      this.businessAssignment.splice(index, 1);
+    },
+    addBusinessAssignment: function addBusinessAssignment() {
+      this.businessAssignment.push({
+        business: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        persons: [{
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          predeceased: "",
+          shareType: "share",
+          share: 0
+        }]
+      });
     }
   }
 });

@@ -91,13 +91,15 @@
     </div>
     <div class="card-footer ">
         <div class="form-group d-flex justify-content-between">
-            <button class="btn btn-lg btn-primary" id="gift_back">
-                <i class="fa fa-arrow-left"></i>
-                Go Back
+            <button class="btn btn-lg btn-primary" @click="step='gift_property'"
+                    type="button"
+                    id="address_back">
+                <i class="fa fa-arrow-left"></i> Go
+                Back
             </button>
             <button class="btn btn-lg btn-success"
                     @click.prevent="submitForm('gift_pet')"
-                    id="address_next" type="submit">
+                    id="address_next" type="button">
                 Next <i class="fa fa-arrow-right"></i></button>
         </div>
     </div>

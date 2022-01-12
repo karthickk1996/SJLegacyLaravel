@@ -32,7 +32,7 @@
                         @include('dashboard.willform.partials.gift-bank')
                         @include('dashboard.willform.partials.gift-property')
                         @include('dashboard.willform.partials.gift-pet')
-{{--                        @include('dashboard.willform.partials.business')--}}
+                        @include('dashboard.willform.partials.business')
 {{--                        @include('dashboard.willform.partials.residue')--}}
 {{--                        @include('dashboard.willform.partials.request')--}}
                     </div>

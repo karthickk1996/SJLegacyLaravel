@@ -194,19 +194,14 @@ export default {
                 lastName: "",
                 relation: "",
                 secondApplicantRelation: "",
-                predeceased: "",
-                beneficiary: {
-                    firstName: "",
-                    middleName: "",
-                    lastName: "",
-                },
-                sharePerson: [{
+                persons: [{
                     firstName: "",
                     middleName: "",
                     lastName: "",
                     relation: "",
                     secondApplicantRelation: "",
-                    share: ""
+                    shareType: "share",
+                    share: 0,
                 }]
             }],
             residue: [{
@@ -827,7 +822,7 @@ export default {
             },
             giftPet: {
                 $each: {
-                    petDetails:{},
+                    petDetails: {},
                     firstName: {required},
                     middleName: {
                         alpha,
@@ -855,6 +850,53 @@ export default {
                             required: requiredIf(function (nested) {
                                 return this.giftMoney.predeceased === 'Assign to named beneficiary'
                             })
+                        }
+                    }
+                }
+            },
+            businessAssignment:{
+                $each:{
+                    business:{},
+                    firstName: {
+                        required,
+                        alpha,
+                        minLength: minLength(4),
+                    },
+                    middleName: {
+                        alpha,
+                        minLength: minLength(4),
+                    },
+                    lastName: {
+                        alpha,
+                        minLength: minLength(4),
+                    },
+                    relation: {
+                        required
+                    },
+                    secondApplicantRelation: {
+                        required
+                    },
+                    persons: {
+                        $each: {
+                            firstName: {alpha, required},
+                            middleName: {
+                                alpha,
+                                minLength: minLength(4),
+                            },
+                            lastName: {
+                                alpha,
+                                minLength: minLength(4),
+                            },
+                            relation: {
+                                required
+                            },
+                            secondApplicantRelation: {},
+                            shareType: {
+                                required
+                            },
+                            share: {
+                                maxValue: maxValue(this.maxBankShare)
+                            },
                         }
                     }
                 }
@@ -1131,6 +1173,21 @@ export default {
 
             })
         },
+        removeBusinessPerson(main, index) {
+            this.businessAssignment[main].persons.splice(index, 1)
+        },
+        addBusinessPerson(index) {
+            this.businessAssignment[index].persons.push({
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                relation: "",
+                secondApplicantRelation: "",
+                predeceased: "",
+                shareType: "share",
+                share: 0,
+            })
+        },
         AddGiftPet() {
             this.giftPet.push({
                 pet: "",
@@ -1147,6 +1204,29 @@ export default {
         },
         removeGiftPet(index) {
             this.giftPet.splice(index, 1)
+        },
+        removeBusinessAssignment(index){
+            this.businessAssignment.splice(index, 1)
+        },
+        addBusinessAssignment(){
+            this.businessAssignment.push({
+                business: "",
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                relation: "",
+                secondApplicantRelation: "",
+                persons: [{
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    relation: "",
+                    secondApplicantRelation: "",
+                    predeceased: "",
+                    shareType: "share",
+                    share: 0,
+                }]
+            })
         }
     }
 }

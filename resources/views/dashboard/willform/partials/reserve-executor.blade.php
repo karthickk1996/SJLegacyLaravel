@@ -47,7 +47,6 @@
                         class="second_applicant">@{{ reserveExecutor[index].firstName ? reserveExecutor[index].firstName : 'Reserve Executor' }}</span>
                     is my</label>
                 <select class="form-control form-control-lg" id="second_applicant_relation"
-                        required
                         v-model.trim="resExec.relation.$model"
                         :class="resExec.relation.$anyError ? 'is-invalid':''"
                         @blur="resExec.relation.$touch"
