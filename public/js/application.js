@@ -1919,7 +1919,9 @@ var _require = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modul
     alpha = _require.alpha,
     minLength = _require.minLength,
     email = _require.email,
-    helpers = _require.helpers;
+    helpers = _require.helpers,
+    maxValue = _require.maxValue,
+    sameAs = _require.sameAs;
 
 var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$/);
 
@@ -2076,7 +2078,8 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
       giftBank: {
         bankName: "",
         bankReference: "",
-        persons: {
+        maxShare: "",
+        persons: [{
           firstName: "",
           middleName: "",
           lastName: "",
@@ -2084,13 +2087,13 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
           secondApplicantRelation: "",
           predeceased: "",
           shareType: "share",
-          share: "",
+          share: 0,
           beneficiary: {
             firstName: "",
             middleName: "",
             lastName: ""
           }
-        }
+        }]
       },
       giftPet: [{
         pet: "",
@@ -2157,97 +2160,72 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
       }
     };
   },
-  validations: {
-    form1: {
-      firstName: {
-        required: required,
-        alpha: alpha,
-        minLength: minLength(4)
-      },
-      middleName: {
-        alpha: alpha,
-        minLength: minLength(4)
-      },
-      lastName: {
-        alpha: alpha,
-        minLength: minLength(4)
-      },
-      email: {
-        required: required,
-        email: email
-      },
-      dob: {
-        required: required
-      }
+  computed: {
+    maxBankShare: function maxBankShare() {
+      if (this.giftBank.persons[0].shareType === 'share') {
+        return 100;
+      } else return 1;
     },
-    addressSummary: {
-      line1: {
-        required: required
+    finalShare: function finalShare() {
+      var v = 0;
+      this.giftBank.persons.forEach(function (value) {
+        var base = value.share;
+
+        if (base) {
+          v = v + parseInt(value.share);
+        }
+      });
+      return v;
+    }
+  },
+  validations: function validations() {
+    var _this = this;
+
+    return {
+      form1: {
+        firstName: {
+          required: required,
+          alpha: alpha,
+          minLength: minLength(4)
+        },
+        middleName: {
+          alpha: alpha,
+          minLength: minLength(4)
+        },
+        lastName: {
+          alpha: alpha,
+          minLength: minLength(4)
+        },
+        email: {
+          required: required,
+          email: email
+        },
+        dob: {
+          required: required
+        }
       },
-      line2: {
-        required: required
+      addressSummary: {
+        line1: {
+          required: required
+        },
+        line2: {
+          required: required
+        },
+        city: {
+          required: required
+        },
+        county: {
+          required: required
+        },
+        country: {
+          required: required
+        },
+        postal: {
+          required: required,
+          postal: postal
+        }
       },
-      city: {
-        required: required
-      },
-      county: {
-        required: required
-      },
-      country: {
-        required: required
-      },
-      postal: {
-        required: required,
-        postal: postal
-      }
-    },
-    secondApplicant: {
-      firstName: {
-        required: required,
-        alpha: alpha,
-        minLength: minLength(4)
-      },
-      middleName: {
-        alpha: alpha,
-        minLength: minLength(4)
-      },
-      lastName: {
-        alpha: alpha,
-        minLength: minLength(4)
-      },
-      email: {
-        required: required,
-        email: email
-      },
-      dob: {
-        required: required
-      },
-      relation: {
-        required: required
-      },
-      line1: {
-        required: required
-      },
-      line2: {
-        required: required
-      },
-      city: {
-        required: required
-      },
-      county: {
-        required: required
-      },
-      country: {
-        required: required
-      },
-      postal: {
-        required: required,
-        postal: postal
-      }
-    },
-    executor: {
-      required: required,
-      $each: {
+      secondApplicant: {
         firstName: {
           required: required,
           alpha: alpha,
@@ -2289,132 +2267,382 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         postal: {
           required: required,
           postal: postal
-        },
-        secondApplicantRelation: {
-          required: required
         }
-      }
-    },
-    reserveExecutor: {
-      required: required,
-      $each: {
-        firstName: {
-          required: required,
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        middleName: {
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        lastName: {
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        email: {
-          required: required,
-          email: email
-        },
-        dob: {
-          required: required
-        },
-        relation: {
-          required: required
-        },
-        line1: {
-          required: required
-        },
-        line2: {
-          required: required
-        },
-        city: {
-          required: required
-        },
-        county: {
-          required: required
-        },
-        country: {
-          required: required
-        },
-        postal: {
-          required: required,
-          postal: postal
-        },
-        secondApplicantRelation: {
-          required: required
+      },
+      executor: {
+        required: required,
+        $each: {
+          firstName: {
+            required: required,
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          middleName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          lastName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          email: {
+            required: required,
+            email: email
+          },
+          dob: {
+            required: required
+          },
+          relation: {
+            required: required
+          },
+          line1: {
+            required: required
+          },
+          line2: {
+            required: required
+          },
+          city: {
+            required: required
+          },
+          county: {
+            required: required
+          },
+          country: {
+            required: required
+          },
+          postal: {
+            required: required,
+            postal: postal
+          },
+          secondApplicantRelation: {
+            required: required
+          }
         }
-      }
-    },
-    reserveGuardian: {
-      required: required,
-      $each: {
-        firstName: {
-          required: required,
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        middleName: {
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        lastName: {
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        email: {
-          required: required,
-          email: email
-        },
-        dob: {
-          required: required
-        },
-        relation: {
-          required: required
-        },
-        line1: {
-          required: required
-        },
-        line2: {
-          required: required
-        },
-        city: {
-          required: required
-        },
-        county: {
-          required: required
-        },
-        country: {
-          required: required
-        },
-        postal: {
-          required: required,
-          postal: postal
-        },
-        secondApplicantRelation: {
-          required: required
+      },
+      reserveExecutor: {
+        required: required,
+        $each: {
+          firstName: {
+            required: required,
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          middleName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          lastName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          email: {
+            required: required,
+            email: email
+          },
+          dob: {
+            required: required
+          },
+          relation: {
+            required: required
+          },
+          line1: {
+            required: required
+          },
+          line2: {
+            required: required
+          },
+          city: {
+            required: required
+          },
+          county: {
+            required: required
+          },
+          country: {
+            required: required
+          },
+          postal: {
+            required: required,
+            postal: postal
+          },
+          secondApplicantRelation: {
+            required: required
+          }
         }
-      }
-    },
-    children: {
-      required: required,
-      $each: function $each() {
-        if (!this.sameGuardianAllChildren) {
-          return {
+      },
+      reserveGuardian: {
+        required: required,
+        $each: {
+          firstName: {
+            required: required,
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          middleName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          lastName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          email: {
+            required: required,
+            email: email
+          },
+          dob: {
+            required: required
+          },
+          relation: {
+            required: required
+          },
+          line1: {
+            required: required
+          },
+          line2: {
+            required: required
+          },
+          city: {
+            required: required
+          },
+          county: {
+            required: required
+          },
+          country: {
+            required: required
+          },
+          postal: {
+            required: required,
+            postal: postal
+          },
+          secondApplicantRelation: {
+            required: required
+          }
+        }
+      },
+      children: {
+        required: required,
+        $each: function $each() {
+          if (!this.sameGuardianAllChildren) {
+            return {
+              firstName: {
+                required: required,
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              GuardianFirstName: {
+                required: required,
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              middleName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              GuardianMiddleName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              lastName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              GuardianLastName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              email: {
+                required: required,
+                email: email
+              },
+              dob: {
+                required: required
+              },
+              relation: {
+                required: required
+              },
+              line1: {
+                required: required
+              },
+              line2: {
+                required: required
+              },
+              city: {
+                required: required
+              },
+              county: {
+                required: required
+              },
+              country: {
+                required: required
+              },
+              postal: {
+                required: required,
+                postal: postal
+              },
+              secondApplicantRelation: {
+                required: required
+              }
+            };
+          } else {
+            return {
+              GuardianFirstName: {
+                required: required,
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              GuardianMiddleName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              GuardianLastName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              email: {
+                required: required,
+                email: email
+              },
+              dob: {
+                required: required
+              },
+              relation: {
+                required: required
+              },
+              line1: {
+                required: required
+              },
+              line2: {
+                required: required
+              },
+              city: {
+                required: required
+              },
+              county: {
+                required: required
+              },
+              country: {
+                required: required
+              },
+              postal: {
+                required: required,
+                postal: postal
+              },
+              secondApplicantRelation: {
+                required: required
+              }
+            };
+          }
+        }
+      },
+      giftDetails: {
+        required: required,
+        $each: {
+          giftTo: {
+            required: required
+          },
+          firstName: {
+            required: required,
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          middleName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          lastName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          relation: {
+            required: required
+          },
+          secondApplicantRelation: {
+            required: required
+          },
+          predeceased: {
+            required: required
+          },
+          beneficiary: {
+            required: required,
             firstName: {
-              required: required,
-              alpha: alpha,
-              minLength: minLength(4)
-            },
-            GuardianFirstName: {
-              required: required,
-              alpha: alpha,
-              minLength: minLength(4)
+              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                return this.giftDetails.predeceased === 'Assign to named beneficiary';
+              })
             },
             middleName: {
               alpha: alpha,
               minLength: minLength(4)
             },
-            GuardianMiddleName: {
+            lastName: {
+              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                return this.giftDetails.predeceased === 'Assign to named beneficiary';
+              })
+            }
+          }
+        }
+      },
+      giftMoney: {
+        $each: {
+          moneyDetails: {
+            required: required
+          },
+          firstName: {
+            required: required
+          },
+          middleName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          lastName: {
+            alpha: alpha,
+            minLength: minLength(4)
+          },
+          relation: {
+            required: required
+          },
+          secondApplicantRelation: {},
+          predeceased: {
+            required: required
+          },
+          beneficiary: {
+            required: required,
+            firstName: {
+              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                return this.giftMoney.predeceased === 'Assign to named beneficiary';
+              })
+            },
+            middleName: {
+              alpha: alpha,
+              minLength: minLength(4)
+            },
+            lastName: {
+              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                return this.giftMoney.predeceased === 'Assign to named beneficiary';
+              })
+            }
+          }
+        }
+      },
+      giftCharity: {
+        name: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["alphaNum"],
+        reference: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["alphaNum"],
+        money: ""
+      },
+      giftBank: {
+        bankName: {},
+        bankReference: {},
+        maxShare: {
+          sameAsmaxBankSharesameAs: sameAs(function () {
+            return _this.maxBankShare;
+          })
+        },
+        persons: {
+          $each: {
+            firstName: {
+              alpha: alpha,
+              required: required
+            },
+            middleName: {
               alpha: alpha,
               minLength: minLength(4)
             },
@@ -2422,188 +2650,40 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
               alpha: alpha,
               minLength: minLength(4)
             },
-            GuardianLastName: {
-              alpha: alpha,
-              minLength: minLength(4)
-            },
-            email: {
-              required: required,
-              email: email
-            },
-            dob: {
-              required: required
-            },
             relation: {
               required: required
             },
-            line1: {
+            secondApplicantRelation: {},
+            predeceased: {
               required: required
             },
-            line2: {
+            shareType: {
               required: required
             },
-            city: {
-              required: required
+            share: {
+              maxValue: maxValue(this.maxBankShare)
             },
-            county: {
-              required: required
-            },
-            country: {
-              required: required
-            },
-            postal: {
+            beneficiary: {
               required: required,
-              postal: postal
-            },
-            secondApplicantRelation: {
-              required: required
+              firstName: {
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                  return this.giftBank.predeceased === 'Assign to named beneficiary';
+                })
+              },
+              middleName: {
+                alpha: alpha,
+                minLength: minLength(4)
+              },
+              lastName: {
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                  return this.giftBank.predeceased === 'Assign to named beneficiary';
+                })
+              }
             }
-          };
-        } else {
-          return {
-            GuardianFirstName: {
-              required: required,
-              alpha: alpha,
-              minLength: minLength(4)
-            },
-            GuardianMiddleName: {
-              alpha: alpha,
-              minLength: minLength(4)
-            },
-            GuardianLastName: {
-              alpha: alpha,
-              minLength: minLength(4)
-            },
-            email: {
-              required: required,
-              email: email
-            },
-            dob: {
-              required: required
-            },
-            relation: {
-              required: required
-            },
-            line1: {
-              required: required
-            },
-            line2: {
-              required: required
-            },
-            city: {
-              required: required
-            },
-            county: {
-              required: required
-            },
-            country: {
-              required: required
-            },
-            postal: {
-              required: required,
-              postal: postal
-            },
-            secondApplicantRelation: {
-              required: required
-            }
-          };
-        }
-      }
-    },
-    giftDetails: {
-      required: required,
-      $each: {
-        giftTo: {
-          required: required
-        },
-        firstName: {
-          required: required,
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        middleName: {
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        lastName: {
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        relation: {
-          required: required
-        },
-        secondApplicantRelation: {
-          required: required
-        },
-        predeceased: {
-          required: required
-        },
-        beneficiary: {
-          required: required,
-          firstName: {
-            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-              return this.giftDetails.predeceased === 'Assign to named beneficiary';
-            })
-          },
-          middleName: {
-            alpha: alpha,
-            minLength: minLength(4)
-          },
-          lastName: {
-            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-              return this.giftDetails.predeceased === 'Assign to named beneficiary';
-            })
           }
         }
       }
-    },
-    giftMoney: {
-      $each: {
-        moneyDetails: {
-          required: required
-        },
-        firstName: {
-          required: required
-        },
-        middleName: {
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        lastName: {
-          alpha: alpha,
-          minLength: minLength(4)
-        },
-        relation: {
-          required: required
-        },
-        secondApplicantRelation: {},
-        predeceased: {
-          required: required
-        },
-        beneficiary: {
-          required: required,
-          firstName: {
-            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-              return this.giftMoney.predeceased === 'Assign to named beneficiary';
-            })
-          },
-          middleName: {
-            alpha: alpha,
-            minLength: minLength(4)
-          },
-          lastName: {
-            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-              return this.giftMoney.predeceased === 'Assign to named beneficiary';
-            })
-          }
-        }
-      }
-    },
-    giftCharity: {
-      name: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["alphaNum"],
-      reference: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["alphaNum"],
-      money: ""
-    }
+    };
   },
   methods: {
     AddExecutor: function AddExecutor() {
@@ -2665,6 +2745,9 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
     },
     removeReserveGuardian: function removeReserveGuardian(index) {
       this.reserveGuardian.splice(index, 1);
+    },
+    removeBankPerson: function removeBankPerson(index) {
+      this.giftBank.persons.splice(index, 1);
     },
     AddJointGuardian: function AddJointGuardian() {
       this.children.push({
@@ -2734,6 +2817,23 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
     removeGiftMoney: function removeGiftMoney(index) {
       this.giftMoney.splice(index, 1);
     },
+    addBankPerson: function addBankPerson() {
+      this.giftBank.persons.push({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        shareType: "share",
+        share: "",
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
+      });
+    },
     submitForm: function submitForm(form) {
       if (form === 1) {
         this.$v.form1.$touch();
@@ -2793,7 +2893,14 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
       } else if (form === 'gift_charity') {
         this.step = 'gift_bank';
       } else if (form === 'gift_bank') {
-        this.step = 'gift_property';
+        this.giftBank.maxShare = this.finalShare;
+        this.$v.giftBank.$touch();
+
+        if (this.$v.giftBank.$invalid) {
+          console.log(this.$v.giftBank);
+        } else {
+          this.step = 'gift_property';
+        }
       } else if (form === 'gift_property') {
         this.step = 'gift_pet';
       } else if (form === 'gift_pet') {
@@ -23700,7 +23807,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/ikkarti/PhpstormProjects/SJLegacyLaravel/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/itskarti/PhpstormProjects/SJLegacyLaravel/resources/js/app.js */"./resources/js/app.js");
 
 
 /***/ })
