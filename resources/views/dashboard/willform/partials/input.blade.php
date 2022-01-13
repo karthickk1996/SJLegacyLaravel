@@ -55,12 +55,11 @@
                              type="date"
                              placeholder="YYYY-MM-DD"
                              @blur="$v.form1.dob.$touch"
-                             input-class="form-control form-control-lg"
-                             :input-class="$v.form1.dob.$anyError ? 'form-control form-control-lg is-invalid':''"
-                ></date-picker>
-                <div class="invalid-feedback" v-if="$v.form1.dob.$anyError">Please provide a valid date of birth</div>
+                             :input-class="$v.form1.dob.$anyError ? 'form-control form-control-lg is-invalid':'form-control form-control-lg'"
+                >
+                </date-picker>
+                <div v-if="$v.form1.dob.$anyError" style="{margin-top: 0.25rem;font-size: 80%;color: #e55353;}">Please provide a valid date of birth</div>
             </div>
-
         </div>
         <div class="card-footer ">
             <div class="form-group text-right">

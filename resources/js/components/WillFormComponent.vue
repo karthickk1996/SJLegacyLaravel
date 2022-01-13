@@ -3,6 +3,16 @@ import {alphaNum, requiredIf, decimal, maxLength} from "vuelidate/lib/validators
 
 const {required, alpha, minLength, email, helpers, maxValue, sameAs} = require('vuelidate/lib/validators')
 const postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$/)
+const ageValidation = (dateString) => {
+    const today = new Date();
+    const birthDate = new Date(dateString);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age > 18;
+}
 import axios from 'axios';
 
 export default {
@@ -26,7 +36,7 @@ export default {
                 line2: "",
                 city: "",
                 county: "",
-                country: "",
+                country: "United_Kingdom",
                 postal: "",
             },
             secondApplicant: {
@@ -39,7 +49,7 @@ export default {
                 line1: "",
                 line2: "",
                 city: "",
-                country: "",
+                country: "United_Kingdom",
                 postal: "",
                 county: ""
             },
@@ -54,7 +64,8 @@ export default {
                 line1: "",
                 line2: "",
                 city: "",
-                country: "",
+                country: "United_Kingdom",
+                county: "",
                 postal: "",
                 secondApplicantRelation: "",
             }],
@@ -211,27 +222,18 @@ export default {
                 relation: "",
                 secondApplicantRelation: "",
                 predeceased: "",
-                beneficiary: {
-                    firstName: "",
-                    middleName: "",
-                    lastName: "",
-                },
-                sharePerson: [{
-                    firstName: "",
-                    middleName: "",
-                    lastName: "",
-                    relation: "",
-                    secondApplicantRelation: "",
-                    share: ""
-                }]
+                shareType: "",
+                share: "",
             }],
             request: {
                 optOutOfOrganDonation: false,
                 secondApplicantOptOutOfOrganDonation: false,
                 burialType: false,
                 secondApplicantBurialType: false,
-                funeralPlan: "",
-                secondApplicantFuneralPlan: ""
+                funeralPlan: false,
+                funeralPlanType: "",
+                secondApplicantFuneralPlan: false,
+                secondApplicantFuneralPlanType: ""
             },
             giftProperty: [{
                 name: "",
@@ -294,6 +296,7 @@ export default {
                 },
                 dob: {
                     required,
+                    ageValidation
                 },
             },
             addressSummary: {
@@ -337,6 +340,7 @@ export default {
                 },
                 dob: {
                     required,
+                    ageValidation
                 },
                 relation: {
                     required
@@ -383,6 +387,7 @@ export default {
                     },
                     dob: {
                         required,
+                        ageValidation
                     },
                     relation: {
                         required
@@ -433,6 +438,7 @@ export default {
                     },
                     dob: {
                         required,
+                        ageValidation
                     },
                     relation: {
                         required
@@ -854,9 +860,9 @@ export default {
                     }
                 }
             },
-            businessAssignment:{
-                $each:{
-                    business:{},
+            businessAssignment: {
+                $each: {
+                    business: {},
                     firstName: {
                         required,
                         alpha,
@@ -900,6 +906,18 @@ export default {
                         }
                     }
                 }
+            },
+            residue: {
+                $each: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    relation: "",
+                    secondApplicantRelation: "",
+                    predeceased: "",
+                    shareType: "",
+                    share: "",
+                }
             }
         }
     },
@@ -920,6 +938,13 @@ export default {
                 county: "",
                 secondApplicantRelation: "",
             })
+        },
+        backToExecutor() {
+            if (this.secondExecutor) {
+                this.step = 'reserve_executor_details';
+            } else {
+                this.step = 'executor_summary';
+            }
         },
         AddReserveExecutor() {
             this.reserveExecutor.push({
@@ -1125,8 +1150,6 @@ export default {
                 this.step = 'residue'
             } else if (form === 'residue') {
                 this.step = 'request'
-            } else if (form === 'request') {
-                //final form submission
             }
         },
         addBankProperty() {
@@ -1205,10 +1228,10 @@ export default {
         removeGiftPet(index) {
             this.giftPet.splice(index, 1)
         },
-        removeBusinessAssignment(index){
+        removeBusinessAssignment(index) {
             this.businessAssignment.splice(index, 1)
         },
-        addBusinessAssignment(){
+        addBusinessAssignment() {
             this.businessAssignment.push({
                 business: "",
                 firstName: "",
@@ -1227,6 +1250,21 @@ export default {
                     share: 0,
                 }]
             })
+        },
+        addResidue() {
+            this.residue.push({
+                firstName: "",
+                middleName: "",
+                lastName: "",
+                relation: "",
+                secondApplicantRelation: "",
+                predeceased: "",
+                shareType: "",
+                share: "",
+            })
+        },
+        removeResidue(i) {
+            this.residue.splice(i, 1)
         }
     }
 }

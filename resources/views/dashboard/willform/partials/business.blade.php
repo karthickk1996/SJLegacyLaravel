@@ -91,7 +91,7 @@
                     <div class="col-sm-6 my-3">
                         <label class="form-col-form-label h4" for="property_share_fraction">Share fraction
                             (required)</label>
-                        <select class="form-control form-control-lg"
+                        <select class="form-control form-control-lg" v-if="index > 0"
                         >
                             <option value="share"
                                     :selected="businessAssignment[i].persons[0].shareType === 'share'"
@@ -100,6 +100,12 @@
                                     :selected="businessAssignment[i].persons[0].shareType === 'fraction'"
                                     :disabled="businessAssignment[i].persons[0].shareType !== 'fraction'"
                             >Fraction</option>
+                        </select>
+                        <select class="form-control form-control-lg" v-else
+                                v-model.trim="bank.shareType.$model"
+                        >
+                            <option value="share">Share</option>
+                            <option value="fraction">Fraction</option>
                         </select>
 
                     </div>

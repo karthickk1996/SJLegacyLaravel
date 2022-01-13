@@ -18,7 +18,7 @@
         <div class="form-group d-flex justify-content-between">
             <button class="btn btn-lg btn-primary"
                     type="button"
-                    @click.prevent="submitForm('reserve_executor_details')">
+                    @click.prevent="step='reserve_executor_details'">
                 <i class="fa fa-arrow-left"></i> Go
                 Back
             </button>

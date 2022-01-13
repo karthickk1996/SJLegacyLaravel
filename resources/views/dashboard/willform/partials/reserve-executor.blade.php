@@ -205,7 +205,7 @@
     </div>
     <div class="card-footer">
         <div class="form-group d-flex justify-content-between">
-            <button class="btn btn-lg btn-primary" @click="step='executor_details'"
+            <button class="btn btn-lg btn-primary" @click.prevent="backToExecutor"
                     type="button"
                     id="address_back">
                 <i class="fa fa-arrow-left"></i> Go

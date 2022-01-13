@@ -1925,6 +1925,20 @@ var _require = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modul
 
 var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$/);
 
+var ageValidation = function ageValidation(dateString) {
+  var today = new Date();
+  var birthDate = new Date(dateString);
+  var age = today.getFullYear() - birthDate.getFullYear();
+  var m = today.getMonth() - birthDate.getMonth();
+
+  if (m < 0 || m === 0 && today.getDate() < birthDate.getDate()) {
+    age--;
+  }
+
+  return age > 18;
+};
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "WillFormComponent",
   data: function data() {
@@ -1946,7 +1960,7 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         line2: "",
         city: "",
         county: "",
-        country: "",
+        country: "United_Kingdom",
         postal: ""
       },
       secondApplicant: {
@@ -1959,7 +1973,7 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         line1: "",
         line2: "",
         city: "",
-        country: "",
+        country: "United_Kingdom",
         postal: "",
         county: ""
       },
@@ -1974,7 +1988,8 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         line1: "",
         line2: "",
         city: "",
-        country: "",
+        country: "United_Kingdom",
+        county: "",
         postal: "",
         secondApplicantRelation: ""
       }],
@@ -2131,27 +2146,18 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         relation: "",
         secondApplicantRelation: "",
         predeceased: "",
-        beneficiary: {
-          firstName: "",
-          middleName: "",
-          lastName: ""
-        },
-        sharePerson: [{
-          firstName: "",
-          middleName: "",
-          lastName: "",
-          relation: "",
-          secondApplicantRelation: "",
-          share: ""
-        }]
+        shareType: "",
+        share: ""
       }],
       request: {
         optOutOfOrganDonation: false,
         secondApplicantOptOutOfOrganDonation: false,
         burialType: false,
         secondApplicantBurialType: false,
-        funeralPlan: "",
-        secondApplicantFuneralPlan: ""
+        funeralPlan: false,
+        funeralPlanType: "",
+        secondApplicantFuneralPlan: false,
+        secondApplicantFuneralPlanType: ""
       },
       giftProperty: [{
         name: "",
@@ -2215,7 +2221,8 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
           email: email
         },
         dob: {
-          required: required
+          required: required,
+          ageValidation: ageValidation
         }
       },
       addressSummary: {
@@ -2258,7 +2265,8 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
           email: email
         },
         dob: {
-          required: required
+          required: required,
+          ageValidation: ageValidation
         },
         relation: {
           required: required
@@ -2304,7 +2312,8 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
             email: email
           },
           dob: {
-            required: required
+            required: required,
+            ageValidation: ageValidation
           },
           relation: {
             required: required
@@ -2354,7 +2363,8 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
             email: email
           },
           dob: {
-            required: required
+            required: required,
+            ageValidation: ageValidation
           },
           relation: {
             required: required
@@ -2835,6 +2845,18 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
             }
           }
         }
+      },
+      residue: {
+        $each: {
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          predeceased: "",
+          shareType: "",
+          share: ""
+        }
       }
     };
   },
@@ -2855,6 +2877,13 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         county: "",
         secondApplicantRelation: ""
       });
+    },
+    backToExecutor: function backToExecutor() {
+      if (this.secondExecutor) {
+        this.step = 'reserve_executor_details';
+      } else {
+        this.step = 'executor_summary';
+      }
     },
     AddReserveExecutor: function AddReserveExecutor() {
       this.reserveExecutor.push({
@@ -3062,7 +3091,6 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
         this.step = 'residue';
       } else if (form === 'residue') {
         this.step = 'request';
-      } else if (form === 'request') {//final form submission
       }
     },
     addBankProperty: function addBankProperty() {
@@ -3161,6 +3189,21 @@ var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9
           share: 0
         }]
       });
+    },
+    addResidue: function addResidue() {
+      this.residue.push({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        shareType: "",
+        share: ""
+      });
+    },
+    removeResidue: function removeResidue(i) {
+      this.residue.splice(i, 1);
     }
   }
 });
