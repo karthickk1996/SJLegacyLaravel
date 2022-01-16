@@ -14,16 +14,16 @@
         <div class="card">
           <div class="card-header"><h4>{{ $form->name }}</h4></div>
             <div class="card-body">
-                @if(Session::has('message'))
+                @if(\Session::has('message'))
                     <div class="row">
                         <div class="col-12">
-                            <div class="alert alert-success" role="alert">{{ Session::get('message') }}</div>
+                            <div class="alert alert-success" role="alert">{{ \Session::get('message') }}</div>
                         </div>
                     </div>
                 @endif
                 @if( $enableButtons['add'] == 1 )
                     <div class="col-12">
-                        <a 
+                        <a
                             href="{{ route('resource.create', $form->id ) }}"
                             class="btn btn-primary mb-3"
                         >

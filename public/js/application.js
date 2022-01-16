@@ -1938,6 +1938,35 @@ var ageValidation = function ageValidation(dateString) {
   return age > 18;
 };
 
+var beniRequirement = function beniRequirement(value, nested) {
+  console.log(value, nested);
+  return true;
+};
+
+var maxValueProperty = function maxValueProperty(value, nested) {
+  if (nested.shareType === 'share') {
+    return value <= 100;
+  } else {
+    return value <= 1;
+  }
+};
+
+var maxFinalValue = function maxFinalValue(value, nested) {
+  if (nested.persons[0].shareType === 'share') {
+    var l = 0;
+    nested.persons.forEach(function (person) {
+      l = l + person.share;
+    });
+    return l == 100;
+  } else {
+    var l = 0.0;
+    nested.persons.forEach(function (person) {
+      l = l + person.share;
+    });
+    return l == 1;
+  }
+};
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "WillFormComponent",
@@ -2003,7 +2032,7 @@ var ageValidation = function ageValidation(dateString) {
         line1: "",
         line2: "",
         city: "",
-        country: "",
+        country: "United_Kingdom",
         postal: "",
         county: "",
         secondApplicantRelation: ""
@@ -2129,6 +2158,7 @@ var ageValidation = function ageValidation(dateString) {
         lastName: "",
         relation: "",
         secondApplicantRelation: "",
+        finalShare: "",
         persons: [{
           firstName: "",
           middleName: "",
@@ -2146,8 +2176,13 @@ var ageValidation = function ageValidation(dateString) {
         relation: "",
         secondApplicantRelation: "",
         predeceased: "",
-        shareType: "",
-        share: ""
+        shareType: "share",
+        share: "",
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
       }],
       request: {
         optOutOfOrganDonation: false,
@@ -2165,8 +2200,9 @@ var ageValidation = function ageValidation(dateString) {
         line2: "",
         city: "",
         county: "",
-        country: "",
+        country: "United Kingdom",
         postal: "",
+        finalShare: "",
         persons: [{
           firstName: "",
           middleName: "",
@@ -2187,19 +2223,115 @@ var ageValidation = function ageValidation(dateString) {
       } else return 1;
     },
     finalShare: function finalShare() {
-      var v = 0;
-      this.giftBank.persons.forEach(function (value) {
-        var base = value.share;
+      if (this.giftBank.persons[0].shareType === 'share') {
+        var v = 0;
+        this.giftBank.persons.forEach(function (value) {
+          var base = value.share;
 
-        if (base) {
-          v = v + parseInt(value.share);
+          if (base) {
+            v = v + parseInt(value.share);
+          }
+        });
+      } else {
+        var v = 0.0;
+        this.giftBank.persons.forEach(function (value) {
+          var base = value.share;
+
+          if (base) {
+            v = v + parseFloat(value.share);
+          }
+        });
+      }
+
+      return v;
+    },
+    finalPropertyShare: function finalPropertyShare() {
+      var _this = this;
+
+      this.giftProperty.forEach(function (property, i) {
+        if (property.persons[0].shareType === 'share') {
+          var v = 0;
+          property.persons.forEach(function (person) {
+            var base = person.share;
+
+            if (base) {
+              v = v + parseInt(person.share);
+            }
+          });
+          _this.giftProperty[i].finalShare = v;
+        } else {
+          var v = 0.0;
+          property.persons.forEach(function (value) {
+            var base = value.share;
+
+            if (base) {
+              v = v + parseFloat(value.share);
+            }
+          });
+          _this.giftProperty[i].finalShare = v;
         }
       });
-      return v;
+      return true;
+    },
+    finalBusinessShare: function finalBusinessShare() {
+      var _this2 = this;
+
+      this.businessAssignment.forEach(function (business, i) {
+        if (business.persons[0].shareType === 'share') {
+          var v = 0;
+          business.persons.forEach(function (person) {
+            var base = person.share;
+
+            if (base) {
+              v = v + parseInt(person.share);
+            }
+          });
+          _this2.businessAssignment[i].finalShare = v;
+        } else {
+          var v = 0.0;
+          business.persons.forEach(function (value) {
+            var base = value.share;
+
+            if (base) {
+              v = v + parseFloat(value.share);
+            }
+          });
+          _this2.businessAssignment[i].finalShare = v;
+        }
+      });
+      return true;
+    },
+    maxResidueShare: function maxResidueShare() {
+      if (this.residue[0].shareType === 'share') {
+        return 100;
+      } else return 1;
+    },
+    finalResidueShare: function finalResidueShare() {
+      if (this.residue[0].shareType === 'share') {
+        var v = 0;
+        this.residue.forEach(function (person) {
+          var base = person.share;
+
+          if (base) {
+            v = v + parseInt(person.share);
+          }
+        });
+        return v;
+      } else {
+        var v = 0.0;
+        this.residue.forEach(function (value) {
+          var base = value.share;
+
+          if (base) {
+            v = v + parseFloat(value.share);
+          }
+        });
+        return v;
+      }
     }
   },
   validations: function validations() {
-    var _this = this;
+    var _this3 = this;
 
     return {
       form1: {
@@ -2589,18 +2721,16 @@ var ageValidation = function ageValidation(dateString) {
           beneficiary: {
             required: required,
             firstName: {
-              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                return this.giftDetails.predeceased === 'Assign to named beneficiary';
-              })
+              alpha: alpha,
+              minLength: minLength(4)
             },
             middleName: {
               alpha: alpha,
               minLength: minLength(4)
             },
             lastName: {
-              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                return this.giftDetails.predeceased === 'Assign to named beneficiary';
-              })
+              alpha: alpha,
+              minLength: minLength(4)
             }
           }
         }
@@ -2631,33 +2761,35 @@ var ageValidation = function ageValidation(dateString) {
           beneficiary: {
             required: required,
             firstName: {
-              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                return this.giftMoney.predeceased === 'Assign to named beneficiary';
-              })
+              alpha: alpha,
+              minLength: minLength(4)
             },
             middleName: {
               alpha: alpha,
               minLength: minLength(4)
             },
             lastName: {
-              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                return this.giftMoney.predeceased === 'Assign to named beneficiary';
-              })
+              alpha: alpha,
+              minLength: minLength(4)
             }
           }
         }
       },
       giftCharity: {
-        name: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["alphaNum"],
-        reference: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["alphaNum"],
-        money: ""
+        name: {
+          alphaNum: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["alphaNum"]
+        },
+        reference: {
+          alphaNum: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["alphaNum"]
+        },
+        money: {}
       },
       giftBank: {
         bankName: {},
         bankReference: {},
         maxShare: {
           sameAsmaxBankSharesameAs: sameAs(function () {
-            return _this.maxBankShare;
+            return _this3.maxBankShare;
           })
         },
         persons: {
@@ -2690,18 +2822,16 @@ var ageValidation = function ageValidation(dateString) {
             beneficiary: {
               required: required,
               firstName: {
-                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                  return this.giftBank.predeceased === 'Assign to named beneficiary';
-                })
+                alpha: alpha,
+                minLength: minLength(4)
               },
               middleName: {
                 alpha: alpha,
                 minLength: minLength(4)
               },
               lastName: {
-                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                  return this.giftBank.predeceased === 'Assign to named beneficiary';
-                })
+                alpha: alpha,
+                minLength: minLength(4)
               }
             }
           }
@@ -2729,6 +2859,9 @@ var ageValidation = function ageValidation(dateString) {
             required: required,
             postal: postal
           },
+          finalShare: {
+            maxFinalValue: maxFinalValue
+          },
           persons: {
             $each: {
               firstName: {
@@ -2754,7 +2887,7 @@ var ageValidation = function ageValidation(dateString) {
                 required: required
               },
               share: {
-                maxValue: maxValue(this.maxBankShare)
+                maxValueProperty: maxValueProperty
               }
             }
           }
@@ -2781,7 +2914,7 @@ var ageValidation = function ageValidation(dateString) {
             required: required,
             firstName: {
               required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                return this.giftMoney.predeceased === 'Assign to named beneficiary';
+                return _this3.giftMoney.predeceased === 'Assign to named beneficiary';
               })
             },
             middleName: {
@@ -2790,7 +2923,7 @@ var ageValidation = function ageValidation(dateString) {
             },
             lastName: {
               required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                return this.giftMoney.predeceased === 'Assign to named beneficiary';
+                return _this3.giftMoney.predeceased === 'Assign to named beneficiary';
               })
             }
           }
@@ -2818,6 +2951,9 @@ var ageValidation = function ageValidation(dateString) {
           secondApplicantRelation: {
             required: required
           },
+          finalShare: {
+            maxFinalValue: maxFinalValue
+          },
           persons: {
             $each: {
               firstName: {
@@ -2840,7 +2976,7 @@ var ageValidation = function ageValidation(dateString) {
                 required: required
               },
               share: {
-                maxValue: maxValue(this.maxBankShare)
+                maxValueProperty: maxValueProperty
               }
             }
           }
@@ -2855,12 +2991,33 @@ var ageValidation = function ageValidation(dateString) {
           secondApplicantRelation: "",
           predeceased: "",
           shareType: "",
-          share: ""
+          share: "",
+          beneficiary: {
+            firstName: {
+              alpha: alpha,
+              minLength: minLength(4)
+            },
+            middleName: {
+              alpha: alpha,
+              minLength: minLength(4)
+            },
+            lastName: {
+              alpha: alpha,
+              minLength: minLength(4)
+            }
+          }
         }
       }
     };
   },
   methods: {
+    maxPropertyShare: function maxPropertyShare(property) {
+      if (property.persons[0].shareType === 'share') {
+        return 100;
+      } else {
+        return 1;
+      }
+    },
     AddExecutor: function AddExecutor() {
       this.executor.push({
         firstName: "",
@@ -2872,9 +3029,9 @@ var ageValidation = function ageValidation(dateString) {
         line1: "",
         line2: "",
         city: "",
-        country: "",
-        postal: "",
+        country: "United_Kingdom",
         county: "",
+        postal: "",
         secondApplicantRelation: ""
       });
     },
@@ -2902,7 +3059,7 @@ var ageValidation = function ageValidation(dateString) {
         secondApplicantRelation: ""
       });
     },
-    RemoveReserveExecutor: function RemoveReserveExecutor() {
+    RemoveReserveExecutor: function RemoveReserveExecutor(index) {
       this.reserveExecutor.splice(index, 1);
     },
     removeExecutor: function removeExecutor(index) {
@@ -3054,12 +3211,24 @@ var ageValidation = function ageValidation(dateString) {
           this.step = 'executor_summary';
         }
       } else if (form === 'executor_summary') {
-        this.step = 'reserve_executor_details';
-      } else if (form === 'reserve_executor_details') {
-        if (this.hasChildrenUnderEighteen) {
-          this.step = 'guardian';
+        this.$v.executor.$touch();
+
+        if (this.$v.executor.$invalid) {
+          console.log('Invalid Details in executor form');
         } else {
-          this.step = 'gift_options';
+          this.step = 'reserve_executor_details';
+        }
+      } else if (form === 'reserve_executor_details') {
+        this.$v.reserveExecutor.$touch();
+
+        if (this.$v.reserveExecutor.$invalid) {
+          console.log('Invalid details in reserve executor form');
+        } else {
+          if (this.hasChildrenUnderEighteen) {
+            this.step = 'guardian';
+          } else {
+            this.step = 'gift_options';
+          }
         }
       } else if (form === 'guardian') {
         if (this.appointGuardian) {
@@ -3069,28 +3238,66 @@ var ageValidation = function ageValidation(dateString) {
         }
       } else if (form === 'children_details') {//@todo complete children_details form data
       } else if (form === 'gift_options') {
-        this.step = 'gift_money';
+        this.$v.giftDetails.$touch();
+
+        if (this.$v.giftDetails.invalid) {
+          console.log('Error in gift details');
+        } else this.step = 'gift_money';
       } else if (form === 'gift_money') {
-        this.step = 'gift_charity';
+        this.$v.giftMoney.$touch();
+
+        if (this.$v.giftMoney.invalid) {
+          console.log('Error in gift money');
+        } else this.step = 'gift_charity';
       } else if (form === 'gift_charity') {
-        this.step = 'gift_bank';
+        this.$v.giftCharity.$touch();
+
+        if (this.$v.giftCharity.invalid) {
+          console.log('Error in gift charity');
+        } else {
+          this.step = 'gift_bank';
+        }
       } else if (form === 'gift_bank') {
         this.giftBank.maxShare = this.finalShare;
         this.$v.giftBank.$touch();
 
         if (this.$v.giftBank.$invalid) {
-          console.log(this.$v.giftBank);
+          console.log('Error in gift bank');
         } else {
           this.step = 'gift_property';
         }
       } else if (form === 'gift_property') {
-        this.step = 'gift_pet';
+        this.$v.giftProperty.$touch();
+
+        if (this.$v.giftProperty.$invalid) {
+          console.log('Error in gift property');
+        } else {
+          this.step = 'gift_pet';
+        }
       } else if (form === 'gift_pet') {
-        this.step = 'business_assignment';
+        this.$v.giftBank.$touch();
+
+        if (this.$v.giftProperty.$invalid) {
+          console.log('Error in gift bank');
+        } else {
+          this.step = 'business_assignment';
+        }
       } else if (form === 'business_assignment') {
-        this.step = 'residue';
+        this.$v.businessAssignment.$touch();
+
+        if (this.$v.businessAssignment.$invalid) {
+          console.log('Error in business assignment');
+        } else {
+          this.step = 'residue';
+        }
       } else if (form === 'residue') {
-        this.step = 'request';
+        this.$v.residue.$touch();
+
+        if (this.$v.residue.$invalid) {
+          console.log('Error in residue');
+        } else {
+          this.step = 'request';
+        }
       }
     },
     addBankProperty: function addBankProperty() {
@@ -3115,6 +3322,7 @@ var ageValidation = function ageValidation(dateString) {
       });
     },
     addPropertyPerson: function addPropertyPerson(index) {
+      var shareType = this.giftProperty[index].persons[0].shareType;
       this.giftProperty[index].persons.push({
         firstName: "",
         middleName: "",
@@ -3122,7 +3330,7 @@ var ageValidation = function ageValidation(dateString) {
         relation: "",
         secondApplicantRelation: "",
         predeceased: "",
-        shareType: "share",
+        shareType: shareType,
         share: 0
       });
     },
@@ -3133,7 +3341,37 @@ var ageValidation = function ageValidation(dateString) {
       this.giftProperty.splice(index, 1);
     },
     submitFinalForm: function submitFinalForm() {
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/will', {}).then(function (response) {});
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('willform', {
+        firstName: this.form1.firstName,
+        lastName: this.form1.lastName,
+        middleName: this.form1.middleName,
+        email: this.form1.email,
+        dob: this.form1.dob,
+        hasPartner: this.hasPartner,
+        hasChildrenUnderEighteen: this.hasChildrenUnderEighteen,
+        hasMirrorWill: this.hasMirrorWill,
+        ownProperty: this.ownProperty,
+        addressSummary: this.addressSummary,
+        secondApplicant: this.secondApplicant,
+        secondExecutor: this.secondExecutor,
+        executor: this.executor,
+        reserveExecutor: this.reserveExecutor,
+        reserve: this.reserve,
+        giftDetails: this.giftDetails,
+        giftMoney: this.giftMoney,
+        appointGuardian: this.appointGuardian,
+        hasMoreThanOneChildren: this.hasMoreThanOneChildren,
+        sameGuardianAllChildren: this.sameGuardianAllChildren,
+        children: this.children,
+        reserveGuardian: this.reserveGuardian,
+        giftCharity: this.giftCharity,
+        giftBank: this.giftBank,
+        giftPet: this.giftPet,
+        businessAssignment: this.businessAssignment,
+        residue: this.residue,
+        request: this.request,
+        giftProperty: this.giftProperty
+      }).then(function (response) {});
     },
     removeBusinessPerson: function removeBusinessPerson(main, index) {
       this.businessAssignment[main].persons.splice(index, 1);
@@ -3204,6 +3442,22 @@ var ageValidation = function ageValidation(dateString) {
     },
     removeResidue: function removeResidue(i) {
       this.residue.splice(i, 1);
+    }
+  },
+  watch: {
+    giftProperty: {
+      handler: function handler() {
+        var _this4 = this;
+
+        this.giftProperty.forEach(function (property, main) {
+          property.persons.forEach(function (person, index) {
+            if (index > 0) {
+              _this4.giftProperty[main].persons[index].shareType = _this4.giftProperty[main].persons[0].shareType;
+            }
+          });
+        });
+      },
+      deep: true
     }
   }
 });
@@ -24097,7 +24351,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/itskarti/PhpstormProjects/SJLegacyLaravel/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/ikkarti/PhpstormProjects/SJLegacyLaravel/resources/js/app.js */"./resources/js/app.js");
 
 
 /***/ })

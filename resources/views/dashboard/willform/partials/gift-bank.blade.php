@@ -93,9 +93,8 @@
                             Fraction
                             (required) </label>
                         <select class="form-control form-control-lg inner bank_share_fraction"
-                                v-model.trim="bank.shareType.$model"
                                 :class="bank.shareType.$anyError ? 'is-invalid':''"
-                                @blur="bank.shareType.$touch">
+                                @blur="bank.shareType.$touch" v-if="index > 0">
                             <option value="share"
                                     :selected="giftBank.persons[0].shareType === 'share'"
                                     :disabled="giftBank.persons[0].shareType !== 'share'"
@@ -104,6 +103,11 @@
                                     :selected="giftBank.persons[0].shareType === 'fraction'"
                                     :disabled="giftBank.persons[0].shareType !== 'fraction'"
                             >Fraction</option>
+                        </select>
+                        <select class="form-control form-control-lg" v-else
+                                v-model.trim="bank.shareType.$model">
+                            <option value="share">Share</option>
+                            <option value="fraction">Fraction</option>
                         </select>
                     </div>
                     <div class="col-sm-6 inner">
@@ -168,8 +172,7 @@
             </div>
             <div class="row col">
                 <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"
-                     v-if="$v.giftBank.maxShare.$anyError"> Overall share values should be equal to @{{
-                    this.maxBankShare }} current is @{{ this.finalShare }}
+                     v-if="$v.giftBank.maxShare.$anyError"> Overall share values should be equal to @{{ maxResidueShare }} current is @{{ $v.giftBank.maxShare.$model }}
                 </div>
             </div>
         </div>

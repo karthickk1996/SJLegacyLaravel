@@ -22,4 +22,7 @@ Route::get('/', function () {
 
 Route::group([], function () {
     Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.show');
+    Route::post('willform', [WillFormController::class, 'store'])->name('willform.store');
+    Route::get('users', [\App\Http\Controllers\UsersController::class, 'index'])->name('users.show');
+    Route::get('will/submissions', [\App\Http\Controllers\UsersController::class, 'index'])->name('willform.submissions');
 });

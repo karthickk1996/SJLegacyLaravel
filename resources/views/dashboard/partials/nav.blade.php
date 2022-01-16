@@ -2,16 +2,20 @@
     <img src="{{asset('images/sj_logo_long.png')}}" alt="SJ Legacy" width="90%" height="auto" style="padding:10px">
 </div>
 <ul class="c-sidebar-nav ps">
-    <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link c-active" href="https://riseaboveself.com/dashboard">
+    <li class="c-sidebar-nav-item">
+        <a class="c-sidebar-nav-link c-active" href="https://riseaboveself.com/dashboard">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-speedometer')}}"></use>
             </svg>
-            Dashboard</a></li>
-    <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="https://riseaboveself.com/auth/edit_user/1">
+            Dashboard</a>
+    </li>
+    <li class="c-sidebar-nav-item">
+        <a class="c-sidebar-nav-link" href="https://riseaboveself.com/auth/edit_user/1">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-people')}}"></use>
             </svg>
-            Profile</a></li>
+            Profile</a>
+    </li>
     <li class="c-sidebar-nav-item">
         <a class="c-sidebar-nav-link" href="{{route('willform.show')}}">
             <svg class="c-sidebar-nav-icon">
@@ -22,7 +26,7 @@
         </a>
     </li>
     <li class="c-sidebar-nav-item">
-        <a class="c-sidebar-nav-link" href="https://riseaboveself.com/will/submission">
+        <a class="c-sidebar-nav-link" href="{{route('willform.submissions')}}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-layers')}}">
                 </use>

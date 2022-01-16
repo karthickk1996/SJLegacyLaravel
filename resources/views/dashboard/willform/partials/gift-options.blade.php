@@ -60,7 +60,7 @@
         </div>
         <div class="row my-3">
             <div class="col-sm-6" v-if="hasMirrorWill">
-                <label class="form-col-form-label h4" for="gift_exec_relation"><span>@{{ gift.firstName ? gift.firstName : 'He/She' }} is</span>
+                <label class="form-col-form-label h4" for="gift_exec_relation"><span>@{{ gift.firstName.$model ? gift.firstName.$model : 'He/She' }} is</span>
                     @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                     (required)</label>
                 <select class="form-control form-control-lg"

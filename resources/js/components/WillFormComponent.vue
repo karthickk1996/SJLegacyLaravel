@@ -13,6 +13,36 @@ const ageValidation = (dateString) => {
     }
     return age > 18;
 }
+
+const beniRequirement = (value, nested) => {
+    console.log(value, nested);
+    return true;
+}
+
+const maxValueProperty = (value, nested) => {
+    if (nested.shareType === 'share') {
+        return value <= 100
+    } else {
+        return value <= 1
+    }
+}
+
+const maxFinalValue = (value, nested) => {
+    if (nested.persons[0].shareType === 'share') {
+        var l = 0;
+        nested.persons.forEach(person => {
+            l = l + person.share
+        })
+        return l == 100
+    } else {
+        var l = 0.0;
+        nested.persons.forEach(person => {
+            l = l + person.share
+        })
+        return l == 1
+    }
+}
+
 import axios from 'axios';
 
 export default {
@@ -79,7 +109,7 @@ export default {
                 line1: "",
                 line2: "",
                 city: "",
-                country: "",
+                country: "United_Kingdom",
                 postal: "",
                 county: "",
                 secondApplicantRelation: ""
@@ -205,6 +235,7 @@ export default {
                 lastName: "",
                 relation: "",
                 secondApplicantRelation: "",
+                finalShare: "",
                 persons: [{
                     firstName: "",
                     middleName: "",
@@ -222,8 +253,13 @@ export default {
                 relation: "",
                 secondApplicantRelation: "",
                 predeceased: "",
-                shareType: "",
+                shareType: "share",
                 share: "",
+                beneficiary: {
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                }
             }],
             request: {
                 optOutOfOrganDonation: false,
@@ -241,8 +277,9 @@ export default {
                 line2: "",
                 city: "",
                 county: "",
-                country: "",
+                country: "United Kingdom",
                 postal: "",
+                finalShare: "",
                 persons: [{
                     firstName: "",
                     middleName: "",
@@ -264,15 +301,102 @@ export default {
                 return 1
         },
         finalShare() {
-            var v = 0;
-            this.giftBank.persons.forEach(value => {
-                let base = value.share;
-                if (base) {
-                    v = v + parseInt(value.share)
-                }
-            })
+            if (this.giftBank.persons[0].shareType === 'share') {
+                var v = 0;
+                this.giftBank.persons.forEach(value => {
+                    let base = value.share;
+                    if (base) {
+                        v = v + parseInt(value.share)
+                    }
+                })
+            } else {
+                var v = 0.0;
+                this.giftBank.persons.forEach(value => {
+                    let base = value.share;
+                    if (base) {
+                        v = v + parseFloat(value.share)
+                    }
+                })
+            }
             return v;
         },
+        finalPropertyShare() {
+            this.giftProperty.forEach((property, i) => {
+                if (property.persons[0].shareType === 'share') {
+                    var v = 0;
+                    property.persons.forEach(person => {
+                        let base = person.share;
+                        if (base) {
+                            v = v + parseInt(person.share)
+                        }
+                    })
+                    this.giftProperty[i].finalShare = v;
+                } else {
+                    var v = 0.0;
+                    property.persons.forEach(value => {
+                        let base = value.share;
+                        if (base) {
+                            v = v + parseFloat(value.share)
+                        }
+                    })
+                    this.giftProperty[i].finalShare = v;
+                }
+            })
+
+            return true;
+        },
+        finalBusinessShare() {
+            this.businessAssignment.forEach((business, i) => {
+                if (business.persons[0].shareType === 'share') {
+                    var v = 0;
+                    business.persons.forEach(person => {
+                        let base = person.share;
+                        if (base) {
+                            v = v + parseInt(person.share)
+                        }
+                    })
+                    this.businessAssignment[i].finalShare = v;
+                } else {
+                    var v = 0.0;
+                    business.persons.forEach(value => {
+                        let base = value.share;
+                        if (base) {
+                            v = v + parseFloat(value.share)
+                        }
+                    })
+                    this.businessAssignment[i].finalShare = v;
+                }
+            })
+
+            return true;
+        },
+        maxResidueShare() {
+            if (this.residue[0].shareType === 'share') {
+                return 100
+            } else
+                return 1
+        },
+        finalResidueShare() {
+            if (this.residue[0].shareType === 'share') {
+                var v = 0;
+                this.residue.forEach(person => {
+                    let base = person.share;
+                    if (base) {
+                        v = v + parseInt(person.share)
+                    }
+                })
+                return v;
+            } else {
+                var v = 0.0;
+                this.residue.forEach(value => {
+                    let base = value.share;
+                    if (base) {
+                        v = v + parseFloat(value.share)
+                    }
+                })
+                return v;
+            }
+        }
     },
     validations() {
         return {
@@ -663,18 +787,16 @@ export default {
                     beneficiary: {
                         required,
                         firstName: {
-                            required: requiredIf(function (nested) {
-                                return this.giftDetails.predeceased === 'Assign to named beneficiary'
-                            })
+                            alpha,
+                            minLength: minLength(4),
                         },
                         middleName: {
                             alpha,
                             minLength: minLength(4),
                         },
                         lastName: {
-                            required: requiredIf(function (nested) {
-                                return this.giftDetails.predeceased === 'Assign to named beneficiary'
-                            })
+                            alpha,
+                            minLength: minLength(4),
                         }
                     }
                 },
@@ -702,26 +824,28 @@ export default {
                     beneficiary: {
                         required,
                         firstName: {
-                            required: requiredIf(function (nested) {
-                                return this.giftMoney.predeceased === 'Assign to named beneficiary'
-                            })
+                            alpha,
+                            minLength: minLength(4),
                         },
                         middleName: {
                             alpha,
                             minLength: minLength(4),
                         },
                         lastName: {
-                            required: requiredIf(function (nested) {
-                                return this.giftMoney.predeceased === 'Assign to named beneficiary'
-                            })
+                            alpha,
+                            minLength: minLength(4),
                         }
                     }
                 }
             },
             giftCharity: {
-                name: alphaNum,
-                reference: alphaNum,
-                money: "",
+                name: {
+                    alphaNum
+                },
+                reference: {
+                    alphaNum
+                },
+                money: {},
             },
             giftBank: {
                 bankName: {},
@@ -758,18 +882,16 @@ export default {
                         beneficiary: {
                             required,
                             firstName: {
-                                required: requiredIf(function (nested) {
-                                    return this.giftBank.predeceased === 'Assign to named beneficiary'
-                                })
+                                alpha,
+                                minLength: minLength(4),
                             },
                             middleName: {
                                 alpha,
                                 minLength: minLength(4),
                             },
                             lastName: {
-                                required: requiredIf(function (nested) {
-                                    return this.giftBank.predeceased === 'Assign to named beneficiary'
-                                })
+                                alpha,
+                                minLength: minLength(4),
                             }
                         }
 
@@ -798,6 +920,9 @@ export default {
                         required,
                         postal
                     },
+                    finalShare: {
+                        maxFinalValue
+                    },
                     persons: {
                         $each: {
                             firstName: {alpha, required},
@@ -820,8 +945,8 @@ export default {
                                 required
                             },
                             share: {
-                                maxValue: maxValue(this.maxBankShare)
-                            },
+                                maxValueProperty
+                            }
                         }
                     }
                 }
@@ -844,7 +969,7 @@ export default {
                     beneficiary: {
                         required,
                         firstName: {
-                            required: requiredIf(function (nested) {
+                            required: requiredIf((nested) => {
                                 return this.giftMoney.predeceased === 'Assign to named beneficiary'
                             })
                         },
@@ -853,7 +978,7 @@ export default {
                             minLength: minLength(4),
                         },
                         lastName: {
-                            required: requiredIf(function (nested) {
+                            required: requiredIf((nested) => {
                                 return this.giftMoney.predeceased === 'Assign to named beneficiary'
                             })
                         }
@@ -882,6 +1007,9 @@ export default {
                     secondApplicantRelation: {
                         required
                     },
+                    finalShare: {
+                        maxFinalValue
+                    },
                     persons: {
                         $each: {
                             firstName: {alpha, required},
@@ -901,7 +1029,7 @@ export default {
                                 required
                             },
                             share: {
-                                maxValue: maxValue(this.maxBankShare)
+                                maxValueProperty
                             },
                         }
                     }
@@ -917,11 +1045,32 @@ export default {
                     predeceased: "",
                     shareType: "",
                     share: "",
+                    beneficiary: {
+                        firstName: {
+                            alpha,
+                            minLength: minLength(4),
+                        },
+                        middleName: {
+                            alpha,
+                            minLength: minLength(4),
+                        },
+                        lastName: {
+                            alpha,
+                            minLength: minLength(4),
+                        }
+                    }
                 }
             }
         }
     },
     methods: {
+        maxPropertyShare(property) {
+            if (property.persons[0].shareType === 'share') {
+                return 100
+            } else {
+                return 1
+            }
+        },
         AddExecutor() {
             this.executor.push({
                 firstName: "",
@@ -933,9 +1082,9 @@ export default {
                 line1: "",
                 line2: "",
                 city: "",
-                country: "",
-                postal: "",
+                country: "United_Kingdom",
                 county: "",
+                postal: "",
                 secondApplicantRelation: "",
             })
         },
@@ -963,7 +1112,7 @@ export default {
                 secondApplicantRelation: "",
             })
         },
-        RemoveReserveExecutor() {
+        RemoveReserveExecutor(index) {
             this.reserveExecutor.splice(index, 1)
         },
         removeExecutor(index) {
@@ -1112,14 +1261,23 @@ export default {
                     this.step = 'executor_summary';
                 }
             } else if (form === 'executor_summary') {
-                this.step = 'reserve_executor_details';
-            } else if (form === 'reserve_executor_details') {
-                if (this.hasChildrenUnderEighteen) {
-                    this.step = 'guardian';
+                this.$v.executor.$touch()
+                if (this.$v.executor.$invalid) {
+                    console.log('Invalid Details in executor form')
                 } else {
-                    this.step = 'gift_options';
+                    this.step = 'reserve_executor_details';
                 }
-
+            } else if (form === 'reserve_executor_details') {
+                this.$v.reserveExecutor.$touch();
+                if (this.$v.reserveExecutor.$invalid) {
+                    console.log('Invalid details in reserve executor form')
+                } else {
+                    if (this.hasChildrenUnderEighteen) {
+                        this.step = 'guardian';
+                    } else {
+                        this.step = 'gift_options';
+                    }
+                }
             } else if (form === 'guardian') {
                 if (this.appointGuardian) {
                     this.step = 'children_details';
@@ -1129,27 +1287,60 @@ export default {
             } else if (form === 'children_details') {
                 //@todo complete children_details form data
             } else if (form === 'gift_options') {
-                this.step = 'gift_money';
+                this.$v.giftDetails.$touch();
+                if (this.$v.giftDetails.invalid) {
+                    console.log('Error in gift details')
+                } else
+                    this.step = 'gift_money';
             } else if (form === 'gift_money') {
-                this.step = 'gift_charity'
+                this.$v.giftMoney.$touch();
+                if (this.$v.giftMoney.invalid) {
+                    console.log('Error in gift money')
+                } else
+                    this.step = 'gift_charity';
             } else if (form === 'gift_charity') {
-                this.step = 'gift_bank'
+                this.$v.giftCharity.$touch();
+                if (this.$v.giftCharity.invalid) {
+                    console.log('Error in gift charity')
+                } else {
+                    this.step = 'gift_bank'
+                }
             } else if (form === 'gift_bank') {
                 this.giftBank.maxShare = this.finalShare;
                 this.$v.giftBank.$touch();
                 if (this.$v.giftBank.$invalid) {
-                    console.log(this.$v.giftBank)
+                    console.log('Error in gift bank')
                 } else {
                     this.step = 'gift_property'
                 }
             } else if (form === 'gift_property') {
-                this.step = 'gift_pet'
+                this.$v.giftProperty.$touch();
+                if (this.$v.giftProperty.$invalid) {
+                    console.log('Error in gift property')
+                } else {
+                    this.step = 'gift_pet'
+                }
             } else if (form === 'gift_pet') {
-                this.step = 'business_assignment';
+                this.$v.giftBank.$touch();
+                if (this.$v.giftProperty.$invalid) {
+                    console.log('Error in gift bank')
+                } else {
+                    this.step = 'business_assignment';
+                }
             } else if (form === 'business_assignment') {
-                this.step = 'residue'
+                this.$v.businessAssignment.$touch();
+                if (this.$v.businessAssignment.$invalid) {
+                    console.log('Error in business assignment')
+                } else {
+                    this.step = 'residue';
+                }
             } else if (form === 'residue') {
-                this.step = 'request'
+                this.$v.residue.$touch();
+                if (this.$v.residue.$invalid) {
+                    console.log('Error in residue')
+                } else {
+                    this.step = 'request';
+                }
             }
         },
         addBankProperty() {
@@ -1174,6 +1365,7 @@ export default {
             })
         },
         addPropertyPerson(index) {
+            let shareType = this.giftProperty[index].persons[0].shareType
             this.giftProperty[index].persons.push({
                 firstName: "",
                 middleName: "",
@@ -1181,7 +1373,7 @@ export default {
                 relation: "",
                 secondApplicantRelation: "",
                 predeceased: "",
-                shareType: "share",
+                shareType: shareType,
                 share: 0,
             })
         },
@@ -1192,7 +1384,37 @@ export default {
             this.giftProperty.splice(index, 1)
         },
         submitFinalForm() {
-            axios.post('/api/will', {}).then(response => {
+            axios.post('willform', {
+                firstName: this.form1.firstName,
+                lastName: this.form1.lastName,
+                middleName: this.form1.middleName,
+                email: this.form1.email,
+                dob: this.form1.dob,
+                hasPartner: this.hasPartner,
+                hasChildrenUnderEighteen: this.hasChildrenUnderEighteen,
+                hasMirrorWill: this.hasMirrorWill,
+                ownProperty: this.ownProperty,
+                addressSummary: this.addressSummary,
+                secondApplicant: this.secondApplicant,
+                secondExecutor: this.secondExecutor,
+                executor: this.executor,
+                reserveExecutor: this.reserveExecutor,
+                reserve: this.reserve,
+                giftDetails: this.giftDetails,
+                giftMoney: this.giftMoney,
+                appointGuardian: this.appointGuardian,
+                hasMoreThanOneChildren: this.hasMoreThanOneChildren,
+                sameGuardianAllChildren: this.sameGuardianAllChildren,
+                children: this.children,
+                reserveGuardian: this.reserveGuardian,
+                giftCharity: this.giftCharity,
+                giftBank: this.giftBank,
+                giftPet: this.giftPet,
+                businessAssignment: this.businessAssignment,
+                residue: this.residue,
+                request: this.request,
+                giftProperty: this.giftProperty
+            }).then(response => {
 
             })
         },
@@ -1265,6 +1487,20 @@ export default {
         },
         removeResidue(i) {
             this.residue.splice(i, 1)
+        }
+    },
+    watch: {
+        giftProperty: {
+            handler() {
+                this.giftProperty.forEach((property, main) => {
+                    property.persons.forEach((person, index) => {
+                        if (index > 0) {
+                            this.giftProperty[main].persons[index].shareType = this.giftProperty[main].persons[0].shareType;
+                        }
+                    })
+                })
+            },
+            deep: true
         }
     }
 }

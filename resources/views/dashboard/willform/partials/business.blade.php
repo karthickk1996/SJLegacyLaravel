@@ -91,8 +91,7 @@
                     <div class="col-sm-6 my-3">
                         <label class="form-col-form-label h4" for="property_share_fraction">Share fraction
                             (required)</label>
-                        <select class="form-control form-control-lg" v-if="index > 0"
-                        >
+                        <select class="form-control form-control-lg" v-if="index > 0">
                             <option value="share"
                                     :selected="businessAssignment[i].persons[0].shareType === 'share'"
                                     :disabled="businessAssignment[i].persons[0].shareType !== 'share'">Share</option>
@@ -112,6 +111,7 @@
                     <div class="col-sm-6 my-3">
                         <label class="form-col-form-label h4" for="property_share">Share/Fraction (required)</label>
                         <input  v-model.trim="bank.share.$model"
+                                type="number"
                                 :class="bank.share.$anyError ? 'is-invalid':''"
                                 @blur="bank.share.$touch"
                                 class="form-control form-control-lg">
@@ -141,6 +141,11 @@
                                 Add Person
                             </button>
                         </div>
+                    </div>
+                </div>
+                <div class="row col">
+                    <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"
+                         v-if="business.finalShare.$anyError"> Overall share values should be equal to @{{ maxPropertyShare(business.$model) }} current is @{{ business.finalShare.$model }}
                     </div>
                 </div>
             </div>

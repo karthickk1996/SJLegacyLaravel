@@ -102,8 +102,8 @@
             <div class="col-sm-6 my-3">
                 <label class="form-col-form-label h4" for="property_share_fraction">Share fraction
                     (required)</label>
-                <select class="form-control form-control-lg"
-                        >
+                <select class="form-control form-control-lg" v-if="index > 0"
+                        v-model="giftProperty[i].persons[0].shareType">
                     <option value="share"
                             :selected="giftProperty[i].persons[0].shareType === 'share'"
                             :disabled="giftProperty[i].persons[0].shareType !== 'share'">Share</option>
@@ -112,11 +112,16 @@
                             :disabled="giftProperty[i].persons[0].shareType !== 'fraction'"
                     >Fraction</option>
                 </select>
-
+                <select class="form-control form-control-lg" v-else
+                        v-model.trim="bank.shareType.$model"
+                >
+                    <option value="share">Share</option>
+                    <option value="fraction">Fraction</option>
+                </select>
             </div>
             <div class="col-sm-6 my-3">
                 <label class="form-col-form-label h4" for="property_share">Share/Fraction (required)</label>
-                <input  v-model.trim="bank.share.$model"
+                <input type="number" v-model.trim="bank.share.$model"
                         :class="bank.share.$anyError ? 'is-invalid':''"
                         @blur="bank.share.$touch"
                         class="form-control form-control-lg">
@@ -157,6 +162,11 @@
                         Add Person
                     </button>
                 </div>
+            </div>
+        </div>
+        <div class="row col">
+            <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"
+                 v-if="property.finalShare.$anyError"> Overall share values should be equal to @{{ maxPropertyShare(property.$model) }} current is @{{ property.finalShare.$model }}
             </div>
         </div>
         <div class="col-sm-12 text-center">

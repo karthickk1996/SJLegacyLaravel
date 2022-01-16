@@ -61,7 +61,7 @@
             </div>
             <div class="form-group col-sm-6 align-self-start universal_mirror" v-if="hasMirrorWill">
                 <label class="form-col-form-label h4" for="second_applicant_relation"><span
-                        class="second_applicant">@{{ reserveExecutor[index].firstName ? reserveExecutor[index].firstName : 'Executor' }} is @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s</span>
+                        class="second_applicant">@{{ executor[index].firstName ? executor[index].firstName : 'Executor' }} is @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s</span>
                 </label>
                 <select class="form-control form-control-lg" id="second_applicant_relation"
                         required
@@ -81,7 +81,7 @@
         <div class="row d-flex">
             <div class="form-group col-sm-6 align-self-end">
                 <label class="form-col-form-label h4" for="email_second">What is <span
-                        class="second_applicant">@{{ reserveExecutor[index].firstName ? reserveExecutor[index].firstName : 'Executor' }}
+                        class="second_applicant">@{{ executor[index].firstName ? executor[index].firstName : 'Executor' }}
                         </span>'s email? (required)</label>
                 <input class="form-control form-control-lg"
                        v-model.trim="exec.email.$model"
@@ -95,7 +95,7 @@
             <div class="form-group col-sm-6 align-self-end">
                 <label class="form-col-form-label h4" for="dob_second">What is <span
                         class="second_applicants_names"></span>
-                    @{{ reserveExecutor[index].firstName ? reserveExecutor[index].firstName : 'Executor' }}'s date of
+                    @{{ executor[index].firstName ? executor[index].firstName : 'Executor' }}'s date of
                     birth? (required)</label>
                 <date-picker v-model="exec.dob.$model"
                              fomat="YYYY-MM-DD"

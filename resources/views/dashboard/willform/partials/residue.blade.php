@@ -1,4 +1,4 @@
-<div class="card card-accent-success">
+<div class="card card-accent-success" v-if="step==='residue'">
     <div class="card-header h3"><strong>Distribution of residue</strong></div>
     <div class="card-body" v-for="(res,i) in $v.residue.$each.$iter">
         <div class="row">
@@ -62,10 +62,40 @@
             <div class="col-sm-6 my-3">
                 <label class="form-col-form-label h4" for="residue_predeceased">Up on first exec predeceased
                     (required)</label>
-                <select class="form-control form-control-lg" id="residue_predeceased" name="residue_predeceased">
+                <select class="form-control form-control-lg"
+                v-model.trim="res.predeceased.$model">
                     @include('dashboard.willform.partials.gifting-details')
                 </select>
             </div>
+        </div>
+        <section class="row" v-if="res.predeceased.$model === 'Assign to named beneficiary'">
+                <div class="col-sm-6">
+                    <label class="form-col-form-label h4" for="gift_predeceased_first">First Name of
+                        named beneficiary (required)</label>
+                    <input name="gift_predeceased_first" id="gift_predeceased_first"
+                           v-model.trim="res.beneficiary.firstName.$model"
+                           :class="res.beneficiary.firstName.$anyError ? 'is-invalid':''"
+                           @blur="res.beneficiary.firstName.$touch"
+                           class="form-control form-control-lg"></div>
+                <div class="col-sm-6"><label class="form-col-form-label h4" for="gift_predeceased_middle">Middle Name of
+                        named beneficiary (required)</label>
+                    <input name="gift_predeceased_middle"
+                           id="gift_predeceased_middle"
+                           v-model.trim="res.beneficiary.middleName.$model"
+                           :class="res.beneficiary.middleName.$anyError ? 'is-invalid':''"
+                           @blur="res.beneficiary.middleName.$touch"
+                           class="form-control form-control-lg"></div>
+                <div class="col-sm-6">
+                    <label class="form-col-form-label h4" for="gift_predeceased_last">Last Name of
+                        named beneficiary (required)</label>
+                    <input name="gift_predeceased_last"
+                           id="gift_predeceased_last"
+                           v-model.trim="res.beneficiary.lastName.$model"
+                           :class="res.beneficiary.lastName.$anyError ? 'is-invalid':''"
+                           @blur="res.beneficiary.lastName.$touch"
+                           class="form-control form-control-lg"></div>
+            </section>
+        <div class="row">
             <div class="col-sm-12 my-3">
                 <section class="row">
                     <div class="col-sm-6 my-3">
@@ -94,6 +124,7 @@
                     <div class="col-sm-6 my-3">
                         <label class="form-col-form-label h4" for="property_share">Share/Fraction (required)</label>
                         <input v-model.trim="res.share.$model"
+                               type="number"
                                :class="res.share.$anyError ? 'is-invalid':''"
                                @blur="res.share.$touch"
                                class="form-control form-control-lg">
@@ -120,6 +151,14 @@
             </div>
         </div>
     </div>
+    <div class="card-body">
+        <div class="row col">
+            <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"
+                 v-if="finalResidueShare && (maxResidueShare != finalResidueShare)"> Overall share values should be equal to @{{ maxResidueShare }} current is @{{ finalResidueShare }}
+            </div>
+        </div>
+    </div>
+
     <div class="card-footer ">
         <div class="form-group d-flex justify-content-between">
             <button class="btn btn-lg btn-primary" @click="step='business_assignment'"
