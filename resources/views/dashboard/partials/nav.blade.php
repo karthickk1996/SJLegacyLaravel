@@ -17,7 +17,7 @@
             Profile</a>
     </li>
     <li class="c-sidebar-nav-item">
-        <a class="c-sidebar-nav-link" href="{{route('willform.show')}}">
+        <a class="c-sidebar-nav-link" href="{{route('willform.create')}}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-elevator')}}">
                 </use>

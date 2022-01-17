@@ -3296,7 +3296,9 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         if (this.$v.residue.$invalid) {
           console.log('Error in residue');
         } else {
-          this.step = 'request';
+          if (this.finalResidueShare && this.maxResidueShare != this.finalResidueShare) {
+            console.log('Error in residue');
+          } else this.step = 'request';
         }
       }
     },
@@ -3341,7 +3343,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
       this.giftProperty.splice(index, 1);
     },
     submitFinalForm: function submitFinalForm() {
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('willform', {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/willform', {
         firstName: this.form1.firstName,
         lastName: this.form1.lastName,
         middleName: this.form1.middleName,

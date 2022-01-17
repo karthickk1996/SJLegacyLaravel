@@ -1339,7 +1339,10 @@ export default {
                 if (this.$v.residue.$invalid) {
                     console.log('Error in residue')
                 } else {
-                    this.step = 'request';
+                    if (this.finalResidueShare && (this.maxResidueShare != this.finalResidueShare)) {
+                        console.log('Error in residue')
+                    } else
+                        this.step = 'request';
                 }
             }
         },
@@ -1384,7 +1387,7 @@ export default {
             this.giftProperty.splice(index, 1)
         },
         submitFinalForm() {
-            axios.post('willform', {
+            axios.post('/willform', {
                 firstName: this.form1.firstName,
                 lastName: this.form1.lastName,
                 middleName: this.form1.middleName,

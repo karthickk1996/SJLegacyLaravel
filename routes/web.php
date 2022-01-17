@@ -11,18 +11,18 @@
 |
 */
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WillFormController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-\Illuminate\Support\Facades\Auth::routes();
+Auth::routes();
 
-Route::get('/', function () {
-    return view('dashboard.homepage');
-});
-
-Route::group([], function () {
-    Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.show');
+Route::group(['auth'], function () {
+    Route::get('/', [HomeController::class, 'index'])->name('dashboard.index');
+    Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.create');
     Route::post('willform', [WillFormController::class, 'store'])->name('willform.store');
-    Route::get('users', [\App\Http\Controllers\UsersController::class, 'index'])->name('users.show');
-    Route::get('will/submissions', [\App\Http\Controllers\UsersController::class, 'index'])->name('willform.submissions');
+    Route::get('will/submissions', [WillFormController::class, 'submissions'])->name('willform.submissions');
+    Route::get('users', [UsersController::class, 'index'])->name('users.show');
 });

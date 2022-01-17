@@ -18,7 +18,7 @@ class CreateWillsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('firstName');
-            $table->string('middleName');
+            $table->string('middleName')->nullable();
             $table->string('lastName');
             $table->string('email');
             $table->string('dob');
@@ -28,7 +28,6 @@ class CreateWillsTable extends Migration
             $table->boolean('ownProperty')->default(false);
             $table->json('addressSummary')->nullable();
             $table->json('secondApplicant')->nullable();
-            $table->json('secondExecutor')->nullable();
             $table->boolean('eachOtherExecutor')->default(false);
             $table->json('executor')->nullable();
             $table->json('reserveExecutor')->nullable();

@@ -12,11 +12,11 @@ class Will extends Model
     protected $fillable = [
         'user_id', 'firstName', 'middleName', 'lastName', 'email', 'dob',
         'hasPartner', 'hasChildrenUnderEighteen', 'hasMirrorWill', 'ownProperty',
-        'addressSummary', 'secondApplicant', 'secondExecutor', 'eachOtherExecutor',
+        'addressSummary', 'secondApplicant', 'eachOtherExecutor',
         'executor', 'reserveExecutor', 'giftOptions', 'giftMoney', 'giftCharity',
         'giftBank', 'giftProperty', 'giftPet', 'businessAssignment', 'residueDetails',
         'requestDetails', 'appointGuardian', 'hasMoreThanOneChildren', 'sameGuardianAllChildren',
-        'children', 'reserveGuardian'
+        'children', 'reserveGuardian','wills'
     ];
 
     protected $casts = [
@@ -30,7 +30,6 @@ class Will extends Model
         'sameGuardianAllChildren' => 'boolean',
         'addressSummary' => 'json',
         'secondApplicant' => 'json',
-        'secondExecutor' => 'json',
         'executor' => 'json',
         'reserveExecutor' => 'json',
         'giftOptions' => 'json',
