@@ -50,12 +50,12 @@
             </svg>
             Edit Mirror Will</a></li>
     <li class="c-sidebar-nav-title">Settings</li>
-    <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="https://riseaboveself.com/auth/manage_users">
+    <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('users.index') }}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-group')}}"></use>
             </svg>
             Manage Users</a></li>
-    <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="https://riseaboveself.com/auth/create_user">
+    <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('users.create') }}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-user')}}"></use>
             </svg>

@@ -2,46 +2,68 @@
 
 @section('content')
 
-        <div class="container-fluid">
-          <div class="animated fadeIn">
+    <div class="container-fluid">
+        <div class="animated fadeIn">
             <div class="row">
-              <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
-                <div class="card">
-                    <div class="card-header">
-                      <i class="fa fa-align-justify"></i> {{ __('Edit') }} {{ $user->name }}</div>
-                    <div class="card-body">
-                        <br>
-                        <form method="POST" action="/users/{{ $user->id }}">
-                            @csrf
-                            @method('PUT')
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                      <svg class="c-icon c-icon-sm">
-                                          <use xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-user"></use>
-                                      </svg>
-                                    </span>
+                <div class="col-sm-12 col-md-12 ">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <h5 class="card-title">Edit User : {{ $user->name }}</h5>
+                            <hr/>
+                            <form method="POST" action="{{ route('users.update', $user) }}">
+                                @csrf
+                                @method('PATCH')
+                                <div class="form-body mt-3">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class=" py-3 rounded">
+                                                <div class="mb-3">
+                                                    <label for="name" class="form-label">Name</label>
+                                                    <input id="name" class="form-control" type="text"
+                                                           name="name" value="{{ old("name", $user->name) }} ">
+                                                    @error('name')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="email" class="form-label">Email</label>
+                                                    <input id="email" class="form-control" type="email"
+                                                           name="email" value="{{ old("email", $user->email) }}">
+                                                    @error('email')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="password" class="form-label">Password</label>
+                                                    <input id="password" class="form-control" type="password"
+                                                           name="password" >
+                                                    @error('password')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <button class="btn btn-primary" type="submit">Update User</button>
+                                            </div>
+                                        </div>
+                                    </div><!--end row-->
                                 </div>
-                                <input class="form-control" type="text" placeholder="{{ __('Name') }}" name="name" value="{{ $user->name }}" required autofocus>
-                            </div>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">@</span>
-                                </div>
-                                <input class="form-control" type="text" placeholder="{{ __('E-Mail Address') }}" name="email" value="{{ $user->email }}" required>
-                            </div>
-                            <button class="btn btn-block btn-success" type="submit">{{ __('Save') }}</button>
-                            <a href="{{ route('users.index') }}" class="btn btn-block btn-primary">{{ __('Return') }}</a> 
-                        </form>
+                            </form>
+                            @if(session('success'))
+                                <div class="alert alert-info mt-3" id="alert-success"> {{ session('success') }}</div>
+                            @endif
+                        </div>
                     </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
+    </div>
 
 @endsection
+
 
 @section('javascript')
 
 @endsection
+

@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WillFormController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,6 @@ Route::get('/', function () {
 Route::group([], function () {
     Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.show');
     Route::post('willform', [WillFormController::class, 'store'])->name('willform.store');
-    Route::get('users', [\App\Http\Controllers\UsersController::class, 'index'])->name('users.show');
-    Route::get('will/submissions', [\App\Http\Controllers\UsersController::class, 'index'])->name('willform.submissions');
+    Route::resource('users', UsersController::class);
+    Route::get('will/submissions', [UsersController::class, 'index'])->name('willform.submissions');
 });
