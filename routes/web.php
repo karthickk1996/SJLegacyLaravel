@@ -21,7 +21,7 @@ Route::get('/', function () {
     return view('dashboard.homepage');
 });
 
-Route::group([], function () {
+Route::middleware('isAdmin')->group( function () {
     Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.show');
     Route::post('willform', [WillFormController::class, 'store'])->name('willform.store');
     Route::resource('users', UsersController::class);

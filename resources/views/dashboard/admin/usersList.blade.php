@@ -27,7 +27,7 @@
                                     <tr>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
-                                        <td>{{ $user->menuroles }}</td>
+                                        <td>{{ $user->roles[0]->name }}</td>
                                         <td>{{ $user->created_at->diffForHumans() }}</td>
                                         <td>
                                             <a href="{{ route('users.show', $user)}}"

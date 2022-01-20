@@ -44,6 +44,19 @@
                                                     @enderror
                                                 </div>
 
+                                                <div class="mb-3">
+                                                    <label for="role" class="form-label">Role</label>
+                                                    <br>
+                                                    <select class="form-control" name="role_name">
+                                                        @foreach( $roles as  $role )
+                                                            <option {{ $user->roles[0]->name === $role ? 'selected' : '' }} value="{{ $role }}">{{ $role }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('password')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
                                                 <button class="btn btn-primary" type="submit">Update User</button>
                                             </div>
                                         </div>

@@ -37,7 +37,20 @@
                                                 <div class="mb-3">
                                                     <label for="password" class="form-label">Password</label>
                                                     <input id="password" class="form-control" type="password"
-                                                           name="password" >
+                                                           name="password">
+                                                    @error('password')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="role" class="form-label">Role</label>
+                                                    <br>
+                                                    <select class="form-control" name="role_name">
+                                                        @foreach( $roles as  $role )
+                                                            <option value="{{ $role }}">{{ $role }}</option>
+                                                        @endforeach
+                                                    </select>
                                                     @error('password')
                                                     <p class="text-danger">{{ $message }}</p>
                                                     @enderror
