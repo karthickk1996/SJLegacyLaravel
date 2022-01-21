@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::group(['middleware' => ['role:user']], function () {
+Route::group(['middleware' => ['role:user|admin']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('dashboard.index');
     Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.create');
     Route::post('willform', [WillFormController::class, 'store'])->name('willform.store');
@@ -27,5 +27,5 @@ Route::group(['middleware' => ['role:user']], function () {
     Route::get('form/mirror-will', [WillFormController::class, 'mirrorWillEdit'])->name('mirrorWill.form');
     Route::post('form/update', [WillFormController::class, 'willFormUpdate'])->name('form.update');
     Route::resource('users', UsersController::class);
-    Route::get('will/submissions', [UsersController::class, 'index'])->name('willform.submissions');
+    Route::get('will/submissions', [WillFormController::class, 'submissions'])->name('willform.submissions');
 });

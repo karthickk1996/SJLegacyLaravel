@@ -21,7 +21,6 @@
                                 <tr>
                                     <th>User Id</th>
                                     <th>Will Number</th>
-                                    <th>Status</th>
                                     <th>Single/Mirror Will</th>
                                     <th>View/Edit</th>
                                     <th>Date Created</th>
@@ -43,12 +42,12 @@
              aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-body">
+                    <div class="modal-body" id="will-print-{{$datum->id}}">
                         @include('dashboard.willform.print.index',['data' => $datum])
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Print</button>
+                        <button type="button" class="btn btn-primary" onclick="printJS('will-print-{{$datum->id}}', 'html')">Print</button>
                     </div>
                 </div>
             </div>
@@ -67,7 +66,6 @@
                 columns: [
                     {data: 'user_id', name: 'UserId'},
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'status', name: 'status'},
                     // {data: 'payment_type', name: 'username'},
                     {data: 'willType', name: 'willType'},
                     {
