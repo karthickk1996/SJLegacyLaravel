@@ -8,11 +8,10 @@
                 <div class="col-sm-12 col-md-12 ">
                     <div class="card">
                         <div class="card-body p-4">
-                            <h5 class="card-title">Edit User : {{ $user->name }}</h5>
+                            <h5 class="card-title">Add New User</h5>
                             <hr/>
-                            <form method="POST" action="{{ route('users.update', $user) }}">
+                            <form method="POST" action="{{ route('users.store') }}">
                                 @csrf
-                                @method('PATCH')
                                 <div class="form-body mt-3">
                                     <div class="row">
                                         <div class="col-lg-12">
@@ -20,7 +19,7 @@
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Name</label>
                                                     <input id="name" class="form-control" type="text"
-                                                           name="name" value="{{ old("name", $user->name) }} ">
+                                                           name="name" value="{{ old("name") }} ">
                                                     @error('name')
                                                     <p class="text-danger">{{ $message }}</p>
                                                     @enderror
@@ -29,7 +28,7 @@
                                                 <div class="mb-3">
                                                     <label for="email" class="form-label">Email</label>
                                                     <input id="email" class="form-control" type="email"
-                                                           name="email" value="{{ old("email", $user->email) }}">
+                                                           name="email" value="{{ old("email") }}">
                                                     @error('email')
                                                     <p class="text-danger">{{ $message }}</p>
                                                     @enderror
@@ -38,7 +37,7 @@
                                                 <div class="mb-3">
                                                     <label for="password" class="form-label">Password</label>
                                                     <input id="password" class="form-control" type="password"
-                                                           name="password" >
+                                                           name="password">
                                                     @error('password')
                                                     <p class="text-danger">{{ $message }}</p>
                                                     @enderror
@@ -49,7 +48,7 @@
                                                     <br>
                                                     <select class="form-control" name="role_name">
                                                         @foreach( $roles as  $role )
-                                                            <option {{ $user->roles[0]->name === $role ? 'selected' : '' }} value="{{ $role }}">{{ $role }}</option>
+                                                            <option value="{{ $role }}">{{ $role }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('password')
@@ -57,7 +56,7 @@
                                                     @enderror
                                                 </div>
 
-                                                <button class="btn btn-primary" type="submit">Update User</button>
+                                                <button class="btn btn-primary" type="submit">Add User</button>
                                             </div>
                                         </div>
                                     </div><!--end row-->

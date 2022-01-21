@@ -2,92 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 
 class UsersController extends Controller
 {
+    protected $rules = [
+        'name' => 'required|min:1|max:256',
+        'email' => 'required|email|max:256',
+        'password' => 'required|min:8|max:20',
+    ];
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('admin');
+        // $this->middleware('admin');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $you = auth()->user();
-        $users = User::all();
+        $users = User::with('roles')->paginate(4);
         return view('dashboard.admin.usersList', compact('users', 'you'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+
+    public function create()
     {
-        $user = User::find($id);
-        return view('dashboard.admin.userShow', compact( 'user' ));
+        $roles = Role::pluck('name', 'id');
+        return view('dashboard.admin.userCreate', compact('roles'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-    public function edit($id)
+
+    public function store(Request $request)
     {
-        $user = User::find($id);
-        return view('dashboard.admin.userEditForm', compact('user'));
+        $role = $request->input('role_name');
+        $validatedData = $request->validate($this->rules);
+        $validatedData['password'] = Hash::make($request->input('password'));
+        $user = User::create($validatedData);
+
+        $user->assignRole($role);
+        return back()->with('success', ' New User has been created successfully');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+
+    public function show(User $user)
     {
-        $validatedData = $request->validate([
-            'name'       => 'required|min:1|max:256',
-            'email'      => 'required|email|max:256'
-        ]);
-        $user = User::find($id);
-        $user->name       = $request->input('name');
-        $user->email      = $request->input('email');
-        $user->save();
-        $request->session()->flash('message', 'Successfully updated user');
-        return redirect()->route('users.index');
+        return view('dashboard.admin.userShow', compact('user'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+
+    public function edit(User $user)
     {
-        $user = User::find($id);
-        if($user){
-            $user->delete();
+        $roles = Role::pluck('name', 'id');
+        return view('dashboard.admin.userEditForm', compact('user', 'roles'));
+    }
+
+
+    public function update(Request $request, User $user)
+    {
+        $role = $request->input('role_name');
+        $this->rules['password'] = 'nullable | min:3| max:8';
+        $this->rules['email'] = Rule::unique('users')->ignore($user);
+
+        $validatedData = $request->validate($this->rules);
+
+        if ($validatedData['password'] === null) {
+            unset($validatedData['password']);
+        } else {
+            $validatedData['password'] = Hash::make($request->input('password'));
         }
-        return redirect()->route('users.index');
+        $user->roles()->detach();
+        $user->update($validatedData);
+        $user->assignRole($role);
+
+        return back()->with('success', 'User data has been updated successfully');
+    }
+
+
+    public function destroy(User $user)
+    {
+
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'User has been deleted successfully');
     }
 }
