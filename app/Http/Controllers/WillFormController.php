@@ -17,7 +17,7 @@ class WillFormController extends Controller
     public function store(Request $request)
     {
         Will::create([
-            'user_id' => 1,
+            'user_id' => $request->auth()->id,
             'firstName' => $request->get('firstName'),
             'middleName' => $request->get('middleName'),
             'lastName' => $request->get('lastName'),
@@ -65,6 +65,8 @@ class WillFormController extends Controller
                     } else {
                         return 'Single Will';
                     }
+                })->addColumn('createdAt', function ($row) {
+                    return $row->created_at->toDateTimeString();
                 })
                 ->rawColumns(['action'])
                 ->make(true);

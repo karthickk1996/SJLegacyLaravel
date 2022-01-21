@@ -1,8 +1,6 @@
 @extends('dashboard.base')
 
 @section('content')
-
-
     <div class="container-fluid">
         <div class="fade-in">
             <div class="row">
@@ -74,7 +72,7 @@
                         orderable: true,
                         searchable: true
                     },
-                    {data: 'created_at', name: 'Date Created'},
+                    {data: 'createdAt', name: 'Date Created'},
                 ]
             });
 
