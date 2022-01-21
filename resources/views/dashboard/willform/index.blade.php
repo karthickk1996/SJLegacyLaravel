@@ -37,8 +37,23 @@
             </div>
         </div>
     </div>
-    </div>
 
+    @foreach($data as $datum)
+        <div class="modal fade" id="will-{{$datum->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        @include('dashboard.willform.print.index',['data' => $datum])
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Print</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
 @endsection
 
 @section('javascript')

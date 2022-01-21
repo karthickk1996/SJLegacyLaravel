@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Form extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id', 'form_type', 'content'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

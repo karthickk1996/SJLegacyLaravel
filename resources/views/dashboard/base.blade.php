@@ -33,7 +33,7 @@
 <div class="c-body">
 
     <main class="c-main" id="app">
-
+        <notifications></notifications>
         @yield('content')
 
     </main>

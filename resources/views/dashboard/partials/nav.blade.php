@@ -39,12 +39,15 @@
             </svg>
             Payments &amp; Subscriptions</a></li>
     <li class="c-sidebar-nav-title">Manage Will</li>
-    <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="https://riseaboveself.com/edit/single_will">
+    <li class="c-sidebar-nav-item">
+        <a class="c-sidebar-nav-link" href="{{route('singleWill.form')}}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-user')}}"></use>
             </svg>
             Edit Single Will</a></li>
-    <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="https://riseaboveself.com/edit/mirror_will">
+    <li class="c-sidebar-nav-item">
+        <a class="c-sidebar-nav-link"
+           href="{{route('mirrorWill.form')}}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-group')}}"></use>
             </svg>
