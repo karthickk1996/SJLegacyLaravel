@@ -38,6 +38,7 @@
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-money')}}"></use>
             </svg>
             Payments &amp; Subscriptions</a></li>
+
     <li class="c-sidebar-nav-title">Manage Will</li>
     <li class="c-sidebar-nav-item">
         <a class="c-sidebar-nav-link" href="{{route('singleWill.form')}}">
@@ -53,6 +54,7 @@
             </svg>
             Edit Mirror Will</a></li>
     <li class="c-sidebar-nav-title">Settings</li>
+    @hasrole('admin')
     <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('users.index') }}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-group')}}"></use>
@@ -63,6 +65,7 @@
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-user')}}"></use>
             </svg>
             Create User</a></li>
+    @endhasrole
     <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
         <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
     </div>

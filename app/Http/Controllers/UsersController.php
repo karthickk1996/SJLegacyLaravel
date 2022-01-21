@@ -13,7 +13,7 @@ class UsersController extends Controller
     protected $rules = [
         'name' => 'required|min:1|max:256',
         'email' => 'required|email|max:256',
-        'password' => 'required|min:8|max:20',
+        'password' => 'required|confirmed|min:8|max:20',
     ];
 
     public function __construct()
@@ -75,9 +75,8 @@ class UsersController extends Controller
         } else {
             $validatedData['password'] = Hash::make($request->input('password'));
         }
-        $user->roles()->detach();
         $user->update($validatedData);
-        $user->assignRole($role);
+        $user->syncRoles([$role]);
 
         return back()->with('success', 'User data has been updated successfully');
     }
@@ -85,9 +84,7 @@ class UsersController extends Controller
 
     public function destroy(User $user)
     {
-
         $user->delete();
-
         return redirect()->route('users.index')->with('success', 'User has been deleted successfully');
     }
 }

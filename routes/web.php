@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::group(['auth'], function () {
+Route::group(['middleware' => ['role:user']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('dashboard.index');
     Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.create');
     Route::post('willform', [WillFormController::class, 'store'])->name('willform.store');

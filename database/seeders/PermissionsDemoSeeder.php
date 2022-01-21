@@ -23,7 +23,6 @@ class PermissionsDemoSeeder extends Seeder
 
 
         foreach ($users as $user) {
-
             $user->assignRole($role);
         }
 
