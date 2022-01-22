@@ -60,9 +60,6 @@
                                                             <option value="{{ $role }}">{{ $role }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @error('password')
-                                                    <p class="text-danger">{{ $message }}</p>
-                                                    @enderror
                                                 </div>
 
                                                 <button class="btn btn-primary" type="submit">Add User</button>
