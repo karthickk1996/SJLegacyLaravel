@@ -10,7 +10,7 @@
             Dashboard</a>
     </li>
     <li class="c-sidebar-nav-item">
-        <a class="c-sidebar-nav-link" href="https://riseaboveself.com/auth/edit_user/1">
+        <a class="c-sidebar-nav-link" href="{{ route('profile.edit', auth()->id()) }}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-people')}}"></use>
             </svg>

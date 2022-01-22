@@ -6,6 +6,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Laravel\Cashier\Billable;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
@@ -21,6 +23,24 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function($model){
+          $model->password = Hash::make($model->password);
+        });
+
+        self::updating(function($model){
+            if ($model->password === null) {
+                unset($model->password);
+            } else {
+                $model->password = Hash::make($model->password);
+            }
+        });
+
+
+    }
     /**
      * The attributes that are mass assignable.
      *

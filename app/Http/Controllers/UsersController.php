@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserCreateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -10,9 +11,9 @@ use Spatie\Permission\Models\Role;
 
 class UsersController extends Controller
 {
-    protected $rules = [
+    protected  $rules = [
         'name' => 'required|min:1|max:256',
-        'email' => 'required|email|max:256',
+        'email' => 'required|email|max:256|unique:users,email',
         'password' => 'required|confirmed|min:8|max:20',
     ];
 
@@ -25,7 +26,7 @@ class UsersController extends Controller
     public function index()
     {
         $you = auth()->user();
-        $users = User::with('roles')->paginate(4);
+        $users = User::with('roles')->paginate(7);
         return view('dashboard.admin.usersList', compact('users', 'you'));
     }
 
@@ -41,7 +42,6 @@ class UsersController extends Controller
     {
         $role = $request->input('role_name');
         $validatedData = $request->validate($this->rules);
-        $validatedData['password'] = Hash::make($request->input('password'));
         $user = User::create($validatedData);
 
         $user->assignRole($role);
@@ -65,16 +65,10 @@ class UsersController extends Controller
     public function update(Request $request, User $user)
     {
         $role = $request->input('role_name');
-        $this->rules['password'] = 'nullable | min:3| max:8';
+        $this->rules['password'] = 'nullable|confirmed|min:8|max:20';
         $this->rules['email'] = Rule::unique('users')->ignore($user);
 
         $validatedData = $request->validate($this->rules);
-
-        if ($validatedData['password'] === null) {
-            unset($validatedData['password']);
-        } else {
-            $validatedData['password'] = Hash::make($request->input('password'));
-        }
         $user->update($validatedData);
         $user->syncRoles([$role]);
 
