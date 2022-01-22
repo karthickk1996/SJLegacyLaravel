@@ -11,7 +11,7 @@
     }
 
     if(strpos($content, '{7}') !== false){
-       $content = str_replace('{7}',$data->dob->toFormattedDateString(),$content);
+       $content = str_replace('{7}',\Carbon\Carbon::parse($data->dob)->toFormattedDateString(),$content);
     }
 
     if(strpos($content, '{8}') !== false){

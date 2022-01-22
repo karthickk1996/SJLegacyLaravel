@@ -32,13 +32,13 @@
                 </use>
             </svg>
             Submission</a></li>
+    @hasrole('admin')
     <li class="c-sidebar-nav-title">Payment</li>
     <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="https://riseaboveself.com/payments">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-money')}}"></use>
             </svg>
             Payments &amp; Subscriptions</a></li>
-
     <li class="c-sidebar-nav-title">Manage Will</li>
     <li class="c-sidebar-nav-item">
         <a class="c-sidebar-nav-link" href="{{route('singleWill.form')}}">
@@ -54,7 +54,6 @@
             </svg>
             Edit Mirror Will</a></li>
     <li class="c-sidebar-nav-title">Settings</li>
-    @hasrole('admin')
     <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('users.index') }}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="{{asset('icons/sprites/free.svg#cil-group')}}"></use>

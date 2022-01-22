@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WillFormController;
 use Illuminate\Support\Facades\Auth;
@@ -29,3 +30,6 @@ Route::group(['middleware' => ['role:user|admin']], function () {
     Route::resource('users', UsersController::class);
     Route::get('will/submissions', [WillFormController::class, 'submissions'])->name('willform.submissions');
 });
+
+Route::get('payment/form', [PaymentController::class, 'paymentForm']);
+Route::post('payment/form', [PaymentController::class, 'paymentFormSubmit']);

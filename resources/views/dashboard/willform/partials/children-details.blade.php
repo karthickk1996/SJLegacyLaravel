@@ -1,4 +1,4 @@
-<div class="card card-accent-primary hide" v-if="step==='children_details'">
+<div class="card card-accent-primary" v-if="step==='children_details'">
     <div class="card-header h3"><strong>Children Details</strong></div>
     <div class="card-body hide" v-if="hasMoreThanOneChildren">
         <div class="form-group">
@@ -13,7 +13,7 @@
 
     <div class="card-body">
         <div v-for="(child,index) in $v.children.$each.$iter">
-            <div class="row mt-3 same_guardian" v-if="!sameGuardianAllChildren">
+            <div class="row mt-3" v-if="!sameGuardianAllChildren">
                 <div class="form-group col-sm-6">
                     <label class="form-col-form-label h4" for="first_name_child">First Name of Child <br>
                         (required)</label>
@@ -102,129 +102,129 @@
                         @include('dashboard.willform.partials.combo-options')
                     </select>
                     <div class="invalid-feedback" v-if="child.relation.$anyError">Please choose an option</div>
-                    <div class="form-group col-sm-6" v-if="hasMirrorWill">
-                        <label class="form-col-form-label h4" for="guardian_second_relation">
-                            @{{ children[index].firstName ? children[index].firstName : 'He/She' }}
-                            is
-                            @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
-                            (required)</label>
-                        <select class="form-control form-control-lg" id="guardian_second_relation"
-                                v-model.trim="child.secondApplicantRelation.$model"
-                                :class="child.secondApplicantRelation.$anyError ? 'is-invalid':''"
-                                @blur="child.secondApplicantRelation.$touch"
-                                name="guardian_second_relation" data-my-validation="relation">
-                            @include('dashboard.willform.partials.combo-options')
-                        </select>
-                        <div class="invalid-feedback" v-if="child.secondApplicantRelation.$anyError">Please choose
-                            an option
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label class="form-col-form-label h4" for="address_line1_guardian">Address Line1
-                            (required)</label>
-                        <input class="form-control form-control-lg"
-                               v-model.trim="child.line1.$model"
-                               @blur="child.line1.$touch"
-                               :class="child.line1.$anyError ? 'is-invalid':''"
-                               type="text" placeholder="Enter address line 1" required
-                               data-parsley-trigger="change"/>
-                        <div class="invalid-feedback" v-if="child.line1.$anyError">This value is required.
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label class="form-col-form-label h4" for="address_line2_guardian">Address Line2
-                            (required)</label>
-                        <input class="form-control form-control-lg"
-                               v-model.trim="child.line2.$model"
-                               @blur="child.line2.$touch"
-                               :class="child.line2.$anyError ? 'is-invalid':''"
-                               type="text" placeholder="Enter address line 2"/>
-                        <div class="invalid-feedback" v-if="child.line2.$anyError">This value is required.
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label class="form-col-form-label h4" for="city_guardian">City/Town
-                            (required)</label>
-                        <input class="form-control form-control-lg"
-                               v-model.trim="child.city.$model"
-                               @blur="child.city.$touch"
-                               :class="child.city.$anyError ? 'is-invalid':''"
-                               type="text"
-                               placeholder="Enter your city/town" required data-parsley-trigger="change"/>
-                        <div class="invalid-feedback" v-if="child.city.$anyError">This value is required.</div>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label class="form-col-form-label h4" for="county_guardian">County
-                            (required)</label>
-                        <input class="form-control form-control-lg"
-                               v-model.trim="child.county.$model"
-                               @blur="child.county.$touch"
-                               :class="child.county.$anyError ? 'is-invalid':''"
-                               type="text"
-                               placeholder="Enter county name" required data-parsley-trigger="change"/>
-                        <div class="invalid-feedback" v-if="child.county.$anyError">This value is required.
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label for="country_guardian" class="h4 d-block">Country</label>
-                            <select name="country_second" id="country_second" class="form-control form-control-lg"
-                                    required
-                                    v-model.trim="child.country.$model"
-                                    @blur="child.country.$touch"
-                                    :class="child.country.$anyError ? 'is-invalid':''"
-                                    data-parsley-trigger="change">
-                                <option value="United_Kingdom" selected>United Kingdom</option>
-                                <option value="England">England</option>
-                                <option value="Wales">Wales</option>
-                            </select>
-                            <div class="invalid-feedback" v-if="child.country.$anyError">This value is required.
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label for="postal_code_guardian" class="h4">Postal Code</label>
-                            <input class="form-control form-control-lg" id="postal_code_second"
-                                   v-model.trim="child.postal.$model"
-                                   @blur="child.postal.$touch"
-                                   :class="child.postal.$anyError ? 'is-invalid':''"
-                                   name="postal_code_second"
-                                   type="text" placeholder="Postal Code" required data-parsley-trigger="change"/>
-                            <div class="invalid-feedback" v-if="!child.postal.required">This value is required.
-                            </div>
-                            <div class="invalid-feedback" v-if="!child.postal.postal">This value is invalid.
-                            </div>
-                        </div>
+                </div>
+                <div class="form-group col-sm-6" v-if="hasMirrorWill">
+                    <label class="form-col-form-label h4" for="guardian_second_relation">
+                        @{{ children[index].firstName ? children[index].firstName : 'He/She' }}
+                        is
+                        @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
+                        (required)</label>
+                    <select class="form-control form-control-lg" id="guardian_second_relation"
+                            v-model.trim="child.secondApplicantRelation.$model"
+                            :class="child.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                            @blur="child.secondApplicantRelation.$touch"
+                            name="guardian_second_relation" data-my-validation="relation">
+                        @include('dashboard.willform.partials.combo-options')
+                    </select>
+                    <div class="invalid-feedback" v-if="child.secondApplicantRelation.$anyError">Please choose
+                        an option
                     </div>
                 </div>
-                <div class="row" v-if="hasMoreThanOneChildren">
-                    <div class="col">
-                        <div class="form-group d-flex justify-content-between">
-                            <button class="btn btn-lg btn-warning"
-                                    @click.prevent="AddJointGuardian">
-                                <i class="fa fa-plus-circle"></i>
-                                Add Joint Guardian
-                            </button>
-                            <div v-if="index > 0">
-                                <button class="btn btn-lg btn-danger"
-                                        v-if="children.length > 1"
-                                        @click.prevent="removeJointGuardian(index)">
-                                    <i class="fa fa-minus-circle"></i>
-                                    Remove Joint Guardian
-                                </button>
-                            </div>
-                        </div>
+                <div class="form-group col-sm-6">
+                    <label class="form-col-form-label h4" for="address_line1_guardian">Address Line1
+                        (required)</label>
+                    <input class="form-control form-control-lg"
+                           v-model.trim="child.line1.$model"
+                           @blur="child.line1.$touch"
+                           :class="child.line1.$anyError ? 'is-invalid':''"
+                           type="text" placeholder="Enter address line 1" required
+                           data-parsley-trigger="change"/>
+                    <div class="invalid-feedback" v-if="child.line1.$anyError">This value is required.
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="form-col-form-label h4" for="address_line2_guardian">Address Line2
+                        (required)</label>
+                    <input class="form-control form-control-lg"
+                           v-model.trim="child.line2.$model"
+                           @blur="child.line2.$touch"
+                           :class="child.line2.$anyError ? 'is-invalid':''"
+                           type="text" placeholder="Enter address line 2"/>
+                    <div class="invalid-feedback" v-if="child.line2.$anyError">This value is required.
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="form-col-form-label h4" for="city_guardian">City/Town
+                        (required)</label>
+                    <input class="form-control form-control-lg"
+                           v-model.trim="child.city.$model"
+                           @blur="child.city.$touch"
+                           :class="child.city.$anyError ? 'is-invalid':''"
+                           type="text"
+                           placeholder="Enter your city/town" required data-parsley-trigger="change"/>
+                    <div class="invalid-feedback" v-if="child.city.$anyError">This value is required.</div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="form-col-form-label h4" for="county_guardian">County
+                        (required)</label>
+                    <input class="form-control form-control-lg"
+                           v-model.trim="child.county.$model"
+                           @blur="child.county.$touch"
+                           :class="child.county.$anyError ? 'is-invalid':''"
+                           type="text"
+                           placeholder="Enter county name" required data-parsley-trigger="change"/>
+                    <div class="invalid-feedback" v-if="child.county.$anyError">This value is required.
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="country_guardian" class="h4 d-block">Country</label>
+                    <select name="country_second" id="country_second" class="form-control form-control-lg"
+                            required
+                            v-model.trim="child.country.$model"
+                            @blur="child.country.$touch"
+                            :class="child.country.$anyError ? 'is-invalid':''"
+                            data-parsley-trigger="change">
+                        <option value="United_Kingdom" selected>United Kingdom</option>
+                        <option value="England">England</option>
+                        <option value="Wales">Wales</option>
+                    </select>
+                    <div class="invalid-feedback" v-if="child.country.$anyError">This value is required.
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="postal_code_guardian" class="h4">Postal Code</label>
+                    <input class="form-control form-control-lg" id="postal_code_second"
+                           v-model.trim="child.postal.$model"
+                           @blur="child.postal.$touch"
+                           :class="child.postal.$anyError ? 'is-invalid':''"
+                           name="postal_code_second"
+                           type="text" placeholder="Postal Code" required data-parsley-trigger="change"/>
+                    <div class="invalid-feedback" v-if="!child.postal.required">This value is required.
+                    </div>
+                    <div class="invalid-feedback" v-if="!child.postal.postal">This value is invalid.
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
-                <button class="btn btn-lg btn-primary"
-                        @click="step='guardian'">
-                    <i class="fa fa-arrow-left"></i> Go
-                    Back
-                </button>
-                <button class="btn btn-lg btn-success"
-                        @click.prevent="submitForm('children_details')"
-                        id="address_next" type="submit">
-                    Next <i class="fa fa-arrow-right"></i></button>
+            <div class="row" v-if="hasMoreThanOneChildren">
+                <div class="col">
+                    <div class="form-group d-flex justify-content-between">
+                        <button class="btn btn-lg btn-warning"
+                                @click.prevent="AddJointGuardian">
+                            <i class="fa fa-plus-circle"></i>
+                            Add Joint Guardian
+                        </button>
+                        <div v-if="index > 0">
+                            <button class="btn btn-lg btn-danger"
+                                    v-if="children.length > 1"
+                                    @click.prevent="removeJointGuardian(index)">
+                                <i class="fa fa-minus-circle"></i>
+                                Remove Joint Guardian
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-lg btn-primary"
+                @click="step='guardian'">
+            <i class="fa fa-arrow-left"></i> Go
+            Back
+        </button>
+        <button class="btn btn-lg btn-success"
+                @click.prevent="submitForm('children_details')"
+                id="address_next" type="submit">
+            Next <i class="fa fa-arrow-right"></i></button>
     </div>
 </div>

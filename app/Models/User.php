@@ -52,5 +52,10 @@ class User extends Authenticatable
         'deleted_at'
     ];
 
+    public function wills()
+    {
+        return $this->hasMany(Will::class);
+    }
+
 
 }

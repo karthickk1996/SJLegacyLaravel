@@ -14,6 +14,7 @@ const ageValidation = (dateString) => {
     return age > 18;
 }
 
+
 const beniRequirement = (value, nested) => {
     console.log(value, nested);
     return true;
@@ -403,15 +404,12 @@ export default {
             form1: {
                 firstName: {
                     required,
-                    alpha,
                     minLength: minLength(4),
                 },
                 middleName: {
-                    alpha,
                     minLength: minLength(4),
                 },
                 lastName: {
-                    alpha,
                     minLength: minLength(4),
                 },
                 email: {
@@ -447,15 +445,12 @@ export default {
             secondApplicant: {
                 firstName: {
                     required,
-                    alpha,
                     minLength: minLength(4),
                 },
                 middleName: {
-                    alpha,
                     minLength: minLength(4),
                 },
                 lastName: {
-                    alpha,
                     minLength: minLength(4),
                 },
                 email: {
@@ -494,15 +489,12 @@ export default {
                 $each: {
                     firstName: {
                         required,
-                        alpha,
                         minLength: minLength(4),
                     },
                     middleName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     lastName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     email: {
@@ -536,7 +528,9 @@ export default {
                         postal
                     },
                     secondApplicantRelation: {
-                        required
+                        required: requiredIf(function () {
+                            return this.hasMirrorWill
+                        })
                     }
                 }
             },
@@ -545,15 +539,12 @@ export default {
                 $each: {
                     firstName: {
                         required,
-                        alpha,
                         minLength: minLength(4),
                     },
                     middleName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     lastName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     email: {
@@ -587,7 +578,9 @@ export default {
                         postal
                     },
                     secondApplicantRelation: {
-                        required
+                        required: requiredIf(function () {
+                            return this.hasMirrorWill
+                        })
                     }
                 }
             },
@@ -596,15 +589,12 @@ export default {
                 $each: {
                     firstName: {
                         required,
-                        alpha,
                         minLength: minLength(4),
                     },
                     middleName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     lastName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     email: {
@@ -637,122 +627,66 @@ export default {
                         postal
                     },
                     secondApplicantRelation: {
-                        required
+                        required: requiredIf(function () {
+                            return this.hasMirrorWill
+                        })
                     }
                 }
             },
             children: {
                 required,
-                $each: function () {
-                    if (!this.sameGuardianAllChildren) {
-                        return {
-                            firstName: {
-                                required,
-                                alpha,
-                                minLength: minLength(4),
-                            },
-                            GuardianFirstName: {
-                                required,
-                                alpha,
-                                minLength: minLength(4),
-                            },
-                            middleName: {
-                                alpha,
-                                minLength: minLength(4),
-                            },
-                            GuardianMiddleName: {
-                                alpha,
-                                minLength: minLength(4),
-                            },
-                            lastName: {
-                                alpha,
-                                minLength: minLength(4),
-                            },
-                            GuardianLastName: {
-                                alpha,
-                                minLength: minLength(4),
-                            },
-                            email: {
-                                required,
-                                email
-                            },
-                            dob: {
-                                required,
-                            },
-                            relation: {
-                                required
-                            },
-                            line1: {
-                                required
-                            },
-                            line2: {
-                                required
-                            },
-                            city: {
-                                required
-                            },
-                            county: {
-                                required
-                            },
-                            country: {
-                                required
-                            },
-                            postal: {
-                                required,
-                                postal
-                            },
-                            secondApplicantRelation: {
-                                required
-                            }
-                        }
-                    } else {
-                        return {
-                            GuardianFirstName: {
-                                required,
-                                alpha,
-                                minLength: minLength(4),
-                            },
-                            GuardianMiddleName: {
-                                alpha,
-                                minLength: minLength(4),
-                            },
-                            GuardianLastName: {
-                                alpha,
-                                minLength: minLength(4),
-                            },
-                            email: {
-                                required,
-                                email
-                            },
-                            dob: {
-                                required,
-                            },
-                            relation: {
-                                required
-                            },
-                            line1: {
-                                required
-                            },
-                            line2: {
-                                required
-                            },
-                            city: {
-                                required
-                            },
-                            county: {
-                                required
-                            },
-                            country: {
-                                required
-                            },
-                            postal: {
-                                required,
-                                postal
-                            },
-                            secondApplicantRelation: {
-                                required
-                            }
-                        }
+                $each: {
+                    firstName: {
+                        minLength: minLength(4),
+                    },
+                    middleName: {
+                        minLength: minLength(4),
+                    },
+                    lastName: {
+                        minLength: minLength(4),
+                    },
+                    GuardianFirstName: {
+                        minLength: minLength(4),
+                    },
+                    GuardianMiddleName: {
+                        minLength: minLength(4),
+                    },
+                    GuardianLastName: {
+                        minLength: minLength(4),
+                    },
+                    email: {
+                        required,
+                        email
+                    },
+                    dob: {
+                        required,
+                    },
+                    relation: {
+                        required
+                    },
+                    line1: {
+                        required
+                    },
+                    line2: {
+                        required
+                    },
+                    city: {
+                        required
+                    },
+                    county: {
+                        required
+                    },
+                    country: {
+                        required
+                    },
+                    postal: {
+                        required,
+                        postal
+                    },
+                    secondApplicantRelation: {
+                        required: requiredIf(function () {
+                            return this.hasMirrorWill
+                        })
                     }
                 }
             },
@@ -764,22 +698,21 @@ export default {
                     },
                     firstName: {
                         required,
-                        alpha,
                         minLength: minLength(4),
                     },
                     middleName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     lastName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     relation: {
                         required
                     },
                     secondApplicantRelation: {
-                        required
+                        required: requiredIf(function () {
+                            return this.hasMirrorWill
+                        })
                     },
                     predeceased: {
                         required
@@ -787,15 +720,12 @@ export default {
                     beneficiary: {
                         required,
                         firstName: {
-                            alpha,
                             minLength: minLength(4),
                         },
                         middleName: {
-                            alpha,
                             minLength: minLength(4),
                         },
                         lastName: {
-                            alpha,
                             minLength: minLength(4),
                         }
                     }
@@ -807,32 +737,31 @@ export default {
                     moneyDetails: {required},
                     firstName: {required},
                     middleName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     lastName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     relation: {
                         required
                     },
-                    secondApplicantRelation: {},
+                    secondApplicantRelation: {
+                        required: requiredIf(function () {
+                            return this.hasMirrorWill
+                        })
+                    },
                     predeceased: {
                         required
                     },
                     beneficiary: {
                         required,
                         firstName: {
-                            alpha,
                             minLength: minLength(4),
                         },
                         middleName: {
-                            alpha,
                             minLength: minLength(4),
                         },
                         lastName: {
-                            alpha,
                             minLength: minLength(4),
                         }
                     }
@@ -857,19 +786,21 @@ export default {
                 },
                 persons: {
                     $each: {
-                        firstName: {alpha, required},
+                        firstName: {required},
                         middleName: {
-                            alpha,
                             minLength: minLength(4),
                         },
                         lastName: {
-                            alpha,
                             minLength: minLength(4),
                         },
                         relation: {
                             required
                         },
-                        secondApplicantRelation: {},
+                        secondApplicantRelation: {
+                            required: requiredIf(function () {
+                                return this.hasMirrorWill
+                            })
+                        },
                         predeceased: {
                             required
                         },
@@ -882,15 +813,12 @@ export default {
                         beneficiary: {
                             required,
                             firstName: {
-                                alpha,
                                 minLength: minLength(4),
                             },
                             middleName: {
-                                alpha,
                                 minLength: minLength(4),
                             },
                             lastName: {
-                                alpha,
                                 minLength: minLength(4),
                             }
                         }
@@ -925,19 +853,21 @@ export default {
                     },
                     persons: {
                         $each: {
-                            firstName: {alpha, required},
+                            firstName: {required},
                             middleName: {
-                                alpha,
                                 minLength: minLength(4),
                             },
                             lastName: {
-                                alpha,
                                 minLength: minLength(4),
                             },
                             relation: {
                                 required
                             },
-                            secondApplicantRelation: {},
+                            secondApplicantRelation: {
+                                required: requiredIf(function () {
+                                    return this.hasMirrorWill
+                                })
+                            },
                             predeceased: {
                                 required
                             },
@@ -956,11 +886,9 @@ export default {
                     petDetails: {},
                     firstName: {required},
                     middleName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     lastName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     predeceased: {
@@ -974,7 +902,6 @@ export default {
                             })
                         },
                         middleName: {
-                            alpha,
                             minLength: minLength(4),
                         },
                         lastName: {
@@ -990,35 +917,32 @@ export default {
                     business: {},
                     firstName: {
                         required,
-                        alpha,
                         minLength: minLength(4),
                     },
                     middleName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     lastName: {
-                        alpha,
                         minLength: minLength(4),
                     },
                     relation: {
                         required
                     },
                     secondApplicantRelation: {
-                        required
+                        required: requiredIf(function () {
+                            return this.hasMirrorWill
+                        })
                     },
                     finalShare: {
                         maxFinalValue
                     },
                     persons: {
                         $each: {
-                            firstName: {alpha, required},
+                            firstName: {required},
                             middleName: {
-                                alpha,
                                 minLength: minLength(4),
                             },
                             lastName: {
-                                alpha,
                                 minLength: minLength(4),
                             },
                             relation: {
@@ -1041,21 +965,22 @@ export default {
                     middleName: "",
                     lastName: "",
                     relation: "",
-                    secondApplicantRelation: "",
+                    secondApplicantRelation: {
+                        required: requiredIf(function () {
+                            return this.hasMirrorWill
+                        })
+                    },
                     predeceased: "",
                     shareType: "",
                     share: "",
                     beneficiary: {
                         firstName: {
-                            alpha,
                             minLength: minLength(4),
                         },
                         middleName: {
-                            alpha,
                             minLength: minLength(4),
                         },
                         lastName: {
-                            alpha,
                             minLength: minLength(4),
                         }
                     }
@@ -1285,7 +1210,9 @@ export default {
                     this.step = 'gift_options';
                 }
             } else if (form === 'children_details') {
-                //@todo complete children_details form data
+                this.step = 'reserve_guardian';
+            } else if (form === 'reserve_guardian') {
+                this.step = 'gift_options'
             } else if (form === 'gift_options') {
                 this.$v.giftDetails.$touch();
                 if (this.$v.giftDetails.invalid) {
@@ -1418,7 +1345,28 @@ export default {
                 request: this.request,
                 giftProperty: this.giftProperty
             }).then(response => {
-
+                if (response.data.success) {
+                    this.$notify({
+                        type: 'success',
+                        title: 'Update',
+                        text: 'Will form uploaded successfully'
+                    })
+                    setTimeout(function () {
+                        window.location.href = '/payment/form'
+                    }, 3000);
+                } else {
+                    this.$notify({
+                        type: 'error',
+                        title: 'Error',
+                        text: 'Error in the form'
+                    })
+                }
+            }).catch(err => {
+                this.$notify({
+                    type: 'error',
+                    title: 'Error',
+                    text: 'Error in the form submissions'
+                })
             })
         },
         removeBusinessPerson(main, index) {

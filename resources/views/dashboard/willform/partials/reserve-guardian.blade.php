@@ -202,12 +202,12 @@
     </div>
     <div class="card-footer">
         <div class="form-group d-flex justify-content-between">
-            <button class="btn btn-lg btn-primary" @click="step=3" id="address_back">
+            <button class="btn btn-lg btn-primary" @click="step='guardian'" id="address_back">
                 <i class="fa fa-arrow-left"></i> Go
                 Back
             </button>
             <button class="btn btn-lg btn-success"
-                    @click.prevent="submitForm(6)"
+                    @click.prevent="submitForm('reserve_guardian')"
                     id="address_next" type="submit">
                 Next <i class="fa fa-arrow-right"></i></button>
         </div>

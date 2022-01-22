@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WillCreated;
 use App\Models\Form;
 use App\Models\Will;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
 use Yajra\DataTables\Facades\DataTables;
 
 class WillFormController extends Controller
@@ -16,8 +19,8 @@ class WillFormController extends Controller
 
     public function store(Request $request)
     {
-        Will::create([
-            'user_id' => $request->auth()->id,
+        $will = Will::create([
+            'user_id' => $request->user()->id,
             'firstName' => $request->get('firstName'),
             'middleName' => $request->get('middleName'),
             'lastName' => $request->get('lastName'),
@@ -47,11 +50,26 @@ class WillFormController extends Controller
             'children' => $request->get('children'),
             'reserveGuardian' => $request->get('reserveGuardian')
         ]);
+
+
+        try{
+            Mail::to($request->user()->email)->send(new WillCreated($will));
+        }catch(\Exception $exception){
+            //
+        }
+
+
+        return response()->json([
+           'success' => true
+        ]);
     }
 
     public function submissions(Request $request)
     {
-        $data = Will::latest()->get();
+        if($request->user()->roles[0]->name == 'admin')
+            $data = $request->user()->wills()->latest()->get();
+        else
+            $data = Will::latest()->get();
         if ($request->ajax()) {
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -105,4 +123,5 @@ class WillFormController extends Controller
             'success' => true
         ]);
     }
+
 }
