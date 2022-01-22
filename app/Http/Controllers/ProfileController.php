@@ -26,7 +26,6 @@ class ProfileController extends Controller
             'password' => 'nullable|confirmed|min:8|max:20',
             ];
 
-        $rules['password'] = 'nullable|confirmed|min:8|max:20';
         $rules['email'] = Rule::unique('users')->ignore($user);
 
         $validatedData = $request->validate($rules);

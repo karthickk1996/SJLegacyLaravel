@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserCreateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,7 +10,7 @@ use Spatie\Permission\Models\Role;
 
 class UsersController extends Controller
 {
-    protected  $rules = [
+    protected $rules = [
         'name' => 'required|min:1|max:256',
         'email' => 'required|email|max:256|unique:users,email',
         'password' => 'required|confirmed|min:8|max:20',
@@ -43,7 +42,6 @@ class UsersController extends Controller
         $role = $request->input('role_name');
         $validatedData = $request->validate($this->rules);
         $user = User::create($validatedData);
-
         $user->assignRole($role);
         return back()->with('success', ' New User has been created successfully');
     }
