@@ -166,7 +166,7 @@
         </div>
         <div class="row col">
             <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"
-                 v-if="property.finalShare.$anyError"> Overall share values should be equal to @{{ maxPropertyShare(property.$model) }} current is @{{ property.finalShare.$model }}
+                 v-if="finalPropertyShare"> Overall share values should be equal to @{{ maxPropertyShare(property.$model) }} current is @{{ property.finalShare.$model ? property.finalShare.$model : '0' }}
             </div>
         </div>
         <div class="col-sm-12 text-center">

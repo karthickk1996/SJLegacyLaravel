@@ -2704,6 +2704,8 @@ var maxValueProperty = function maxValueProperty(value, nested) {
 };
 
 var maxFinalValue = function maxFinalValue(value, nested) {
+  console.log(value, nested);
+
   if (nested.persons[0].shareType === 'share') {
     var l = 0;
     nested.persons.forEach(function (person) {
@@ -2998,35 +3000,18 @@ var maxFinalValue = function maxFinalValue(value, nested) {
       return v;
     },
     finalPropertyShare: function finalPropertyShare() {
-      var _this = this;
-
+      var r = false;
       this.giftProperty.forEach(function (property, i) {
         if (property.persons[0].shareType === 'share') {
-          var v = 0;
-          property.persons.forEach(function (person) {
-            var base = person.share;
-
-            if (base) {
-              v = v + parseInt(person.share);
-            }
-          });
-          _this.giftProperty[i].finalShare = v;
+          r = property.finalShare !== 100;
         } else {
-          var v = 0.0;
-          property.persons.forEach(function (value) {
-            var base = value.share;
-
-            if (base) {
-              v = v + parseFloat(value.share);
-            }
-          });
-          _this.giftProperty[i].finalShare = v;
+          r = property.finalShare !== 1;
         }
       });
-      return true;
+      return r;
     },
     finalBusinessShare: function finalBusinessShare() {
-      var _this2 = this;
+      var _this = this;
 
       this.businessAssignment.forEach(function (business, i) {
         if (business.persons[0].shareType === 'share') {
@@ -3038,7 +3023,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
               v = v + parseInt(person.share);
             }
           });
-          _this2.businessAssignment[i].finalShare = v;
+          _this.businessAssignment[i].finalShare = v;
         } else {
           var v = 0.0;
           business.persons.forEach(function (value) {
@@ -3048,7 +3033,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
               v = v + parseFloat(value.share);
             }
           });
-          _this2.businessAssignment[i].finalShare = v;
+          _this.businessAssignment[i].finalShare = v;
         }
       });
       return true;
@@ -3083,7 +3068,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
     }
   },
   validations: function validations() {
-    var _this3 = this;
+    var _this2 = this;
 
     return {
       form1: {
@@ -3469,7 +3454,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         bankReference: {},
         maxShare: {
           sameAsmaxBankSharesameAs: sameAs(function () {
-            return _this3.maxBankShare;
+            return _this2.maxBankShare;
           })
         },
         persons: {
@@ -3537,9 +3522,6 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             required: required,
             postal: postal
           },
-          finalShare: {
-            maxFinalValue: maxFinalValue
-          },
           persons: {
             $each: {
               firstName: {
@@ -3591,7 +3573,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             required: required,
             firstName: {
               required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                return _this3.giftMoney.predeceased === 'Assign to named beneficiary';
+                return _this2.giftMoney.predeceased === 'Assign to named beneficiary';
               })
             },
             middleName: {
@@ -3599,7 +3581,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             },
             lastName: {
               required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                return _this3.giftMoney.predeceased === 'Assign to named beneficiary';
+                return _this2.giftMoney.predeceased === 'Assign to named beneficiary';
               })
             }
           }
@@ -4019,7 +4001,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
       this.giftProperty.splice(index, 1);
     },
     submitFinalForm: function submitFinalForm() {
-      var _this4 = this;
+      var _this3 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/willform', {
         firstName: this.form1.firstName,
@@ -4053,7 +4035,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         giftProperty: this.giftProperty
       }).then(function (response) {
         if (response.data.success) {
-          _this4.$notify({
+          _this3.$notify({
             type: 'success',
             title: 'Update',
             text: 'Will form uploaded successfully'
@@ -4063,14 +4045,14 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             window.location.href = '/payment/form';
           }, 3000);
         } else {
-          _this4.$notify({
+          _this3.$notify({
             type: 'error',
             title: 'Error',
             text: 'Error in the form'
           });
         }
       })["catch"](function (err) {
-        _this4.$notify({
+        _this3.$notify({
           type: 'error',
           title: 'Error',
           text: 'Error in the form submissions'
@@ -4151,14 +4133,28 @@ var maxFinalValue = function maxFinalValue(value, nested) {
   watch: {
     giftProperty: {
       handler: function handler() {
-        var _this5 = this;
+        var _this4 = this;
 
         this.giftProperty.forEach(function (property, main) {
           property.persons.forEach(function (person, index) {
             if (index > 0) {
-              _this5.giftProperty[main].persons[index].shareType = _this5.giftProperty[main].persons[0].shareType;
+              _this4.giftProperty[main].persons[index].shareType = _this4.giftProperty[main].persons[0].shareType;
             }
           });
+
+          if (_this4.giftProperty[main].persons[0].shareType === 'share') {
+            var share = 0;
+            property.persons.forEach(function (person, index) {
+              share = share + parseInt(person.share);
+            });
+            _this4.giftProperty[main].finalShare = share;
+          } else {
+            var share = 0.0;
+            property.persons.forEach(function (person, index) {
+              share = share + parseFloat(person.share);
+            });
+            _this4.giftProperty[main].finalShare = share;
+          }
         });
       },
       deep: true

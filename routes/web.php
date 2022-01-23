@@ -11,17 +11,29 @@
 |
 */
 
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WillFormController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::group(['middleware' => ['role:user|admin']], function () {
+Route::group(['middleware' => ['auth']], function () {
+    /**
+     * Verification Routes
+     */
+    Route::get('/email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify')->middleware(['signed']);
+    Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+});
+
+Route::group(['middleware' => ['role:user|admin', 'verified']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('dashboard.index');
     Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.create');
     Route::post('willform', [WillFormController::class, 'store'])->name('willform.store');

@@ -66,7 +66,7 @@ class WillFormController extends Controller
 
     public function submissions(Request $request)
     {
-        if($request->user()->roles[0]->name == 'admin')
+        if($request->user()->roles[0]->name != 'admin')
             $data = $request->user()->wills()->latest()->get();
         else
             $data = Will::latest()->get();

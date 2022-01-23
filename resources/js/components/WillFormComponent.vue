@@ -29,6 +29,7 @@ const maxValueProperty = (value, nested) => {
 }
 
 const maxFinalValue = (value, nested) => {
+    console.log(value, nested)
     if (nested.persons[0].shareType === 'share') {
         var l = 0;
         nested.persons.forEach(person => {
@@ -321,30 +322,17 @@ export default {
             }
             return v;
         },
-        finalPropertyShare() {
+         finalPropertyShare() {
+            var r = false;
             this.giftProperty.forEach((property, i) => {
                 if (property.persons[0].shareType === 'share') {
-                    var v = 0;
-                    property.persons.forEach(person => {
-                        let base = person.share;
-                        if (base) {
-                            v = v + parseInt(person.share)
-                        }
-                    })
-                    this.giftProperty[i].finalShare = v;
+                    r = property.finalShare !== 100;
                 } else {
-                    var v = 0.0;
-                    property.persons.forEach(value => {
-                        let base = value.share;
-                        if (base) {
-                            v = v + parseFloat(value.share)
-                        }
-                    })
-                    this.giftProperty[i].finalShare = v;
+                    r = property.finalShare !== 1;
                 }
             })
 
-            return true;
+            return r;
         },
         finalBusinessShare() {
             this.businessAssignment.forEach((business, i) => {
@@ -847,9 +835,6 @@ export default {
                     postal: {
                         required,
                         postal
-                    },
-                    finalShare: {
-                        maxFinalValue
                     },
                     persons: {
                         $each: {
@@ -1449,6 +1434,20 @@ export default {
                             this.giftProperty[main].persons[index].shareType = this.giftProperty[main].persons[0].shareType;
                         }
                     })
+
+                    if(this.giftProperty[main].persons[0].shareType === 'share'){
+                        var share = 0;
+                        property.persons.forEach((person, index) => {
+                            share = share + parseInt(person.share);
+                        })
+                        this.giftProperty[main].finalShare = share;
+                    }else{
+                        var share = 0.0;
+                        property.persons.forEach((person, index) => {
+                            share = share + parseFloat(person.share);
+                        })
+                        this.giftProperty[main].finalShare = share;
+                    }
                 })
             },
             deep: true
