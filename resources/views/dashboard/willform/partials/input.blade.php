@@ -50,9 +50,9 @@
         <div class="form-group">
             <label class="form-col-form-label h4" for="dob">Date of Birth (required)</label>
             <date-picker v-model="$v.form1.dob.$model"
-                         fomat="YYYY-MM-DD"
+                         format="DD-MM-YYYY"
                          type="date"
-                         placeholder="YYYY-MM-DD"
+                         placeholder="DD-MM-YYYY"
                          @blur="$v.form1.dob.$touch"
                          :input-class="$v.form1.dob.$anyError ? 'form-control form-control-lg is-invalid':'form-control form-control-lg'"
             >
