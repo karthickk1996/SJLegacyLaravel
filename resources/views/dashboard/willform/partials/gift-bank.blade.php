@@ -1,4 +1,4 @@
-<div class="card card-accent-success">
+<div class="card card-accent-success" v-if="step==='gift_bank'">
     <div class="card-header h3">Gift of bank account</div>
     <div data-repeater-list="outer-group" class="card-body outer" v-for="(account,i) in $v.giftBank.$each.$iter">
         <div class="outer">
