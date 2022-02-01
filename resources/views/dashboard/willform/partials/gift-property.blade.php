@@ -130,8 +130,9 @@
                 <div class="invalid-feedback"></div>
             </div>
             <div class="form-group col-sm-6 my-3">
-                <label class="form-col-form-label h4" for="property_relation">He/She is
-                    my</label>
+                <label class="form-col-form-label h4" for="property_relation">
+                    <span>@{{ bank.firstName.$model ? bank.firstName.$model : 'He/She' }} is</span>
+                  </label>
                 <select class="form-control form-control-lg"
                         v-model.trim="bank.relation.$model"
                         :class="bank.relation.$anyError ? 'is-invalid':''"

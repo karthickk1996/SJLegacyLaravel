@@ -1,4 +1,4 @@
-<div class="card card-accent-success" v-if="step==='gift_bank'">
+<div class="card card-accent-success">
     <div class="card-header h3">Gift of bank account</div>
     <div data-repeater-list="outer-group" class="card-body outer" v-for="(account,i) in $v.giftBank.$each.$iter">
         <div class="outer">
@@ -50,8 +50,9 @@
                                class="form-control form-control-lg inner"/>
                     </div>
                     <div class="col-sm-6 inner">
-                        <label class="form-col-form-label h4 mt-3 inner" for="bank_relation">He / She is
-                            my
+                        <label class="form-col-form-label h4 mt-3 inner" for="bank_relation"><span>@{{ bank.firstName.$model ? bank.firstName.$model : 'He/She' }}</span>
+                            is my
+                            (required)
                         </label>
                         <select type="text" class="form-control form-control-lg inner select2"
                                 v-model.trim="bank.relation.$model"

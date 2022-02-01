@@ -39,7 +39,7 @@
             </div>
             <div class="col-sm-6 mt-3">
                 <label class="form-col-form-label h4" for="business_relation">
-                    <span>He/She</span> is my
+                    <span>@{{ business.firstName.$model ? business.firstName.$model : 'He/She' }}'s</span> is my
                     (required)</label>
                 <select class="form-control form-control-lg"
                         v-model.trim="business.relation.$model"
@@ -49,8 +49,8 @@
                 </select>
             </div>
             <div class="col-sm-6 mt-3" v-if="hasMirrorWill">
-                <label class="form-col-form-label h4" for="business_exec_relation"><span>He/She</span> is <span
-                        class="second_applicant">@{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}</span>'s
+                <label class="form-col-form-label h4" for="business_exec_relation"><span>@{{ business.firstName.$model ? business.firstName.$model : 'He/She' }} is</span>
+                    @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                     (required)</label>
                 <select class="form-control form-control-lg"
                         v-model.trim="business.secondApplicantRelation.$model"
