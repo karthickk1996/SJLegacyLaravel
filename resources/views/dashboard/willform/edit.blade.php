@@ -16,7 +16,10 @@
     <div class="container-fluid">
         <div class="fade-in">
             <div class="row">
-                <will-form inline-template v-cloak>
+                <edit-will-form inline-template v-cloak
+                                :data="{{json_encode($data)}}"
+                                id="{{$id}}"
+                                :intent="{{json_encode($intent)}}">
                     <div class="col-sm-10 mx-auto">
                         @include('dashboard.willform.partials.input')
                         @include('dashboard.willform.partials.mirror-select')
@@ -41,7 +44,7 @@
                             'intent' => $intent
                         ])
                     </div>
-                </will-form>
+                </edit-will-form>
                 <!-- /.col-->
             </div>
         </div>

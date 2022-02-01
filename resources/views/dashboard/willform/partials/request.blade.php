@@ -9,8 +9,8 @@
                                :labels="{checked: 'Yes', unchecked: 'No'}"></toggle-button>
             </section>
         </div>
-        <div class="row">
-            <section class="universal_mirror hide">
+        <div class="row" v-if="hasMirrorWill">
+            <section class="universal_mirror">
                 <section class="d-flex align-items-center py-2 universal_mirror hide">
                     <h4 class="mb-2 d-inline col-10">Does the <span class="second_applicant">second applicant</span>
                         wish
@@ -31,7 +31,7 @@
                     @include('dashboard.willform.partials.burial-options')
                 </select>
             </div>
-            <div class="col-sm-6 universal_mirror hide">
+            <div class="col-sm-6" v-if="hasMirrorWill">
                 <label class="form-col-form-label h4" for="burial_second">Would <span
                         class="second_applicant">second applicant</span> like a burial,
                     cremation
@@ -53,7 +53,7 @@
                        type="text"/>
             </div>
         </div>
-        <div class="row my-3 universal_mirror hide">
+        <div class="row my-3" v-if="hasMirrorWill">
             <div class="col-sm-12 d-flex align-items-center">
                 <label class="form-col-form-label h4 col-10" for="funeral_plan_second">Does the <span
                         class="second_applicant">second applicant</span>
@@ -73,13 +73,13 @@
     </div>
     <div class="card-footer ">
         <div class="form-group d-flex justify-content-between">
-            <button class="btn btn-lg btn-primary" @click.prevent="step='residue'"><i class="fa fa-arrow-left"></i>
+            <button class="btn btn-lg btn-primary" @click.prevent="step='residue'">
+                <i class="fa fa-arrow-left"></i>
                 Go
                 Back
             </button>
-
-            <button class="btn btn-lg btn-success" id="request_next" @click.prevent="submitFinalForm">
-                Submit My Will <i class="fa fa-paper-plane"></i></button>
+            <button class="btn btn-lg btn-success" id="request_next" @click.prevent="submitForm('request')">
+                Save and Proceed with payment</button>
         </div>
     </div>
 </div>

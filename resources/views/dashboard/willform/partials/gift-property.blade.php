@@ -106,11 +106,13 @@
                         v-model="giftProperty[i].persons[0].shareType">
                     <option value="share"
                             :selected="giftProperty[i].persons[0].shareType === 'share'"
-                            :disabled="giftProperty[i].persons[0].shareType !== 'share'">Share</option>
+                            :disabled="giftProperty[i].persons[0].shareType !== 'share'">Share
+                    </option>
                     <option value="fraction"
                             :selected="giftProperty[i].persons[0].shareType === 'fraction'"
                             :disabled="giftProperty[i].persons[0].shareType !== 'fraction'"
-                    >Fraction</option>
+                    >Fraction
+                    </option>
                 </select>
                 <select class="form-control form-control-lg" v-else
                         v-model.trim="bank.shareType.$model"
@@ -122,9 +124,9 @@
             <div class="col-sm-6 my-3">
                 <label class="form-col-form-label h4" for="property_share">Share/Fraction (required)</label>
                 <input type="number" v-model.trim="bank.share.$model"
-                        :class="bank.share.$anyError ? 'is-invalid':''"
-                        @blur="bank.share.$touch"
-                        class="form-control form-control-lg">
+                       :class="bank.share.$anyError ? 'is-invalid':''"
+                       @blur="bank.share.$touch"
+                       class="form-control form-control-lg">
                 <div class="invalid-feedback"></div>
             </div>
             <div class="form-group col-sm-6 my-3">
@@ -137,15 +139,59 @@
                     @include('dashboard.willform.partials.combo-options')
                 </select>
             </div>
+            <div class="col-sm-6 inner" v-if="hasMirrorWill">
+                <label class="form-col-form-label h4 mt-3 inner" for="bank_second_relation">He /
+                    She
+                    is
+                    <span class="second_applicant">Second Applicant</span>'s </label>
+                <select class="form-control form-control-lg inner select2"
+                        v-model.trim="bank.secondApplicantRelation.$model"
+                        :class="bank.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                        @blur="bank.secondApplicantRelation.$touch"
+                        name="bank_second_relation">
+                    @include('dashboard.willform.partials.combo-options')
+                </select>
+            </div>
             <div class="form-group col-sm-6 my-3">
-                <label class="form-col-form-label h4" for="property_predeceased">upon his death will be given
-                    to</label>
+                <label class="form-col-form-label h4" for="property_predeceased">Upon first exec predeceased
+                    (required) </label>
                 <select class="form-control form-control-lg"
                         v-model.trim="bank.predeceased.$model"
                         :class="bank.predeceased.$anyError ? 'is-invalid':''"
                         @blur="bank.predeceased.$touch">
-                    @include('dashboard.willform.partials.combo-options')
+                    @include('dashboard.willform.partials.gifting-details')
                 </select>
+            </div>
+            <div class="col-sm-12" v-if="bank.predeceased.$model === 'Assign to named beneficiary'">
+                <div class="row">
+                    <div class="col-sm-6 inner mt-3">
+                        <label class="form-col-form-label h4"
+                               for="money_predeceased_first">First Name (required)</label>
+                        <input name="money_predeceased_first"
+                               v-model.trim="bank.beneficiary.firstName.$model"
+                               :class="bank.beneficiary.firstName.$anyError ? 'is-invalid':''"
+                               @blur="bank.beneficiary.firstName.$touch"
+                               class="form-control form-control-lg inner">
+                    </div>
+                    <div class="col-sm-6 inner mt-3">
+                        <label class="form-col-form-label h4"
+                               for="money_predeceased_middle">Middle Name (required)</label>
+                        <input name="money_predeceased_middle"
+                               v-model.trim="bank.beneficiary.middleName.$model"
+                               :class="bank.beneficiary.middleName.$anyError ? 'is-invalid':''"
+                               @blur="bank.beneficiary.middleName.$touch"
+                               class="form-control form-control-lg inner">
+                    </div>
+                    <div class="col-sm-6 mt-3 inner">
+                        <label class="form-col-form-label h4" for="money_predeceased_last">Last
+                            Name (required)</label>
+                        <input name="money_predeceased_last"
+                               v-model.trim="bank.beneficiary.lastName.$model"
+                               :class="bank.beneficiary.lastName.$anyError ? 'is-invalid':''"
+                               @blur="bank.beneficiary.lastName.$touch"
+                               class="form-control form-control-lg inner">
+                    </div>
+                </div>
             </div>
             <div class="col-sm-12 text-center">
                 <div class="d-flex justify-content-center mt-3">
@@ -166,9 +212,12 @@
         </div>
         <div class="row col">
             <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"
-                 v-if="finalPropertyShare"> Overall share values should be equal to @{{ maxPropertyShare(property.$model) }} current is @{{ property.finalShare.$model ? property.finalShare.$model : '0' }}
+                 v-if="finalPropertyShare"> Overall share values should be equal to @{{
+                maxPropertyShare(property.$model) }} current is @{{ property.finalShare.$model ?
+                property.finalShare.$model : '0' }}
             </div>
         </div>
+
         <div class="col-sm-12 text-center">
             <div class="d-flex justify-content-center mt-3">
                 <button type="button" v-if="i > 0"

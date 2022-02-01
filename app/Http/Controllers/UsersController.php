@@ -41,6 +41,7 @@ class UsersController extends Controller
     {
         $role = $request->input('role_name');
         $validatedData = $request->validate($this->rules);
+        $validatedData['password'] = Hash::make($validatedData['password']);
         $user = User::create($validatedData);
         $user->assignRole($role);
         return back()->with('success', ' New User has been created successfully');
@@ -67,6 +68,7 @@ class UsersController extends Controller
         $this->rules['email'] = Rule::unique('users')->ignore($user);
 
         $validatedData = $request->validate($this->rules);
+        $validatedData['password'] = Hash::make($validatedData['password']);
         $user->update($validatedData);
         $user->syncRoles([$role]);
 

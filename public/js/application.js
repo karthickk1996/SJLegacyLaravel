@@ -2340,6 +2340,1693 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EditWillComponent.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EditWillComponent.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
+
+var _require = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js"),
+    required = _require.required,
+    alpha = _require.alpha,
+    minLength = _require.minLength,
+    email = _require.email,
+    helpers = _require.helpers,
+    maxValue = _require.maxValue,
+    sameAs = _require.sameAs,
+    numeric = _require.numeric;
+
+var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$/);
+
+var ageValidation = function ageValidation(dateString) {
+  var today = new Date();
+  var birthDate = new Date(dateString);
+  var age = today.getFullYear() - birthDate.getFullYear();
+  var m = today.getMonth() - birthDate.getMonth();
+
+  if (m < 0 || m === 0 && today.getDate() < birthDate.getDate()) {
+    age--;
+  }
+
+  return age > 18;
+};
+
+var maxValueProperty = function maxValueProperty(value, nested) {
+  if (nested.shareType === 'share') {
+    return value <= 100;
+  } else {
+    return value <= 1;
+  }
+};
+
+var maxFinalValue = function maxFinalValue(value, nested) {
+  if (nested.persons[0].shareType === 'share') {
+    var l = 0;
+    nested.persons.forEach(function (person) {
+      l = l + person.share;
+    });
+    return l == 100;
+  } else {
+    var l = 0.0;
+    nested.persons.forEach(function (person) {
+      l = l + person.share;
+    });
+    return l == 1;
+  }
+};
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "EditWillComponent",
+  props: ['data', 'id'],
+  data: function data() {
+    return {
+      id: null,
+      step: 1,
+      form1: {
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: ""
+      },
+      hasPartner: false,
+      hasChildrenUnderEighteen: false,
+      hasMirrorWill: false,
+      ownProperty: false,
+      addressSummary: {
+        line1: "",
+        line2: "",
+        city: "",
+        county: "",
+        country: "United_Kingdom",
+        postal: ""
+      },
+      secondApplicant: {
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        relation: "",
+        line1: "",
+        line2: "",
+        city: "",
+        country: "United_Kingdom",
+        postal: "",
+        county: ""
+      },
+      secondExecutor: false,
+      executor: [{
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        relation: "",
+        line1: "",
+        line2: "",
+        city: "",
+        country: "United_Kingdom",
+        county: "",
+        postal: "",
+        secondApplicantRelation: ""
+      }],
+      reserveExecutor: [{
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        relation: "",
+        line1: "",
+        line2: "",
+        city: "",
+        country: "United_Kingdom",
+        postal: "",
+        county: "",
+        secondApplicantRelation: ""
+      }],
+      reserve: {
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        relation: "",
+        line1: "",
+        line2: "",
+        city: "",
+        country: "",
+        postal: ""
+      },
+      giftDetails: [{
+        giftTo: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
+      }],
+      giftMoney: [{
+        moneyDetails: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
+      }],
+      appointGuardian: false,
+      hasMoreThanOneChildren: false,
+      sameGuardianAllChildren: false,
+      children: [{
+        guardianFirstName: "",
+        guardianMiddleName: "",
+        guardianLastName: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        relation: "",
+        line1: "",
+        line2: "",
+        city: "",
+        country: "",
+        postal: "",
+        county: "",
+        secondApplicantRelation: ""
+      }],
+      reserveGuardian: [{
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        relation: "",
+        line1: "",
+        line2: "",
+        city: "",
+        country: "",
+        postal: "",
+        county: "",
+        secondApplicantRelation: ""
+      }],
+      giftCharity: {
+        name: "",
+        reference: "",
+        money: ""
+      },
+      giftBank: [{
+        bankName: "",
+        bankReference: "",
+        maxShare: "",
+        persons: [{
+          parent: 0,
+          index: 0,
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          predeceased: "",
+          shareType: "share",
+          share: 0,
+          beneficiary: {
+            firstName: "",
+            middleName: "",
+            lastName: ""
+          }
+        }]
+      }],
+      giftPet: [{
+        petDetails: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        predeceased: "",
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
+      }],
+      businessAssignment: [{
+        business: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        finalShare: "",
+        parent: 0,
+        persons: [{
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          shareType: "share",
+          share: 0,
+          predeceased: "",
+          beneficiary: {
+            firstName: "",
+            middleName: "",
+            lastName: ""
+          }
+        }]
+      }],
+      residue: [{
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        shareType: "share",
+        share: "",
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
+      }],
+      request: {
+        optOutOfOrganDonation: false,
+        secondApplicantOptOutOfOrganDonation: false,
+        burialType: false,
+        secondApplicantBurialType: false,
+        funeralPlan: false,
+        funeralPlanType: "",
+        secondApplicantFuneralPlan: false,
+        secondApplicantFuneralPlanType: ""
+      },
+      giftProperty: [{
+        name: "",
+        line1: "",
+        line2: "",
+        city: "",
+        county: "",
+        country: "United Kingdom",
+        postal: "",
+        finalShare: "",
+        persons: [{
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          predeceased: "",
+          shareType: "share",
+          share: 0
+        }]
+      }]
+    };
+  },
+  computed: {
+    maxBankShare: function maxBankShare() {
+      return function (value) {
+        if (value.$model.persons[0].shareType === 'share') {
+          return 100;
+        } else return 1;
+      };
+    },
+    bankShareValue: function bankShareValue() {
+      var _this = this;
+
+      return function (value, nested) {
+        if (nested.parent) {
+          var share = _this.giftBank[nested.parent].persons[0].shareType;
+
+          if (share === 'share') {
+            var v = 0;
+
+            _this.giftBank[nested.parent].persons.forEach(function (person) {
+              v = v + parseInt(person.share);
+            });
+
+            return v === 100;
+          } else {
+            var v = 0.0;
+
+            _this.giftBank[nested.parent].persons.forEach(function (person) {
+              v = v + parseFloat(person.share);
+            });
+
+            return v === 1;
+          }
+        } else {
+          return true;
+        }
+      };
+    },
+    finalShare: function finalShare() {
+      var _this2 = this;
+
+      return function (value) {
+        if (value.persons[0].shareType === 'share') {
+          var v = 0;
+
+          _this2.giftBank.persons.forEach(function (value) {
+            var base = value.share;
+
+            if (base) {
+              v = v + parseInt(value.share);
+            }
+          });
+        } else {
+          var v = 0.0;
+          value.persons.forEach(function (value) {
+            var base = value.share;
+
+            if (base) {
+              v = v + parseFloat(value.share);
+            }
+          });
+        }
+
+        return v;
+      };
+    },
+    finalPropertyShare: function finalPropertyShare() {
+      var r = false;
+      this.giftProperty.forEach(function (property, i) {
+        if (property.persons[0].shareType === 'share') {
+          r = property.finalShare !== 100;
+        } else {
+          r = property.finalShare !== 1;
+        }
+      });
+      return r;
+    },
+    finalBusinessShare: function finalBusinessShare() {
+      var _this3 = this;
+
+      this.businessAssignment.forEach(function (business, i) {
+        if (business.persons[0].shareType === 'share') {
+          var v = 0;
+          business.persons.forEach(function (person) {
+            var base = person.share;
+
+            if (base) {
+              v = v + parseInt(person.share);
+            }
+          });
+          _this3.businessAssignment[i].finalShare = v;
+        } else {
+          var v = 0.0;
+          business.persons.forEach(function (value) {
+            var base = value.share;
+
+            if (base) {
+              v = v + parseFloat(value.share);
+            }
+          });
+          _this3.businessAssignment[i].finalShare = v;
+        }
+      });
+      return true;
+    },
+    maxResidueShare: function maxResidueShare() {
+      if (this.residue[0].shareType === 'share') {
+        return 100;
+      } else return 1;
+    },
+    finalResidueShare: function finalResidueShare() {
+      if (this.residue[0].shareType === 'share') {
+        var v = 0;
+        this.residue.forEach(function (person) {
+          var base = person.share;
+
+          if (base) {
+            v = v + parseInt(person.share);
+          }
+        });
+        return v;
+      } else {
+        var v = 0.0;
+        this.residue.forEach(function (value) {
+          var base = value.share;
+
+          if (base) {
+            v = v + parseFloat(value.share);
+          }
+        });
+        return v;
+      }
+    }
+  },
+  validations: function validations() {
+    var _this4 = this;
+
+    return {
+      form1: {
+        firstName: {
+          required: required,
+          minLength: minLength(2)
+        },
+        middleName: {
+          minLength: minLength(2)
+        },
+        lastName: {
+          minLength: minLength(2)
+        },
+        email: {
+          required: required,
+          email: email
+        },
+        dob: {
+          required: required,
+          ageValidation: ageValidation
+        }
+      },
+      addressSummary: {
+        line1: {
+          required: required
+        },
+        line2: {},
+        city: {
+          required: required
+        },
+        county: {
+          required: required
+        },
+        country: {
+          required: required
+        },
+        postal: {
+          required: required,
+          postal: postal
+        }
+      },
+      secondApplicant: {
+        firstName: {
+          required: required,
+          minLength: minLength(2)
+        },
+        middleName: {
+          minLength: minLength(2)
+        },
+        lastName: {
+          minLength: minLength(2)
+        },
+        email: {
+          required: required,
+          email: email
+        },
+        dob: {
+          required: required,
+          ageValidation: ageValidation
+        },
+        relation: {
+          required: required
+        },
+        line1: {
+          required: required
+        },
+        line2: {},
+        city: {
+          required: required
+        },
+        county: {
+          required: required
+        },
+        country: {
+          required: required
+        },
+        postal: {
+          required: required,
+          postal: postal
+        }
+      },
+      executor: {
+        required: required,
+        $each: {
+          firstName: {
+            required: required,
+            minLength: minLength(2)
+          },
+          middleName: {
+            minLength: minLength(2)
+          },
+          lastName: {
+            minLength: minLength(2)
+          },
+          email: {
+            required: required,
+            email: email
+          },
+          dob: {
+            required: required,
+            ageValidation: ageValidation
+          },
+          relation: {
+            required: required
+          },
+          line1: {
+            required: required
+          },
+          line2: {},
+          city: {
+            required: required
+          },
+          county: {
+            required: required
+          },
+          country: {
+            required: required
+          },
+          postal: {
+            required: required,
+            postal: postal
+          },
+          secondApplicantRelation: {
+            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+              return this.hasMirrorWill;
+            })
+          }
+        }
+      },
+      reserveExecutor: {
+        required: required,
+        $each: {
+          firstName: {
+            required: required,
+            minLength: minLength(2)
+          },
+          middleName: {
+            minLength: minLength(2)
+          },
+          lastName: {
+            minLength: minLength(2)
+          },
+          email: {
+            required: required,
+            email: email
+          },
+          dob: {
+            required: required,
+            ageValidation: ageValidation
+          },
+          relation: {
+            required: required
+          },
+          line1: {
+            required: required
+          },
+          line2: {},
+          city: {
+            required: required
+          },
+          county: {
+            required: required
+          },
+          country: {
+            required: required
+          },
+          postal: {
+            required: required,
+            postal: postal
+          },
+          secondApplicantRelation: {
+            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+              return this.hasMirrorWill;
+            })
+          }
+        }
+      },
+      reserveGuardian: {
+        required: required,
+        $each: {
+          firstName: {
+            required: required,
+            minLength: minLength(2)
+          },
+          middleName: {
+            minLength: minLength(2)
+          },
+          lastName: {
+            minLength: minLength(2)
+          },
+          email: {
+            required: required,
+            email: email
+          },
+          dob: {
+            required: required
+          },
+          relation: {
+            required: required
+          },
+          line1: {
+            required: required
+          },
+          line2: {},
+          city: {
+            required: required
+          },
+          county: {
+            required: required
+          },
+          country: {
+            required: required
+          },
+          postal: {
+            required: required,
+            postal: postal
+          },
+          secondApplicantRelation: {
+            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+              return this.hasMirrorWill;
+            })
+          }
+        }
+      },
+      children: {
+        required: required,
+        $each: {
+          firstName: {
+            minLength: minLength(2)
+          },
+          middleName: {
+            minLength: minLength(2)
+          },
+          lastName: {
+            minLength: minLength(2)
+          },
+          GuardianFirstName: {
+            minLength: minLength(2)
+          },
+          GuardianMiddleName: {
+            minLength: minLength(2)
+          },
+          GuardianLastName: {
+            minLength: minLength(2)
+          },
+          email: {
+            required: required,
+            email: email
+          },
+          dob: {
+            required: required
+          },
+          relation: {
+            required: required
+          },
+          line1: {
+            required: required
+          },
+          line2: {},
+          city: {
+            required: required
+          },
+          county: {
+            required: required
+          },
+          country: {
+            required: required
+          },
+          postal: {
+            required: required,
+            postal: postal
+          },
+          secondApplicantRelation: {
+            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+              return this.hasMirrorWill;
+            })
+          }
+        }
+      },
+      giftDetails: {
+        required: required,
+        $each: {
+          giftTo: {
+            required: required
+          },
+          firstName: {
+            required: required,
+            minLength: minLength(2)
+          },
+          middleName: {
+            minLength: minLength(2)
+          },
+          lastName: {
+            minLength: minLength(2)
+          },
+          relation: {
+            required: required
+          },
+          secondApplicantRelation: {
+            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+              return this.hasMirrorWill;
+            })
+          },
+          predeceased: {
+            required: required
+          },
+          beneficiary: {
+            required: required,
+            firstName: {
+              minLength: minLength(2)
+            },
+            middleName: {
+              minLength: minLength(2)
+            },
+            lastName: {
+              minLength: minLength(2)
+            }
+          }
+        }
+      },
+      giftMoney: {
+        $each: {
+          moneyDetails: {
+            required: required
+          },
+          firstName: {
+            required: required
+          },
+          middleName: {
+            minLength: minLength(2)
+          },
+          lastName: {
+            minLength: minLength(2)
+          },
+          relation: {
+            required: required
+          },
+          secondApplicantRelation: {
+            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+              return this.hasMirrorWill;
+            })
+          },
+          predeceased: {
+            required: required
+          },
+          beneficiary: {
+            required: required,
+            firstName: {
+              minLength: minLength(2)
+            },
+            middleName: {
+              minLength: minLength(2)
+            },
+            lastName: {
+              minLength: minLength(2)
+            }
+          }
+        }
+      },
+      giftCharity: {
+        name: {
+          minLength: minLength(2)
+        },
+        reference: {
+          minLength: minLength(2)
+        },
+        money: {
+          numeric: numeric
+        }
+      },
+      giftBank: {
+        $each: {
+          bankName: {},
+          bankReference: {},
+          persons: {
+            $each: {
+              firstName: {
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                  return this.giftBank[nested.parent].bankName;
+                })
+              },
+              middleName: {
+                minLength: minLength(2)
+              },
+              lastName: {
+                minLength: minLength(2)
+              },
+              relation: {
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                  return this.giftBank[nested.parent].bankName;
+                })
+              },
+              secondApplicantRelation: {
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+                  return this.hasMirrorWill;
+                })
+              },
+              predeceased: {
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                  return this.giftBank[nested.parent].bankName;
+                })
+              },
+              shareType: {
+                required: required
+              },
+              share: {
+                hasMaxBankShare: function hasMaxBankShare(value, nested) {
+                  return this.bankShareValue(value, nested);
+                }
+              },
+              beneficiary: {
+                required: required,
+                firstName: {
+                  minLength: minLength(2)
+                },
+                middleName: {
+                  minLength: minLength(2)
+                },
+                lastName: {
+                  minLength: minLength(2)
+                }
+              }
+            }
+          }
+        }
+      },
+      giftProperty: {
+        $each: {
+          name: {},
+          line1: {
+            required: required
+          },
+          line2: {},
+          city: {
+            required: required
+          },
+          county: {
+            required: required
+          },
+          country: {
+            required: required
+          },
+          postal: {
+            required: required,
+            postal: postal
+          },
+          finalShare: {},
+          persons: {
+            $each: {
+              firstName: {
+                required: required
+              },
+              middleName: {
+                minLength: minLength(2)
+              },
+              lastName: {
+                minLength: minLength(2)
+              },
+              relation: {
+                required: required
+              },
+              secondApplicantRelation: {
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+                  return this.hasMirrorWill;
+                })
+              },
+              predeceased: {
+                required: required
+              },
+              shareType: {
+                required: required
+              },
+              share: {
+                maxValueProperty: maxValueProperty
+              }
+            }
+          }
+        }
+      },
+      giftPet: {
+        $each: {
+          petDetails: {},
+          firstName: {
+            required: required
+          },
+          middleName: {
+            minLength: minLength(2)
+          },
+          lastName: {
+            minLength: minLength(2)
+          },
+          predeceased: {
+            required: required
+          },
+          beneficiary: {
+            required: required,
+            firstName: {
+              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                return _this4.giftMoney.predeceased === 'Assign to named beneficiary';
+              })
+            },
+            middleName: {
+              minLength: minLength(2)
+            },
+            lastName: {
+              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                return _this4.giftMoney.predeceased === 'Assign to named beneficiary';
+              })
+            }
+          }
+        }
+      },
+      businessAssignment: {
+        $each: {
+          business: {},
+          firstName: {
+            required: required,
+            minLength: minLength(2)
+          },
+          middleName: {
+            minLength: minLength(2)
+          },
+          lastName: {
+            minLength: minLength(2)
+          },
+          relation: {
+            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+              return this.businessAssignment[nested.parent].business;
+            })
+          },
+          secondApplicantRelation: {
+            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+              return this.hasMirrorWill;
+            })
+          },
+          finalShare: {
+            maxFinalValue: maxFinalValue
+          },
+          persons: {
+            $each: {
+              firstName: {},
+              middleName: {
+                minLength: minLength(2)
+              },
+              lastName: {
+                minLength: minLength(2)
+              },
+              relation: {
+                required: required
+              },
+              secondApplicantRelation: {},
+              shareType: {
+                required: required
+              },
+              share: {
+                maxValueProperty: maxValueProperty
+              },
+              predeceased: {
+                required: required
+              },
+              beneficiary: {
+                required: required,
+                firstName: {
+                  minLength: minLength(2)
+                },
+                middleName: {
+                  minLength: minLength(2)
+                },
+                lastName: {
+                  minLength: minLength(2)
+                }
+              }
+            }
+          }
+        }
+      },
+      residue: {
+        $each: {
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: {
+            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+              return this.hasMirrorWill;
+            })
+          },
+          predeceased: "",
+          shareType: "",
+          share: "",
+          beneficiary: {
+            firstName: {
+              minLength: minLength(2)
+            },
+            middleName: {
+              minLength: minLength(2)
+            },
+            lastName: {
+              minLength: minLength(2)
+            }
+          }
+        }
+      }
+    };
+  },
+  methods: {
+    backFromExecutor: function backFromExecutor() {
+      if (this.hasMirrorWill) {
+        this.step = 'second_applicant';
+      } else {
+        this.step = 'address';
+      }
+    },
+    maxPropertyShare: function maxPropertyShare(property) {
+      if (property.persons[0].shareType === 'share') {
+        return 100;
+      } else {
+        return 1;
+      }
+    },
+    AddExecutor: function AddExecutor() {
+      this.executor.push({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        relation: "",
+        line1: "",
+        line2: "",
+        city: "",
+        country: "United_Kingdom",
+        county: "",
+        postal: "",
+        secondApplicantRelation: ""
+      });
+    },
+    backToExecutor: function backToExecutor() {
+      if (this.secondExecutor) {
+        this.step = 'executor_details';
+      } else {
+        this.step = 'executor_summary';
+      }
+    },
+    AddReserveExecutor: function AddReserveExecutor() {
+      this.reserveExecutor.push({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        relation: "",
+        line1: "",
+        line2: "",
+        city: "",
+        country: "",
+        postal: "",
+        county: "",
+        secondApplicantRelation: ""
+      });
+    },
+    RemoveReserveExecutor: function RemoveReserveExecutor(index) {
+      this.reserveExecutor.splice(index, 1);
+    },
+    removeExecutor: function removeExecutor(index) {
+      this.executor.splice(index, 1);
+    },
+    AddReserveGuardian: function AddReserveGuardian() {
+      this.reserveGuardian.push({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        relation: "",
+        line1: "",
+        line2: "",
+        city: "",
+        country: "",
+        postal: "",
+        county: "",
+        secondApplicantRelation: ""
+      });
+    },
+    removeReserveGuardian: function removeReserveGuardian(index) {
+      this.reserveGuardian.splice(index, 1);
+    },
+    removeBankPerson: function removeBankPerson(main, index) {
+      this.giftBank[main].persons.splice(index, 1);
+    },
+    AddJointGuardian: function AddJointGuardian() {
+      this.children.push({
+        guardianFirstName: "",
+        guardianMiddleName: "",
+        guardianLastName: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        relation: "",
+        line1: "",
+        line2: "",
+        city: "",
+        country: "",
+        postal: "",
+        county: "",
+        secondApplicantRelation: ""
+      });
+    },
+    removeJointGuardian: function removeJointGuardian(index) {
+      this.children.splice(index, 1);
+    },
+    backFromGift: function backFromGift() {
+      if (this.appointGuardian) {
+        this.step = 'children_details';
+      } else {
+        this.step = "reserve_executor_details";
+      }
+    },
+    AddGiftDetails: function AddGiftDetails() {
+      this.giftDetails.push({
+        giftTo: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
+      });
+    },
+    removeGiftDetails: function removeGiftDetails(index) {
+      this.giftDetails.splice(index, 1);
+    },
+    AddGiftMoney: function AddGiftMoney() {
+      this.giftMoney.push({
+        moneyDetails: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
+      });
+    },
+    removeGiftMoney: function removeGiftMoney(index) {
+      this.giftMoney.splice(index, 1);
+    },
+    addBankPerson: function addBankPerson(i, index) {
+      this.giftBank[i].persons.push({
+        parent: i,
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        shareType: "share",
+        share: "",
+        index: index + 1,
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
+      });
+    },
+    addBank: function addBank() {
+      this.giftBank.push({
+        bankName: "",
+        bankReference: "",
+        maxShare: "",
+        persons: [{
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          predeceased: "",
+          shareType: "share",
+          share: 0,
+          beneficiary: {
+            firstName: "",
+            middleName: "",
+            lastName: ""
+          }
+        }]
+      });
+    },
+    removeBank: function removeBank(i) {
+      this.giftBank.splice(i, 1);
+    },
+    submitForm: function submitForm(form) {
+      if (form === 1) {
+        this.$v.form1.$touch();
+
+        if (this.$v.form1.$invalid) {
+          console.log('invalid entry');
+        } else {
+          this.step = 'mirror_select';
+        }
+      } else if (form === 'mirror_select') {
+        this.step = 'address';
+      } else if (form === 'address') {
+        this.$v.addressSummary.$touch();
+
+        if (this.$v.addressSummary.$invalid) {
+          console.log('invalid entry');
+        } else {
+          if (this.hasMirrorWill) {
+            this.step = 'second_applicant';
+          } else {
+            this.step = 'executor_summary';
+          }
+        }
+      } else if (form === 'second_applicant') {
+        this.$v.secondApplicant.$touch();
+
+        if (this.$v.secondApplicant.$invalid) {
+          console.log(this.$v.secondApplicant);
+        } else {
+          this.step = 'executor_details';
+        }
+      } else if (form === 'executor_details') {
+        if (this.secondExecutor) {
+          this.step = 'reserve_executor_details';
+        } else {
+          this.step = 'executor_summary';
+        }
+      } else if (form === 'executor_summary') {
+        this.$v.executor.$touch();
+
+        if (this.$v.executor.$invalid) {
+          console.log('Invalid Details in executor form');
+        } else {
+          this.step = 'reserve_executor_details';
+        }
+      } else if (form === 'reserve_executor_details') {
+        this.$v.reserveExecutor.$touch();
+
+        if (this.$v.reserveExecutor.$invalid) {
+          console.log('Invalid details in reserve executor form');
+        } else {
+          if (this.hasChildrenUnderEighteen) {
+            this.step = 'guardian';
+          } else {
+            this.step = 'gift_options';
+          }
+        }
+      } else if (form === 'guardian') {
+        if (this.appointGuardian) {
+          this.step = 'children_details';
+        } else {
+          this.step = 'gift_options';
+        }
+      } else if (form === 'children_details') {
+        this.step = 'reserve_guardian';
+      } else if (form === 'reserve_guardian') {
+        this.step = 'gift_options';
+      } else if (form === 'gift_options') {
+        this.$v.giftDetails.$touch();
+
+        if (this.$v.giftDetails.invalid) {
+          console.log('Error in gift details');
+        } else this.step = 'gift_money';
+      } else if (form === 'gift_money') {
+        this.$v.giftMoney.$touch();
+
+        if (this.$v.giftMoney.invalid) {
+          console.log('Error in gift money');
+        } else this.step = 'gift_charity';
+      } else if (form === 'gift_charity') {
+        this.$v.giftCharity.$touch();
+
+        if (this.$v.giftCharity.invalid) {
+          console.log('Error in gift charity');
+        } else {
+          this.step = 'gift_bank';
+        }
+      } else if (form === 'gift_bank') {
+        this.giftBank.maxShare = this.finalShare;
+        this.$v.giftBank.$touch();
+
+        if (this.$v.giftBank.$invalid) {
+          console.log('Error in gift bank');
+        } else {
+          this.step = 'gift_property';
+        }
+      } else if (form === 'gift_property') {
+        this.$v.giftProperty.$touch();
+
+        if (this.$v.giftProperty.$invalid) {
+          console.log('Error in gift property');
+        } else {
+          this.step = 'gift_pet';
+        }
+      } else if (form === 'gift_pet') {
+        this.$v.giftBank.$touch();
+
+        if (this.$v.giftProperty.$invalid) {
+          console.log('Error in gift bank');
+        } else {
+          this.step = 'business_assignment';
+        }
+      } else if (form === 'business_assignment') {
+        this.$v.businessAssignment.$touch();
+
+        if (this.$v.businessAssignment.$invalid) {
+          console.log('Error in business assignment');
+        } else {
+          this.step = 'residue';
+        }
+      } else if (form === 'residue') {
+        this.$v.residue.$touch();
+
+        if (this.$v.residue.$invalid) {
+          console.log('Error in residue');
+        } else {
+          if (this.finalResidueShare && this.maxResidueShare != this.finalResidueShare) {
+            console.log('Error in residue');
+          } else this.step = 'request';
+        }
+      } else if (form === 'request') {
+        this.saveWillForm();
+      }
+    },
+    addBankProperty: function addBankProperty() {
+      this.giftProperty.push({
+        name: "",
+        line1: "",
+        line2: "",
+        city: "",
+        county: "",
+        country: "",
+        postal: "",
+        persons: [{
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          predeceased: "",
+          shareType: "share",
+          share: 0
+        }]
+      });
+    },
+    addPropertyPerson: function addPropertyPerson(index) {
+      var shareType = this.giftProperty[index].persons[0].shareType;
+      this.giftProperty[index].persons.push({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        shareType: shareType,
+        share: 0
+      });
+    },
+    removePropertyPerson: function removePropertyPerson(main, index) {
+      this.giftProperty[main].persons.splice(index, 1);
+    },
+    removeBankProperty: function removeBankProperty(index) {
+      this.giftProperty.splice(index, 1);
+    },
+    saveWillForm: function saveWillForm() {
+      var _this5 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/willform/".concat(this.id), {
+        firstName: this.form1.firstName,
+        lastName: this.form1.lastName,
+        middleName: this.form1.middleName,
+        email: this.form1.email,
+        dob: this.form1.dob,
+        hasPartner: this.hasPartner,
+        hasChildrenUnderEighteen: this.hasChildrenUnderEighteen,
+        hasMirrorWill: this.hasMirrorWill,
+        ownProperty: this.ownProperty,
+        addressSummary: this.addressSummary,
+        secondApplicant: this.secondApplicant,
+        secondExecutor: this.secondExecutor,
+        executor: this.executor,
+        reserveExecutor: this.reserveExecutor,
+        reserve: this.reserve,
+        giftDetails: this.giftDetails,
+        giftMoney: this.giftMoney,
+        appointGuardian: this.appointGuardian,
+        hasMoreThanOneChildren: this.hasMoreThanOneChildren,
+        sameGuardianAllChildren: this.sameGuardianAllChildren,
+        children: this.children,
+        reserveGuardian: this.reserveGuardian,
+        giftCharity: this.giftCharity,
+        giftBank: this.giftBank,
+        giftPet: this.giftPet,
+        businessAssignment: this.businessAssignment,
+        residue: this.residue,
+        request: this.request,
+        giftProperty: this.giftProperty
+      }).then(function (response) {
+        if (response.data.success) {
+          _this5.$notify({
+            type: 'success',
+            title: 'Update',
+            text: response.data.message
+          });
+
+          _this5.id = response.data.will.id;
+          setTimeout(function () {
+            _this5.step = 'payment';
+          }, 1000);
+        } else {
+          console.log(response.data);
+
+          _this5.$notify({
+            type: 'error',
+            title: 'Error',
+            text: 'Error in the form'
+          });
+        }
+      })["catch"](function (err) {
+        _this5.$notify({
+          type: 'error',
+          title: 'Error',
+          text: 'Error in the form submissions'
+        });
+      });
+    },
+    submitFinalForm: function submitFinalForm(args) {
+      var _this6 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch("/willform/".concat(this.id, "/payment"), {
+        firstName: this.form1.firstName,
+        lastName: this.form1.lastName,
+        middleName: this.form1.middleName,
+        email: this.form1.email,
+        dob: this.form1.dob,
+        hasPartner: this.hasPartner,
+        hasChildrenUnderEighteen: this.hasChildrenUnderEighteen,
+        hasMirrorWill: this.hasMirrorWill,
+        ownProperty: this.ownProperty,
+        addressSummary: this.addressSummary,
+        secondApplicant: this.secondApplicant,
+        secondExecutor: this.secondExecutor,
+        executor: this.executor,
+        reserveExecutor: this.reserveExecutor,
+        giftOptions: this.giftDetails,
+        giftMoney: this.giftMoney,
+        appointGuardian: this.appointGuardian,
+        hasMoreThanOneChildren: this.hasMoreThanOneChildren,
+        sameGuardianAllChildren: this.sameGuardianAllChildren,
+        children: this.children,
+        reserveGuardian: this.reserveGuardian,
+        giftCharity: this.giftCharity,
+        giftBank: this.giftBank,
+        giftPet: this.giftPet,
+        businessAssignment: this.businessAssignment,
+        residue: this.residue,
+        request: this.request,
+        giftProperty: this.giftProperty,
+        setupIntent: args.setupIntent
+      }).then(function (response) {
+        if (response.data.success) {
+          _this6.$notify({
+            type: 'success',
+            title: 'Update',
+            text: 'Will form updated successfully'
+          });
+
+          setTimeout(function () {
+            window.location.href = '/will/submissions';
+          }, 3000);
+        } else {
+          _this6.$notify({
+            type: 'error',
+            title: 'Error',
+            text: 'Error in the form'
+          });
+        }
+      })["catch"](function (err) {
+        _this6.$notify({
+          type: 'error',
+          title: 'Error',
+          text: 'Error in the form submissions'
+        });
+      });
+    },
+    removeBusinessPerson: function removeBusinessPerson(main, index) {
+      this.businessAssignment[main].persons.splice(index, 1);
+    },
+    addBusinessPerson: function addBusinessPerson(index) {
+      this.businessAssignment[index].persons.push({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        shareType: "share",
+        share: 0
+      });
+    },
+    AddGiftPet: function AddGiftPet() {
+      this.giftPet.push({
+        pet: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        predeceased: "",
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
+      });
+    },
+    removeGiftPet: function removeGiftPet(index) {
+      this.giftPet.splice(index, 1);
+    },
+    removeBusinessAssignment: function removeBusinessAssignment(index) {
+      this.businessAssignment.splice(index, 1);
+    },
+    addBusinessAssignment: function addBusinessAssignment() {
+      this.businessAssignment.push({
+        business: "",
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        persons: [{
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          predeceased: "",
+          shareType: "share",
+          share: 0
+        }]
+      });
+    },
+    addResidue: function addResidue() {
+      this.residue.push({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        relation: "",
+        secondApplicantRelation: "",
+        predeceased: "",
+        shareType: "",
+        share: ""
+      });
+    },
+    removeResidue: function removeResidue(i) {
+      this.residue.splice(i, 1);
+    }
+  },
+  watch: {
+    giftProperty: {
+      handler: function handler() {
+        var _this7 = this;
+
+        this.giftProperty.forEach(function (property, main) {
+          property.persons.forEach(function (person, index) {
+            if (index > 0) {
+              _this7.giftProperty[main].persons[index].shareType = _this7.giftProperty[main].persons[0].shareType;
+            }
+          });
+
+          if (_this7.giftProperty[main].persons[0].shareType === 'share') {
+            var share = 0;
+            property.persons.forEach(function (person, index) {
+              share = share + parseInt(person.share);
+            });
+            _this7.giftProperty[main].finalShare = share;
+          } else {
+            var share = 0.0;
+            property.persons.forEach(function (person, index) {
+              share = share + parseFloat(person.share);
+            });
+            _this7.giftProperty[main].finalShare = share;
+          }
+        });
+      },
+      deep: true
+    }
+  },
+  mounted: function mounted() {
+    this.form1 = this.data.form1;
+    this.hasPartner = this.data.hasPartner;
+    this.hasChildrenUnderEighteen = this.data.hasChildrenUnderEighteen;
+    this.hasMirrorWill = this.data.hasMirrorWill;
+    this.ownProperty = this.data.ownProperty;
+    this.addressSummary = this.data.addressSummary;
+    this.secondApplicant = this.data.secondApplicant;
+    this.secondExecutor = this.data.secondExecutor;
+    this.executor = this.data.executor;
+    this.reserveExecutor = this.data.reserveExecutor;
+    this.giftDetails = this.data.giftDetails;
+    this.giftMoney = this.data.giftMoney;
+    this.appointGuardian = this.data.appointGuardian;
+    this.hasMoreThanOneChildren = this.data.hasMoreThanOneChildren;
+    this.sameGuardianAllChildren = this.data.sameGuardianAllChildren;
+    this.children = this.data.children;
+    this.reserveGuardian = this.data.reserveGuardian;
+    this.giftCharity = this.data.giftCharity;
+    this.giftBank = this.data.giftBank;
+    this.giftPet = this.data.giftPet;
+    this.businessAssignment = this.data.businessAssignment;
+    this.residue = this.data.residue;
+    this.request = this.data.request;
+    this.giftProperty = this.data.giftProperty;
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaymentComponent.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PaymentComponent.vue?vue&type=script&lang=js& ***!
@@ -2673,7 +4360,8 @@ var _require = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modul
     email = _require.email,
     helpers = _require.helpers,
     maxValue = _require.maxValue,
-    sameAs = _require.sameAs;
+    sameAs = _require.sameAs,
+    numeric = _require.numeric;
 
 var postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$/);
 
@@ -2690,11 +4378,6 @@ var ageValidation = function ageValidation(dateString) {
   return age > 18;
 };
 
-var beniRequirement = function beniRequirement(value, nested) {
-  console.log(value, nested);
-  return true;
-};
-
 var maxValueProperty = function maxValueProperty(value, nested) {
   if (nested.shareType === 'share') {
     return value <= 100;
@@ -2704,8 +4387,6 @@ var maxValueProperty = function maxValueProperty(value, nested) {
 };
 
 var maxFinalValue = function maxFinalValue(value, nested) {
-  console.log(value, nested);
-
   if (nested.persons[0].shareType === 'share') {
     var l = 0;
     nested.persons.forEach(function (person) {
@@ -2726,6 +4407,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
   name: "WillFormComponent",
   data: function data() {
     return {
+      id: null,
       step: 1,
       form1: {
         firstName: "",
@@ -2873,11 +4555,13 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         reference: "",
         money: ""
       },
-      giftBank: {
+      giftBank: [{
         bankName: "",
         bankReference: "",
         maxShare: "",
         persons: [{
+          parent: 0,
+          index: 0,
           firstName: "",
           middleName: "",
           lastName: "",
@@ -2892,7 +4576,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             lastName: ""
           }
         }]
-      },
+      }],
       giftPet: [{
         petDetails: "",
         firstName: "",
@@ -2913,6 +4597,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         relation: "",
         secondApplicantRelation: "",
         finalShare: "",
+        parent: 0,
         persons: [{
           firstName: "",
           middleName: "",
@@ -2920,7 +4605,13 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           relation: "",
           secondApplicantRelation: "",
           shareType: "share",
-          share: 0
+          share: 0,
+          predeceased: "",
+          beneficiary: {
+            firstName: "",
+            middleName: "",
+            lastName: ""
+          }
         }]
       }],
       residue: [{
@@ -2965,39 +4656,80 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           secondApplicantRelation: "",
           predeceased: "",
           shareType: "share",
-          share: 0
+          share: 0,
+          beneficiary: {
+            firstName: "",
+            middleName: "",
+            lastName: ""
+          }
         }]
       }]
     };
   },
   computed: {
     maxBankShare: function maxBankShare() {
-      if (this.giftBank.persons[0].shareType === 'share') {
-        return 100;
-      } else return 1;
+      return function (value) {
+        if (value.$model.persons[0].shareType === 'share') {
+          return 100;
+        } else return 1;
+      };
+    },
+    bankShareValue: function bankShareValue() {
+      var _this = this;
+
+      return function (value, nested) {
+        if (nested.parent) {
+          var share = _this.giftBank[nested.parent].persons[0].shareType;
+
+          if (share === 'share') {
+            var v = 0;
+
+            _this.giftBank[nested.parent].persons.forEach(function (person) {
+              v = v + parseInt(person.share);
+            });
+
+            return v === 100;
+          } else {
+            var v = 0.0;
+
+            _this.giftBank[nested.parent].persons.forEach(function (person) {
+              v = v + parseFloat(person.share);
+            });
+
+            return v === 1;
+          }
+        } else {
+          return true;
+        }
+      };
     },
     finalShare: function finalShare() {
-      if (this.giftBank.persons[0].shareType === 'share') {
-        var v = 0;
-        this.giftBank.persons.forEach(function (value) {
-          var base = value.share;
+      var _this2 = this;
 
-          if (base) {
-            v = v + parseInt(value.share);
-          }
-        });
-      } else {
-        var v = 0.0;
-        this.giftBank.persons.forEach(function (value) {
-          var base = value.share;
+      return function (value) {
+        if (value.persons[0].shareType === 'share') {
+          var v = 0;
 
-          if (base) {
-            v = v + parseFloat(value.share);
-          }
-        });
-      }
+          _this2.giftBank.persons.forEach(function (value) {
+            var base = value.share;
 
-      return v;
+            if (base) {
+              v = v + parseInt(value.share);
+            }
+          });
+        } else {
+          var v = 0.0;
+          value.persons.forEach(function (value) {
+            var base = value.share;
+
+            if (base) {
+              v = v + parseFloat(value.share);
+            }
+          });
+        }
+
+        return v;
+      };
     },
     finalPropertyShare: function finalPropertyShare() {
       var r = false;
@@ -3011,7 +4743,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
       return r;
     },
     finalBusinessShare: function finalBusinessShare() {
-      var _this = this;
+      var _this3 = this;
 
       this.businessAssignment.forEach(function (business, i) {
         if (business.persons[0].shareType === 'share') {
@@ -3023,7 +4755,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
               v = v + parseInt(person.share);
             }
           });
-          _this.businessAssignment[i].finalShare = v;
+          _this3.businessAssignment[i].finalShare = v;
         } else {
           var v = 0.0;
           business.persons.forEach(function (value) {
@@ -3033,7 +4765,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
               v = v + parseFloat(value.share);
             }
           });
-          _this.businessAssignment[i].finalShare = v;
+          _this3.businessAssignment[i].finalShare = v;
         }
       });
       return true;
@@ -3068,19 +4800,19 @@ var maxFinalValue = function maxFinalValue(value, nested) {
     }
   },
   validations: function validations() {
-    var _this2 = this;
+    var _this4 = this;
 
     return {
       form1: {
         firstName: {
           required: required,
-          minLength: minLength(4)
+          minLength: minLength(2)
         },
         middleName: {
-          minLength: minLength(4)
+          minLength: minLength(2)
         },
         lastName: {
-          minLength: minLength(4)
+          minLength: minLength(2)
         },
         email: {
           required: required,
@@ -3095,9 +4827,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         line1: {
           required: required
         },
-        line2: {
-          required: required
-        },
+        line2: {},
         city: {
           required: required
         },
@@ -3115,13 +4845,13 @@ var maxFinalValue = function maxFinalValue(value, nested) {
       secondApplicant: {
         firstName: {
           required: required,
-          minLength: minLength(4)
+          minLength: minLength(2)
         },
         middleName: {
-          minLength: minLength(4)
+          minLength: minLength(2)
         },
         lastName: {
-          minLength: minLength(4)
+          minLength: minLength(2)
         },
         email: {
           required: required,
@@ -3137,9 +4867,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         line1: {
           required: required
         },
-        line2: {
-          required: required
-        },
+        line2: {},
         city: {
           required: required
         },
@@ -3159,13 +4887,13 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         $each: {
           firstName: {
             required: required,
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           middleName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           lastName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           email: {
             required: required,
@@ -3181,9 +4909,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           line1: {
             required: required
           },
-          line2: {
-            required: required
-          },
+          line2: {},
           city: {
             required: required
           },
@@ -3209,13 +4935,13 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         $each: {
           firstName: {
             required: required,
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           middleName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           lastName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           email: {
             required: required,
@@ -3231,9 +4957,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           line1: {
             required: required
           },
-          line2: {
-            required: required
-          },
+          line2: {},
           city: {
             required: required
           },
@@ -3259,13 +4983,13 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         $each: {
           firstName: {
             required: required,
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           middleName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           lastName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           email: {
             required: required,
@@ -3280,9 +5004,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           line1: {
             required: required
           },
-          line2: {
-            required: required
-          },
+          line2: {},
           city: {
             required: required
           },
@@ -3307,22 +5029,22 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         required: required,
         $each: {
           firstName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           middleName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           lastName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           GuardianFirstName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           GuardianMiddleName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           GuardianLastName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           email: {
             required: required,
@@ -3337,9 +5059,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           line1: {
             required: required
           },
-          line2: {
-            required: required
-          },
+          line2: {},
           city: {
             required: required
           },
@@ -3368,13 +5088,13 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           },
           firstName: {
             required: required,
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           middleName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           lastName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           relation: {
             required: required
@@ -3390,13 +5110,13 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           beneficiary: {
             required: required,
             firstName: {
-              minLength: minLength(4)
+              minLength: minLength(2)
             },
             middleName: {
-              minLength: minLength(4)
+              minLength: minLength(2)
             },
             lastName: {
-              minLength: minLength(4)
+              minLength: minLength(2)
             }
           }
         }
@@ -3410,10 +5130,10 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             required: required
           },
           middleName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           lastName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           relation: {
             required: required
@@ -3429,72 +5149,79 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           beneficiary: {
             required: required,
             firstName: {
-              minLength: minLength(4)
+              minLength: minLength(2)
             },
             middleName: {
-              minLength: minLength(4)
+              minLength: minLength(2)
             },
             lastName: {
-              minLength: minLength(4)
+              minLength: minLength(2)
             }
           }
         }
       },
       giftCharity: {
         name: {
-          alphaNum: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["alphaNum"]
+          minLength: minLength(2)
         },
         reference: {
-          alphaNum: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["alphaNum"]
+          minLength: minLength(2)
         },
-        money: {}
+        money: {
+          numeric: numeric
+        }
       },
       giftBank: {
-        bankName: {},
-        bankReference: {},
-        maxShare: {
-          sameAsmaxBankSharesameAs: sameAs(function () {
-            return _this2.maxBankShare;
-          })
-        },
-        persons: {
-          $each: {
-            firstName: {
-              required: required
-            },
-            middleName: {
-              minLength: minLength(4)
-            },
-            lastName: {
-              minLength: minLength(4)
-            },
-            relation: {
-              required: required
-            },
-            secondApplicantRelation: {
-              required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
-                return this.hasMirrorWill;
-              })
-            },
-            predeceased: {
-              required: required
-            },
-            shareType: {
-              required: required
-            },
-            share: {
-              maxValue: maxValue(this.maxBankShare)
-            },
-            beneficiary: {
-              required: required,
+        $each: {
+          bankName: {},
+          bankReference: {},
+          persons: {
+            $each: {
               firstName: {
-                minLength: minLength(4)
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                  return this.giftBank[nested.parent].bankName;
+                })
               },
               middleName: {
-                minLength: minLength(4)
+                minLength: minLength(2)
               },
               lastName: {
-                minLength: minLength(4)
+                minLength: minLength(2)
+              },
+              relation: {
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                  return this.giftBank[nested.parent].bankName;
+                })
+              },
+              secondApplicantRelation: {
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
+                  return this.hasMirrorWill;
+                })
+              },
+              predeceased: {
+                required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
+                  return this.giftBank[nested.parent].bankName;
+                })
+              },
+              shareType: {
+                required: required
+              },
+              share: {
+                hasMaxBankShare: function hasMaxBankShare(value, nested) {
+                  return this.bankShareValue(value, nested);
+                }
+              },
+              beneficiary: {
+                required: required,
+                firstName: {
+                  minLength: minLength(2)
+                },
+                middleName: {
+                  minLength: minLength(2)
+                },
+                lastName: {
+                  minLength: minLength(2)
+                }
               }
             }
           }
@@ -3506,9 +5233,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           line1: {
             required: required
           },
-          line2: {
-            required: required
-          },
+          line2: {},
           city: {
             required: required
           },
@@ -3522,16 +5247,17 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             required: required,
             postal: postal
           },
+          finalShare: {},
           persons: {
             $each: {
               firstName: {
                 required: required
               },
               middleName: {
-                minLength: minLength(4)
+                minLength: minLength(2)
               },
               lastName: {
-                minLength: minLength(4)
+                minLength: minLength(2)
               },
               relation: {
                 required: required
@@ -3549,6 +5275,18 @@ var maxFinalValue = function maxFinalValue(value, nested) {
               },
               share: {
                 maxValueProperty: maxValueProperty
+              },
+              beneficiary: {
+                required: required,
+                firstName: {
+                  minLength: minLength(2)
+                },
+                middleName: {
+                  minLength: minLength(2)
+                },
+                lastName: {
+                  minLength: minLength(2)
+                }
               }
             }
           }
@@ -3561,10 +5299,10 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             required: required
           },
           middleName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           lastName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           predeceased: {
             required: required
@@ -3573,15 +5311,15 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             required: required,
             firstName: {
               required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                return _this2.giftMoney.predeceased === 'Assign to named beneficiary';
+                return _this4.giftMoney.predeceased === 'Assign to named beneficiary';
               })
             },
             middleName: {
-              minLength: minLength(4)
+              minLength: minLength(2)
             },
             lastName: {
               required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function (nested) {
-                return _this2.giftMoney.predeceased === 'Assign to named beneficiary';
+                return _this4.giftMoney.predeceased === 'Assign to named beneficiary';
               })
             }
           }
@@ -3591,36 +5329,27 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         $each: {
           business: {},
           firstName: {
-            required: required,
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           middleName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
           lastName: {
-            minLength: minLength(4)
+            minLength: minLength(2)
           },
-          relation: {
-            required: required
-          },
-          secondApplicantRelation: {
-            required: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["requiredIf"])(function () {
-              return this.hasMirrorWill;
-            })
-          },
+          relation: {},
+          secondApplicantRelation: {},
           finalShare: {
             maxFinalValue: maxFinalValue
           },
           persons: {
             $each: {
-              firstName: {
-                required: required
-              },
+              firstName: {},
               middleName: {
-                minLength: minLength(4)
+                minLength: minLength(2)
               },
               lastName: {
-                minLength: minLength(4)
+                minLength: minLength(2)
               },
               relation: {
                 required: required
@@ -3631,6 +5360,21 @@ var maxFinalValue = function maxFinalValue(value, nested) {
               },
               share: {
                 maxValueProperty: maxValueProperty
+              },
+              predeceased: {
+                required: required
+              },
+              beneficiary: {
+                required: required,
+                firstName: {
+                  minLength: minLength(2)
+                },
+                middleName: {
+                  minLength: minLength(2)
+                },
+                lastName: {
+                  minLength: minLength(2)
+                }
               }
             }
           }
@@ -3652,13 +5396,13 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           share: "",
           beneficiary: {
             firstName: {
-              minLength: minLength(4)
+              minLength: minLength(2)
             },
             middleName: {
-              minLength: minLength(4)
+              minLength: minLength(2)
             },
             lastName: {
-              minLength: minLength(4)
+              minLength: minLength(2)
             }
           }
         }
@@ -3666,6 +5410,13 @@ var maxFinalValue = function maxFinalValue(value, nested) {
     };
   },
   methods: {
+    backFromExecutor: function backFromExecutor() {
+      if (this.hasMirrorWill) {
+        this.step = 'second_applicant';
+      } else {
+        this.step = 'address';
+      }
+    },
     maxPropertyShare: function maxPropertyShare(property) {
       if (property.persons[0].shareType === 'share') {
         return 100;
@@ -3692,7 +5443,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
     },
     backToExecutor: function backToExecutor() {
       if (this.secondExecutor) {
-        this.step = 'reserve_executor_details';
+        this.step = 'executor_details';
       } else {
         this.step = 'executor_summary';
       }
@@ -3740,8 +5491,8 @@ var maxFinalValue = function maxFinalValue(value, nested) {
     removeReserveGuardian: function removeReserveGuardian(index) {
       this.reserveGuardian.splice(index, 1);
     },
-    removeBankPerson: function removeBankPerson(index) {
-      this.giftBank.persons.splice(index, 1);
+    removeBankPerson: function removeBankPerson(main, index) {
+      this.giftBank[main].persons.splice(index, 1);
     },
     AddJointGuardian: function AddJointGuardian() {
       this.children.push({
@@ -3770,7 +5521,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
       if (this.appointGuardian) {
         this.step = 'children_details';
       } else {
-        this.step = 'guardian';
+        this.step = "reserve_executor_details";
       }
     },
     AddGiftDetails: function AddGiftDetails() {
@@ -3811,8 +5562,9 @@ var maxFinalValue = function maxFinalValue(value, nested) {
     removeGiftMoney: function removeGiftMoney(index) {
       this.giftMoney.splice(index, 1);
     },
-    addBankPerson: function addBankPerson() {
-      this.giftBank.persons.push({
+    addBankPerson: function addBankPerson(i, index) {
+      this.giftBank[i].persons.push({
+        parent: i,
         firstName: "",
         middleName: "",
         lastName: "",
@@ -3821,12 +5573,38 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         predeceased: "",
         shareType: "share",
         share: "",
+        index: index + 1,
         beneficiary: {
           firstName: "",
           middleName: "",
           lastName: ""
         }
       });
+    },
+    addBank: function addBank() {
+      this.giftBank.push({
+        bankName: "",
+        bankReference: "",
+        maxShare: "",
+        persons: [{
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: "",
+          predeceased: "",
+          shareType: "share",
+          share: 0,
+          beneficiary: {
+            firstName: "",
+            middleName: "",
+            lastName: ""
+          }
+        }]
+      });
+    },
+    removeBank: function removeBank(i) {
+      this.giftBank.splice(i, 1);
     },
     submitForm: function submitForm(form) {
       if (form === 1) {
@@ -3958,6 +5736,8 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             console.log('Error in residue');
           } else this.step = 'request';
         }
+      } else if (form === 'request') {
+        this.saveWillForm();
       }
     },
     addBankProperty: function addBankProperty() {
@@ -3977,7 +5757,12 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           secondApplicantRelation: "",
           predeceased: "",
           shareType: "share",
-          share: 0
+          share: 0,
+          beneficiary: {
+            firstName: "",
+            middleName: "",
+            lastName: ""
+          }
         }]
       });
     },
@@ -3991,7 +5776,12 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         secondApplicantRelation: "",
         predeceased: "",
         shareType: shareType,
-        share: 0
+        share: 0,
+        beneficiary: {
+          firstName: "",
+          middleName: "",
+          lastName: ""
+        }
       });
     },
     removePropertyPerson: function removePropertyPerson(main, index) {
@@ -4000,10 +5790,10 @@ var maxFinalValue = function maxFinalValue(value, nested) {
     removeBankProperty: function removeBankProperty(index) {
       this.giftProperty.splice(index, 1);
     },
-    submitFinalForm: function submitFinalForm() {
-      var _this3 = this;
+    saveWillForm: function saveWillForm() {
+      var _this5 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/willform', {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/willform/", {
         firstName: this.form1.firstName,
         lastName: this.form1.lastName,
         middleName: this.form1.middleName,
@@ -4035,24 +5825,60 @@ var maxFinalValue = function maxFinalValue(value, nested) {
         giftProperty: this.giftProperty
       }).then(function (response) {
         if (response.data.success) {
-          _this3.$notify({
+          _this5.$notify({
             type: 'success',
             title: 'Update',
-            text: 'Will form uploaded successfully'
+            text: response.data.message
           });
 
+          _this5.id = response.data.will.id;
           setTimeout(function () {
-            window.location.href = '/payment/form';
-          }, 3000);
+            _this5.step = 'payment';
+          }, 1000);
         } else {
-          _this3.$notify({
+          console.log(response.data);
+
+          _this5.$notify({
             type: 'error',
             title: 'Error',
             text: 'Error in the form'
           });
         }
       })["catch"](function (err) {
-        _this3.$notify({
+        _this5.$notify({
+          type: 'error',
+          title: 'Error',
+          text: 'Error in the form submissions'
+        });
+      });
+    },
+    submitFinalForm: function submitFinalForm(args) {
+      var _this6 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/willform/".concat(this.id, "/payment"), {
+        setupIntent: args.setupIntent
+      }).then(function (response) {
+        if (response.data.success) {
+          _this6.$notify({
+            type: 'success',
+            title: 'Update',
+            text: 'Payment was successfully'
+          });
+
+          setTimeout(function () {
+            window.location.href = '/will/submissions';
+          }, 3000);
+        } else {
+          console.log(response.data);
+
+          _this6.$notify({
+            type: 'error',
+            title: 'Error',
+            text: 'Error in payment'
+          });
+        }
+      })["catch"](function (err) {
+        _this6.$notify({
           type: 'error',
           title: 'Error',
           text: 'Error in the form submissions'
@@ -4094,13 +5920,14 @@ var maxFinalValue = function maxFinalValue(value, nested) {
     removeBusinessAssignment: function removeBusinessAssignment(index) {
       this.businessAssignment.splice(index, 1);
     },
-    addBusinessAssignment: function addBusinessAssignment() {
+    addBusinessAssignment: function addBusinessAssignment(index) {
       this.businessAssignment.push({
         business: "",
         firstName: "",
         middleName: "",
         lastName: "",
         relation: "",
+        parent: index + 1,
         secondApplicantRelation: "",
         persons: [{
           firstName: "",
@@ -4133,32 +5960,206 @@ var maxFinalValue = function maxFinalValue(value, nested) {
   watch: {
     giftProperty: {
       handler: function handler() {
-        var _this4 = this;
+        var _this7 = this;
 
         this.giftProperty.forEach(function (property, main) {
           property.persons.forEach(function (person, index) {
             if (index > 0) {
-              _this4.giftProperty[main].persons[index].shareType = _this4.giftProperty[main].persons[0].shareType;
+              _this7.giftProperty[main].persons[index].shareType = _this7.giftProperty[main].persons[0].shareType;
             }
           });
 
-          if (_this4.giftProperty[main].persons[0].shareType === 'share') {
+          if (_this7.giftProperty[main].persons[0].shareType === 'share') {
             var share = 0;
             property.persons.forEach(function (person, index) {
               share = share + parseInt(person.share);
             });
-            _this4.giftProperty[main].finalShare = share;
+            _this7.giftProperty[main].finalShare = share;
           } else {
             var share = 0.0;
             property.persons.forEach(function (person, index) {
               share = share + parseFloat(person.share);
             });
-            _this4.giftProperty[main].finalShare = share;
+            _this7.giftProperty[main].finalShare = share;
           }
         });
       },
       deep: true
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WillPayment.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WillPayment.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "WillPayment",
+  props: ['mirrorWill', 'payment'],
+  data: function data() {
+    return {
+      paymentProcessing: false,
+      cardElement: null
+    };
+  },
+  methods: {
+    submitFinalForm: function submitFinalForm() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var _yield$_this$stripe$c, setupIntent, error;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this.paymentProcessing = true;
+                _context.next = 3;
+                return _this.stripe.confirmCardSetup(_this.payment.client_secret, {
+                  payment_method: {
+                    card: _this.cardElement
+                  }
+                });
+
+              case 3:
+                _yield$_this$stripe$c = _context.sent;
+                setupIntent = _yield$_this$stripe$c.setupIntent;
+                error = _yield$_this$stripe$c.error;
+
+                if (error) {
+                  if (error.code === "incomplete_number") _this.$notify({
+                    type: 'error',
+                    title: 'Error',
+                    text: error.message
+                  });
+                  console.log(error);
+                  _this.paymentProcessing = false;
+                } else {
+                  _this.$notify({
+                    type: 'success',
+                    title: 'Success',
+                    text: 'Payment successful.'
+                  });
+
+                  _this.$emit('confirm', {
+                    setupIntent: setupIntent
+                  });
+                }
+
+              case 7:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    }
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      var elements;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _this2.stripe = Stripe('pk_test_XfguED28AQ3eXbkqDjDHSXOb00GHhcjRPs');
+              elements = _this2.stripe.elements({
+                fonts: [{
+                  cssSrc: "https://rsms.me/inter/inter.css"
+                }]
+              });
+              _this2.cardElement = elements.create("card", {
+                hidePostalCode: true,
+                style: {
+                  base: {
+                    color: "#32325D",
+                    fontWeight: 500,
+                    fontFamily: "Inter, Open Sans, Segoe UI, sans-serif",
+                    fontSize: "16px",
+                    fontSmoothing: "antialiased",
+                    "::placeholder": {
+                      color: "#CFD7DF"
+                    }
+                  },
+                  invalid: {
+                    color: "#E25950"
+                  }
+                }
+              });
+
+              _this2.cardElement.mount('#card-element');
+
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }))();
   }
 });
 
@@ -8286,6 +10287,140 @@ var render = function () {
   )
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WillPayment.vue?vue&type=template&id=3962fab9&scoped=true&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WillPayment.vue?vue&type=template&id=3962fab9&scoped=true& ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card card-accent-success" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body text-center" }, [
+      _c("h1", { staticClass: "card-title pricing-card-title" }, [
+        _vm.mirrorWill
+          ? _c("span", [_vm._v("Mirror")])
+          : _c("span", [_vm._v("Single")]),
+        _vm._v(" will payment\n        "),
+      ]),
+      _vm._v(" "),
+      _vm._m(1),
+      _vm._v(" "),
+      _vm._m(2),
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-footer " }, [
+      _c("div", { staticClass: "form-group d-flex justify-content-between" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-lg btn-primary",
+            on: {
+              click: function ($event) {
+                $event.preventDefault()
+                return _vm.$emit("back")
+              },
+            },
+          },
+          [
+            _c("i", { staticClass: "fa fa-arrow-left" }),
+            _vm._v("Go Back\n            "),
+          ]
+        ),
+        _vm._v(" "),
+        _vm.paymentProcessing
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-lg btn-success",
+                attrs: { type: "button", disabled: "" },
+              },
+              [
+                _c("span", {
+                  staticClass: "spinner-border spinner-border-sm",
+                  attrs: { role: "status", "aria-hidden": "true" },
+                }),
+                _vm._v("\n                Please wait\n            "),
+              ]
+            )
+          : _c(
+              "button",
+              {
+                staticClass: "btn btn-lg btn-success",
+                attrs: { id: "request_next" },
+                on: {
+                  click: function ($event) {
+                    $event.preventDefault()
+                    return _vm.submitFinalForm.apply(null, arguments)
+                  },
+                },
+              },
+              [
+                _vm._v("\n                Pay "),
+                _vm.mirrorWill
+                  ? _c("span", [_vm._v("$ 15")])
+                  : _c("span", [_vm._v("$ 10")]),
+              ]
+            ),
+      ]),
+    ]),
+  ])
+}
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header h3" }, [
+      _c("strong", [_vm._v("Make Payment")]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("ul", { staticClass: "list-unstyled mt-3 mb-4" }, [
+      _c("li", [_vm._v("10 users included")]),
+      _vm._v(" "),
+      _c("li", [_vm._v("Email support")]),
+      _vm._v(" "),
+      _c("li", [_vm._v("Help center access")]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-3" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-6 " }, [
+        _c("div", { staticClass: "example example4" }, [
+          _c("label", [_vm._v("Card")]),
+          _vm._v(" "),
+          _c("div", { attrs: { id: "card-element" } }),
+        ]),
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-3" }),
+    ])
+  },
+]
 render._withStripped = true
 
 
@@ -27649,8 +29784,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('WillForm', __webpack_require__(/*! ./components/WillFormComponent */ "./resources/js/components/WillFormComponent.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('EditWillForm', __webpack_require__(/*! ./components/EditWillComponent */ "./resources/js/components/EditWillComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('TinyEditor', __webpack_require__(/*! ./components/TinyEditor */ "./resources/js/components/TinyEditor.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('PaymentForm', __webpack_require__(/*! ./components/PaymentComponent */ "./resources/js/components/PaymentComponent.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('WillPayment', __webpack_require__(/*! ./components/WillPayment */ "./resources/js/components/WillPayment.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('DatePicker', vue2_datepicker__WEBPACK_IMPORTED_MODULE_3__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuelidate__WEBPACK_IMPORTED_MODULE_1___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_js_toggle_button__WEBPACK_IMPORTED_MODULE_2___default.a);
@@ -27658,6 +29795,56 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_notification__WEBPACK_IMPORTE
 new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app'
 });
+
+/***/ }),
+
+/***/ "./resources/js/components/EditWillComponent.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/EditWillComponent.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _EditWillComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EditWillComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/EditWillComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
+  _EditWillComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"],
+  render,
+  staticRenderFns,
+  false,
+  null,
+  "7a17d006",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/EditWillComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/EditWillComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/EditWillComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EditWillComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./EditWillComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EditWillComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EditWillComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -27867,6 +30054,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/WillPayment.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/components/WillPayment.vue ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _WillPayment_vue_vue_type_template_id_3962fab9_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./WillPayment.vue?vue&type=template&id=3962fab9&scoped=true& */ "./resources/js/components/WillPayment.vue?vue&type=template&id=3962fab9&scoped=true&");
+/* harmony import */ var _WillPayment_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./WillPayment.vue?vue&type=script&lang=js& */ "./resources/js/components/WillPayment.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _WillPayment_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _WillPayment_vue_vue_type_template_id_3962fab9_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _WillPayment_vue_vue_type_template_id_3962fab9_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "3962fab9",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/WillPayment.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/WillPayment.vue?vue&type=script&lang=js&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/WillPayment.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WillPayment_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./WillPayment.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WillPayment.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WillPayment_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/WillPayment.vue?vue&type=template&id=3962fab9&scoped=true&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/WillPayment.vue?vue&type=template&id=3962fab9&scoped=true& ***!
+  \********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WillPayment_vue_vue_type_template_id_3962fab9_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./WillPayment.vue?vue&type=template&id=3962fab9&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WillPayment.vue?vue&type=template&id=3962fab9&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WillPayment_vue_vue_type_template_id_3962fab9_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WillPayment_vue_vue_type_template_id_3962fab9_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ 0:
 /*!***********************************!*\
   !*** multi ./resources/js/app.js ***!
@@ -27874,7 +30130,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/itskarti/PhpstormProjects/SJLegacyLaravel/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/ikkarti/PhpstormProjects/SJLegacyLaravel/resources/js/app.js */"./resources/js/app.js");
 
 
 /***/ })

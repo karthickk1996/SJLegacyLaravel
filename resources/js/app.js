@@ -6,8 +6,10 @@ import 'vue2-datepicker/index.css';
 import Notifications from 'vue-notification'
 
 Vue.component('WillForm', require('./components/WillFormComponent').default);
+Vue.component('EditWillForm', require('./components/EditWillComponent').default);
 Vue.component('TinyEditor', require('./components/TinyEditor').default);
 Vue.component('PaymentForm', require('./components/PaymentComponent').default);
+Vue.component('WillPayment', require('./components/WillPayment').default);
 Vue.component('DatePicker',DatePicker)
 Vue.use(Vuelidate);
 Vue.use(ToggleButton)

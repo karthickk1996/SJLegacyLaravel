@@ -36,15 +36,16 @@ Route::group(['middleware' => ['auth']], function () {
 Route::group(['middleware' => ['role:user|admin', 'verified']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('dashboard.index');
     Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.create');
+    Route::get('willform/{will}/edit', [WillFormController::class, 'edit'])->name('willform.edit');
+    Route::patch('willform/{will}', [WillFormController::class, 'updateWill'])->name('willform.update');
     Route::post('willform', [WillFormController::class, 'store'])->name('willform.store');
+    Route::post('willform/{will}/payment', [WillFormController::class, 'makePayment'])->name('willform.makePayment');
     Route::get('form/single-will', [WillFormController::class, 'singleWillEdit'])->name('singleWill.form');
     Route::get('form/mirror-will', [WillFormController::class, 'mirrorWillEdit'])->name('mirrorWill.form');
     Route::post('form/update', [WillFormController::class, 'willFormUpdate'])->name('form.update');
     Route::resource('users', UsersController::class);
     Route::get('will/submissions', [WillFormController::class, 'submissions'])->name('willform.submissions');
+    Route::delete('will', [WillFormController::class, 'deleteWill'])->name('willform.deleteWill');
     Route::get('profile/{id}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
 });
-
-Route::get('payment/form', [PaymentController::class, 'paymentForm']);
-Route::post('payment/form', [PaymentController::class, 'paymentFormSubmit']);

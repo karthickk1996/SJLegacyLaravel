@@ -14,12 +14,22 @@
                                 </div>
                             </div>
                             <br>
+                            @if(session()->has('success'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Success !</strong> {{session()->get('success')}}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+
                             <table class="table table-striped table-bordered yajra-datatable">
                                 <thead>
                                 <tr>
                                     <th>User Id</th>
                                     <th>Will Number</th>
                                     <th>Single/Mirror Will</th>
+                                    <th>Status</th>
                                     <th>View/Edit</th>
                                     <th>Date Created</th>
                                 </tr>
@@ -45,7 +55,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="printJS('will-print-{{$datum->id}}', 'html')">Print</button>
+                        <button type="button" class="btn btn-primary"
+                                onclick="printJS('will-print-{{$datum->id}}', 'html')">Print
+                        </button>
                     </div>
                 </div>
             </div>
@@ -64,8 +76,8 @@
                 columns: [
                     {data: 'user_id', name: 'UserId'},
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    // {data: 'payment_type', name: 'username'},
                     {data: 'willType', name: 'willType'},
+                    {data: 'status', name: 'Status'},
                     {
                         data: 'action',
                         name: 'action',
@@ -77,5 +89,19 @@
             });
 
         });
+
+        function deleteWill(id) {
+            jQuery.ajax({
+                url: "/will",
+                method: 'delete',
+                data: {
+                    id: id,
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function (result) {
+                    window.location.href = '/will/submissions';
+                }
+            });
+        }
     </script>
 @endsection

@@ -80,9 +80,9 @@
                     birth? (required)</label>
 
                 <date-picker v-model="$v.secondApplicant.dob.$model"
-                             fomat="YYYY-MM-DD"
+                             format="DD-MM-YYYY"
                              type="date"
-                             placeholder="YYYY-MM-DD"
+                             placeholder="DD-MM-YYYY"
                              @blur="$v.secondApplicant.dob.$touch"
                              input-class="form-control form-control-lg"
                              :input-class="$v.secondApplicant.dob.$anyError ? 'form-control form-control-lg is-invalid':''"

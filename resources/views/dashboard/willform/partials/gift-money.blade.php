@@ -51,7 +51,8 @@
         </div>
         <div class="row my-3">
             <div class="col-sm-6" v-if="hasMirrorWill">
-                <label class="form-col-form-label h4" for="gift_exec_relation"><span>@{{ money.firstName.$model ? money.firstName.$model : 'He/She' }} is</span>
+                <label class="form-col-form-label h4" for="gift_exec_relation">
+                    <span>@{{ money.firstName.$model ? money.firstName.$model : 'He/She' }} is</span>
                     @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                     (required)</label>
                 <select class="form-control form-control-lg"
@@ -102,11 +103,13 @@
         <div class="row my-3">
             <div class="col">
                 <div class="form-group d-flex justify-content-between">
-                    <button class="btn btn-lg btn-warning" @click.prevent="AddGiftMoney"><i class="fa fa-plus-circle"></i>
+                    <button class="btn btn-lg btn-warning" @click.prevent="AddGiftMoney"><i
+                            class="fa fa-plus-circle"></i>
                         Add
                     </button>
                     <div v-if="index > 0">
-                        <button class="btn btn-lg btn-danger" v-if="giftMoney.length > 1" @click.prevent="removeGiftMoney(index)">
+                        <button class="btn btn-lg btn-danger" v-if="giftMoney.length > 1"
+                                @click.prevent="removeGiftMoney(index)">
                             <i class="fa fa-minus-circle"></i>
                             Remove
                         </button>
@@ -117,7 +120,7 @@
     </div>
     <div class="card-footer ">
         <div class="form-group d-flex justify-content-between">
-            <button class="btn btn-lg btn-primary" id="gift_back">
+            <button class="btn btn-lg btn-primary" @click.prevent="step='gift_options'">
                 <i class="fa fa-arrow-left"></i>
                 Go Back
             </button>

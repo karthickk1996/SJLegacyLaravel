@@ -21,6 +21,7 @@
                 <label class="form-col-form-label h4" for="charity_amount">Charity Amount</label>
                 <input v-model.trim="$v.giftCharity.money.$model"
                        :class="$v.giftCharity.money.$anyError ? 'is-invalid':''"
+                       type="number"
                        @blur="$v.giftCharity.money.$touch" class="form-control form-control-lg">
             </div>
         </div>

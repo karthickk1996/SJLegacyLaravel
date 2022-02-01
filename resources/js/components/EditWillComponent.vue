@@ -42,7 +42,8 @@ const maxFinalValue = (value, nested) => {
 import axios from 'axios';
 
 export default {
-    name: "WillFormComponent",
+    name: "EditWillComponent",
+    props: ['data', 'id'],
     data() {
         return {
             id: null,
@@ -235,7 +236,7 @@ export default {
                 relation: "",
                 secondApplicantRelation: "",
                 finalShare: "",
-                parent:0,
+                parent: 0,
                 persons: [{
                     firstName: "",
                     middleName: "",
@@ -295,11 +296,6 @@ export default {
                     predeceased: "",
                     shareType: "share",
                     share: 0,
-                    beneficiary: {
-                        firstName: "",
-                        middleName: "",
-                        lastName: "",
-                    }
                 }]
             }],
         }
@@ -892,19 +888,7 @@ export default {
                             },
                             share: {
                                 maxValueProperty
-                            },beneficiary: {
-                                required,
-                                firstName: {
-                                    minLength: minLength(2),
-                                },
-                                middleName: {
-                                    minLength: minLength(2),
-                                },
-                                lastName: {
-                                    minLength: minLength(2),
-                                }
                             }
-
                         }
                     }
                 }
@@ -944,6 +928,7 @@ export default {
                 $each: {
                     business: {},
                     firstName: {
+                        required,
                         minLength: minLength(2),
                     },
                     middleName: {
@@ -953,9 +938,14 @@ export default {
                         minLength: minLength(2),
                     },
                     relation: {
-
+                        required: requiredIf(function (nested) {
+                            return this.businessAssignment[nested.parent].business
+                        })
                     },
                     secondApplicantRelation: {
+                        required: requiredIf(function () {
+                            return this.hasMirrorWill
+                        })
                     },
                     finalShare: {
                         maxFinalValue
@@ -1366,11 +1356,6 @@ export default {
                     predeceased: "",
                     shareType: "share",
                     share: 0,
-                    beneficiary: {
-                        firstName: "",
-                        middleName: "",
-                        lastName: "",
-                    }
                 }]
             })
         },
@@ -1385,11 +1370,6 @@ export default {
                 predeceased: "",
                 shareType: shareType,
                 share: 0,
-                beneficiary: {
-                    firstName: "",
-                    middleName: "",
-                    lastName: "",
-                }
             })
         },
         removePropertyPerson(main, index) {
@@ -1399,7 +1379,7 @@ export default {
             this.giftProperty.splice(index, 1)
         },
         saveWillForm() {
-            axios.post(`/willform/`, {
+            axios.post(`/willform/${this.id}`, {
                 firstName: this.form1.firstName,
                 lastName: this.form1.lastName,
                 middleName: this.form1.middleName,
@@ -1457,24 +1437,51 @@ export default {
             })
         },
         submitFinalForm(args) {
-            axios.post(`/willform/${this.id}/payment`, {
+            axios.patch(`/willform/${this.id}/payment`, {
+                firstName: this.form1.firstName,
+                lastName: this.form1.lastName,
+                middleName: this.form1.middleName,
+                email: this.form1.email,
+                dob: this.form1.dob,
+                hasPartner: this.hasPartner,
+                hasChildrenUnderEighteen: this.hasChildrenUnderEighteen,
+                hasMirrorWill: this.hasMirrorWill,
+                ownProperty: this.ownProperty,
+                addressSummary: this.addressSummary,
+                secondApplicant: this.secondApplicant,
+                secondExecutor: this.secondExecutor,
+                executor: this.executor,
+                reserveExecutor: this.reserveExecutor,
+                giftOptions: this.giftDetails,
+                giftMoney: this.giftMoney,
+                appointGuardian: this.appointGuardian,
+                hasMoreThanOneChildren: this.hasMoreThanOneChildren,
+                sameGuardianAllChildren: this.sameGuardianAllChildren,
+                children: this.children,
+                reserveGuardian: this.reserveGuardian,
+                giftCharity: this.giftCharity,
+                giftBank: this.giftBank,
+                giftPet: this.giftPet,
+                businessAssignment: this.businessAssignment,
+                residue: this.residue,
+                request: this.request,
+                giftProperty: this.giftProperty,
                 setupIntent: args.setupIntent,
             }).then(response => {
                 if (response.data.success) {
                     this.$notify({
                         type: 'success',
                         title: 'Update',
-                        text: 'Payment was successfully'
+                        text: 'Will form updated successfully'
                     })
                     setTimeout(function () {
                         window.location.href = '/will/submissions'
                     }, 3000);
                 } else {
-                    console.log(response.data)
                     this.$notify({
                         type: 'error',
                         title: 'Error',
-                        text: 'Error in payment'
+                        text: 'Error in the form'
                     })
                 }
             }).catch(err => {
@@ -1520,14 +1527,13 @@ export default {
         removeBusinessAssignment(index) {
             this.businessAssignment.splice(index, 1)
         },
-        addBusinessAssignment(index) {
+        addBusinessAssignment() {
             this.businessAssignment.push({
                 business: "",
                 firstName: "",
                 middleName: "",
                 lastName: "",
                 relation: "",
-                parent:index +1,
                 secondApplicantRelation: "",
                 persons: [{
                     firstName: "",
@@ -1584,6 +1590,32 @@ export default {
             },
             deep: true
         }
+    },
+    mounted() {
+        this.form1 = this.data.form1
+        this.hasPartner = this.data.hasPartner
+        this.hasChildrenUnderEighteen = this.data.hasChildrenUnderEighteen
+        this.hasMirrorWill = this.data.hasMirrorWill
+        this.ownProperty = this.data.ownProperty
+        this.addressSummary = this.data.addressSummary
+        this.secondApplicant = this.data.secondApplicant
+        this.secondExecutor = this.data.secondExecutor
+        this.executor = this.data.executor
+        this.reserveExecutor = this.data.reserveExecutor
+        this.giftDetails = this.data.giftDetails
+        this.giftMoney = this.data.giftMoney
+        this.appointGuardian = this.data.appointGuardian
+        this.hasMoreThanOneChildren = this.data.hasMoreThanOneChildren
+        this.sameGuardianAllChildren = this.data.sameGuardianAllChildren
+        this.children = this.data.children
+        this.reserveGuardian = this.data.reserveGuardian
+        this.giftCharity = this.data.giftCharity
+        this.giftBank = this.data.giftBank
+        this.giftPet = this.data.giftPet
+        this.businessAssignment = this.data.businessAssignment
+        this.residue = this.data.residue
+        this.request = this.data.request
+        this.giftProperty = this.data.giftProperty
     }
 }
 </script>

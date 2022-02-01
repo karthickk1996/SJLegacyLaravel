@@ -51,10 +51,7 @@
                         :class="resExec.relation.$anyError ? 'is-invalid':''"
                         @blur="resExec.relation.$touch"
                 >
-                    <option value="">Select an option below</option>
-                    <option value="Spouse">Spouse</option>
-                    <option value="Civil Partner">Civil Partner</option>
-                    <option value="Common Law Partner">Common Law Partner</option>
+                    @include('dashboard.willform.partials.combo-options')
                 </select>
                 <div class="invalid-feedback" v-if="resExec.relation.$anyError">Please choose an option
                 </div>
@@ -100,9 +97,9 @@
                     }}'s date of
                     birth? (required)</label>
                 <date-picker v-model="resExec.dob.$model"
-                             fomat="YYYY-MM-DD"
+                             format="DD-MM-YYYY"
                              type="date"
-                             placeholder="YYYY-MM-DD"
+                             placeholder="DD-MM-YYYY"
                              @blur="resExec.dob.$touch"
                              input-class="form-control form-control-lg"
                              :input-class="resExec.dob.$anyError ? 'form-control form-control-lg is-invalid':''"
@@ -205,7 +202,7 @@
     </div>
     <div class="card-footer">
         <div class="form-group d-flex justify-content-between">
-            <button class="btn btn-lg btn-primary" @click.prevent="backToExecutor"
+            <button class="btn btn-lg btn-primary" @click.prevent="backToExecutor()"
                     type="button"
                     id="address_back">
                 <i class="fa fa-arrow-left"></i> Go
