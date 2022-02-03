@@ -51,10 +51,7 @@
                         :class="guardian.relation.$anyError ? 'is-invalid':''"
                         @blur="guardian.relation.$touch"
                 >
-                    <option value="">Select an option below</option>
-                    <option value="Spouse">Spouse</option>
-                    <option value="Civil Partner">Civil Partner</option>
-                    <option value="Common Law Partner">Common Law Partner</option>
+                    @include('dashboard.willform.partials.combo-options')
                 </select>
                 <div class="invalid-feedback" v-if="guardian.relation.$anyError">Please choose an option
                 </div>
@@ -69,10 +66,7 @@
                         :class="guardian.secondApplicantRelation.$anyError ? 'is-invalid':''"
                         @blur="guardian.secondApplicantRelation.$touch"
                 >
-                    <option value="">Select an option below</option>
-                    <option value="Spouse">Spouse</option>
-                    <option value="Civil Partner">Civil Partner</option>
-                    <option value="Common Law Partner">Common Law Partner</option>
+                    @include('dashboard.willform.partials.combo-options')
                 </select>
                 <div class="invalid-feedback" v-if="guardian.secondApplicantRelation.$anyError">Please choose an option
                 </div>

@@ -141,10 +141,11 @@
                 </select>
             </div>
             <div class="col-sm-6 inner" v-if="hasMirrorWill">
-                <label class="form-col-form-label h4 mt-3 inner" for="bank_second_relation">He /
-                    She
-                    is
-                    <span class="second_applicant">Second Applicant</span>'s </label>
+                <label class="form-col-form-label h4 mt-3 inner" for="bank_second_relation">
+                    <span>@{{ bank.firstName.$model ? bank.firstName.$model : 'He/She' }} is</span>
+                    @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
+                    (required)
+                </label>
                 <select class="form-control form-control-lg inner select2"
                         v-model.trim="bank.secondApplicantRelation.$model"
                         :class="bank.secondApplicantRelation.$anyError ? 'is-invalid':''"

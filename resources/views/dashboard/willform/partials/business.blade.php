@@ -1,4 +1,6 @@
-<div class="card card-accent-success" v-if="step==='business_assignment'">
+<div class="card card-accent-success"
+     v-if="step==='business_assignment'"
+>
     <div class="card-header h3"><strong>Business Assignment</strong></div>
     <div class="card-body" v-for="(business,i) in $v.businessAssignment.$each.$iter">
         <div class="row mt-3">
@@ -12,57 +14,58 @@
             </div>
         </div>
         <div class="row my-3 border-top person_body">
-            <div class="col-sm-6 mt-3">
-                <label class="form-col-form-label h4" for="business_first_name">First Name (required)</label>
-                <input type="text" name="bank_first_name"
-                       v-model.trim="business.firstName.$model"
-                       :class="business.firstName.$anyError ? 'is-invalid':''"
-                       @blur="business.firstName.$touch"
-                       class="form-control form-control-lg inner"/>
-            </div>
-            <div class="col-sm-6 mt-3">
-                <label class="form-col-form-label h4" for="business_middle_name">Middle Name <br> </label>
-                <input type="text" name="bank_middle_name"
-                       v-model.trim="business.middleName.$model"
-                       :class="business.middleName.$anyError ? 'is-invalid':''"
-                       @blur="business.middleName.$touch"
-                       class="form-control form-control-lg inner"/>
-            </div>
-
-            <div class="col-sm-6 mt-3">
-                <label class="form-col-form-label h4" for="business_last_name">Last Name (required)</label>
-                <input type="text"
-                       v-model.trim="business.lastName.$model"
-                       :class="business.lastName.$anyError ? 'is-invalid':''"
-                       @blur="business.lastName.$touch"
-                       class="form-control form-control-lg inner"/>
-            </div>
-            <div class="col-sm-6 mt-3">
-                <label class="form-col-form-label h4" for="business_relation">
-                    <span>@{{ business.firstName.$model ? business.firstName.$model : 'He/She' }}'s</span> is my
-                    (required)</label>
-                <select class="form-control form-control-lg"
-                        v-model.trim="business.relation.$model"
-                        :class="business.relation.$anyError ? 'is-invalid':''"
-                        @blur="business.relation.$touch">
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
-            </div>
-            <div class="col-sm-6 mt-3" v-if="hasMirrorWill">
-                <label class="form-col-form-label h4" for="business_exec_relation"><span>@{{ business.firstName.$model ? business.firstName.$model : 'He/She' }} is</span>
-                    @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
-                    (required)</label>
-                <select class="form-control form-control-lg"
-                        v-model.trim="business.secondApplicantRelation.$model"
-                        :class="business.secondApplicantRelation.$anyError ? 'is-invalid':''"
-                        @blur="business.secondApplicantRelation.$touch"
-                >
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
-            </div>
             <div class="col-sm-12">
                 <section v-for="(bank,index) in business.persons.$each.$iter">
                     <div class="row">
+                        <div class="col-sm-6 mt-3">
+                            <label class="form-col-form-label h4" for="business_first_name">First Name (required)</label>
+                            <input type="text" name="bank_first_name"
+                                   v-model.trim="bank.firstName.$model"
+                                   :class="bank.firstName.$anyError ? 'is-invalid':''"
+                                   @blur="bank.firstName.$touch"
+                                   class="form-control form-control-lg inner"/>
+                        </div>
+                        <div class="col-sm-6 mt-3">
+                            <label class="form-col-form-label h4" for="business_middle_name">Middle Name <br> </label>
+                            <input type="text" name="bank_middle_name"
+                                   v-model.trim="bank.middleName.$model"
+                                   :class="bank.middleName.$anyError ? 'is-invalid':''"
+                                   @blur="bank.middleName.$touch"
+                                   class="form-control form-control-lg inner"/>
+                        </div>
+
+                        <div class="col-sm-6 mt-3">
+                            <label class="form-col-form-label h4" for="business_last_name">Last Name (required)</label>
+                            <input type="text"
+                                   v-model.trim="bank.lastName.$model"
+                                   :class="bank.lastName.$anyError ? 'is-invalid':''"
+                                   @blur="bank.lastName.$touch"
+                                   class="form-control form-control-lg inner"/>
+                        </div>
+                        <div class="col-sm-6 mt-3">
+                            <label class="form-col-form-label h4" for="business_relation">
+                                <span>@{{ bank.firstName.$model ? bank.firstName.$model : 'He/She' }}'s</span> is my
+                                (required)</label>
+                            <select class="form-control form-control-lg"
+                                    v-model.trim="bank.relation.$model"
+                                    :class="bank.relation.$anyError ? 'is-invalid':''"
+                                    @blur="bank.relation.$touch">
+                                @include('dashboard.willform.partials.combo-options')
+                            </select>
+                        </div>
+                        <div class="col-sm-6 mt-3" v-if="hasMirrorWill">
+                            <label class="form-col-form-label h4" for="business_exec_relation">
+                                <span>@{{ bank.firstName.$model ? bank.firstName.$model : 'He/She' }} is</span>
+                                @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
+                                (required)</label>
+                            <select class="form-control form-control-lg"
+                                    v-model.trim="bank.secondApplicantRelation.$model"
+                                    :class="bank.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                                    @blur="bank.secondApplicantRelation.$touch"
+                            >
+                                @include('dashboard.willform.partials.combo-options')
+                            </select>
+                        </div>
                         <div class="col-sm-6 my-3">
                             <label class="form-col-form-label h4" for="property_share_fraction">Share fraction
                                 (required)</label>
@@ -83,7 +86,6 @@
                                 <option value="share">Share</option>
                                 <option value="fraction">Fraction</option>
                             </select>
-
                         </div>
                         <div class="col-sm-6 my-3">
                             <label class="form-col-form-label h4" for="property_share">Share/Fraction (required)</label>
@@ -93,16 +95,6 @@
                                    @blur="bank.share.$touch"
                                    class="form-control form-control-lg">
                             <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="form-group col-sm-6 my-3">
-                            <label class="form-col-form-label h4" for="property_relation">He/She is
-                                my</label>
-                            <select class="form-control form-control-lg"
-                                    v-model.trim="bank.relation.$model"
-                                    :class="bank.relation.$anyError ? 'is-invalid':''"
-                                    @blur="bank.relation.$touch">
-                                @include('dashboard.willform.partials.combo-options')
-                            </select>
                         </div>
                         <div class="col-sm-6 inner">
                             <label class="form-col-form-label h4 mt-3 inner" for="bank_predeceased">Up on

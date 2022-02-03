@@ -1,4 +1,6 @@
-<div class="card card-accent-success" v-if="step==='gift_bank'">
+<div class="card card-accent-success"
+     v-if="step==='gift_bank'"
+>
     <div class="card-header h3">Gift of bank account</div>
     <div data-repeater-list="outer-group" class="card-body outer" v-for="(account,i) in $v.giftBank.$each.$iter">
         <div class="outer">
@@ -64,7 +66,6 @@
                     </div>
                     <div class="col-sm-6 inner" v-if="hasMirrorWill">
                         <label class="form-col-form-label h4 mt-3 inner" for="bank_second_relation">
-                            He / She is
                             <span>@{{ bank.firstName.$model ? bank.firstName.$model : 'He/She' }} is</span>
                             @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                             (required)</label>
@@ -197,7 +198,6 @@
             {{--                </div>--}}
             {{--            </div>--}}
         </div>
-
     </div>
     <div class="card-footer">
         <div class="form-group d-flex justify-content-between">

@@ -66,10 +66,7 @@
                         :class="exec.secondApplicantRelation.$anyError ? 'is-invalid':''"
                         @blur="exec.secondApplicantRelation.$touch"
                 >
-                    <option value="">Select an option below</option>
-                    <option value="Spouse">Spouse</option>
-                    <option value="Civil Partner">Civil Partner</option>
-                    <option value="Common Law Partner">Common Law Partner</option>
+                    @include('dashboard.willform.partials.combo-options')
                 </select>
                 <div class="invalid-feedback" v-if="exec.secondApplicantRelation.$anyError">Please choose an option
                 </div>
