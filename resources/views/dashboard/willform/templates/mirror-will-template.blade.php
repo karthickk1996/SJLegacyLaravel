@@ -8,7 +8,7 @@
                     <div class="card">
                         <div class="card-header">Edit Mirror Will</div>
                         <div class="card-body">
-                            <tiny-editor data="{{$data ? $data->content : ''}}"
+                            <tiny-editor data="{{$data}}"
                                          type="mirror-will"
                             ></tiny-editor>
                         </div>

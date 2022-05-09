@@ -44,17 +44,10 @@
                 <label class="form-col-form-label h4" for="second_applicant_relation"><span
                         class="second_applicant">@{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}</span>
                     is my</label>
-                <select class="form-control form-control-lg" id="second_applicant_relation"
-                        required
-                        v-model.trim="$v.secondApplicant.relation.$model"
-                        :class="$v.secondApplicant.relation.$anyError ? 'is-invalid':''"
+                <relationship-selector
                         @blur="$v.secondApplicant.relation.$touch"
-                >
-                    <option value="">Select an option below</option>
-                    <option value="Spouse">Spouse</option>
-                    <option value="Civil Partner">Civil Partner</option>
-                    <option value="Common Law Partner">Common Law Partner</option>
-                </select>
+                        v-model.trim="$v.secondApplicant.relation.$model"
+                        :class="$v.secondApplicant.relation.$anyError ? 'is-invalid':''"></relationship-selector>
                 <div class="invalid-feedback" v-if="$v.secondApplicant.relation.$anyError">Please choose an option
                 </div>
             </div>
@@ -80,9 +73,9 @@
                     birth? (required)</label>
 
                 <date-picker v-model="$v.secondApplicant.dob.$model"
-                             format="DD-MM-YYYY"
-                             type="date"
-                             placeholder="DD-MM-YYYY"
+                             format="DD/MM/YYYY"
+                             value-type="DD/MM/YYYY"
+                             placeholder="DD/MM/YYYY"
                              @blur="$v.secondApplicant.dob.$touch"
                              input-class="form-control form-control-lg"
                              :input-class="$v.secondApplicant.dob.$anyError ? 'form-control form-control-lg is-invalid':''"

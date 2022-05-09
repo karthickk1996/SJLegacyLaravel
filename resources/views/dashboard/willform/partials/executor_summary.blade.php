@@ -1,4 +1,6 @@
-<div class="card card-accent-success" v-if="step==='executor_summary'">
+<div class="card card-accent-success"
+     v-if="step==='executor_summary'"
+>
     <div class="card-header h3">
         <strong>Executor Details</strong></div>
     <div class="card-body" v-for="(exec,index) in $v.executor.$each.$iter">
@@ -45,14 +47,10 @@
                 <label class="form-col-form-label h4" for="second_applicant_relation"><span
                         class="second_applicant">@{{ executor[index].firstName ? executor[index].firstName : 'Executor' }}</span>
                     is my</label>
-                <select class="form-control form-control-lg" id="second_applicant_relation"
-                        required
-                        v-model.trim="exec.relation.$model"
-                        :class="exec.relation.$anyError ? 'is-invalid':''"
+                <relationship-selector
                         @blur="exec.relation.$touch"
-                >
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        v-model.trim="exec.relation.$model"
+                        :class="exec.relation.$anyError ? 'is-invalid':''"></relationship-selector>
                 <div class="invalid-feedback" v-if="exec.relation.$anyError">Please choose an option
                 </div>
             </div>
@@ -60,14 +58,10 @@
                 <label class="form-col-form-label h4" for="second_applicant_relation"><span
                         class="second_applicant">@{{ executor[index].firstName ? executor[index].firstName : 'Executor' }} is @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s</span>
                 </label>
-                <select class="form-control form-control-lg" id="second_applicant_relation"
-                        required
-                        v-model.trim="exec.secondApplicantRelation.$model"
-                        :class="exec.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                <relationship-selector
                         @blur="exec.secondApplicantRelation.$touch"
-                >
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        v-model.trim="exec.secondApplicantRelation.$model"
+                        :class="exec.secondApplicantRelation.$anyError ? 'is-invalid':''"></relationship-selector>
                 <div class="invalid-feedback" v-if="exec.secondApplicantRelation.$anyError">Please choose an option
                 </div>
             </div>
@@ -92,9 +86,9 @@
                     @{{ executor[index].firstName ? executor[index].firstName : 'Executor' }}'s date of
                     birth? (required)</label>
                 <date-picker v-model="exec.dob.$model"
-                             format="DD-MM-YYYY"
-                             type="date"
-                             placeholder="DD-MM-YYYY"
+                             format="DD/MM/YYYY"
+                             value-type="DD/MM/YYYY"
+                             placeholder="DD/MM/YYYY"
                              @blur="exec.dob.$touch"
                              input-class="form-control form-control-lg"
                              :input-class="exec.dob.$anyError ? 'form-control form-control-lg is-invalid':''"

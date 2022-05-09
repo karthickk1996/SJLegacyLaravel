@@ -10,11 +10,6 @@
                         <div class="card-body p-4">
                             <h5 class="card-title">Edit User : {{ $user->name }}</h5>
                             <hr/>
-                            @if($errors->any())
-                                @foreach ($errors->all() as $error)
-                                    <div>{{ $error }}</div>
-                                @endforeach
-                            @endif
                             <form method="POST" action="{{ route('users.update', $user) }}">
                                 @csrf
                                 @method('PATCH')
@@ -44,12 +39,7 @@
                                                     <label for="password" class="form-label">Password</label>
                                                     <input id="password" class="form-control" type="password"
                                                            name="password" >
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="password_confirmation" class="form-label">Confirm Password</label>
-                                                    <input id="password_confirmation" class="form-control" type="password"
-                                                           name="password_confirmation" >
-                                                    @error('password_confirmation')
+                                                    @error('password')
                                                     <p class="text-danger">{{ $message }}</p>
                                                     @enderror
                                                 </div>
@@ -62,7 +52,7 @@
                                                             <option {{ $user->roles[0]->name === $role ? 'selected' : '' }} value="{{ $role }}">{{ $role }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @error('role_name')
+                                                    @error('password')
                                                     <p class="text-danger">{{ $message }}</p>
                                                     @enderror
                                                 </div>

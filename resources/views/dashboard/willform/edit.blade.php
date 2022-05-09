@@ -19,6 +19,7 @@
                 <edit-will-form inline-template v-cloak
                                 :data="{{json_encode($data)}}"
                                 id="{{$id}}"
+                                active-step="{{$step}}"
                                 :intent="{{json_encode($intent)}}">
                     <div class="col-sm-10 mx-auto">
                         @include('dashboard.willform.partials.input')

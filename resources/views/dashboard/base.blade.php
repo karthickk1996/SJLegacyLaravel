@@ -31,16 +31,18 @@
     @include('dashboard.partials.nav')
 </div>
 
-@include('dashboard.shared.header')
+<div class="c-wrapper">
+    @include('dashboard.shared.header')
 
-<div class="c-body">
+    <div class="c-body">
 
-    <main class="c-main" id="app">
-        <notifications></notifications>
-        @yield('content')
+        <main class="c-main" id="app">
+            <notifications></notifications>
+            @yield('content')
 
-    </main>
-    @include('dashboard.shared.footer')
+        </main>
+        @include('dashboard.shared.footer')
+    </div>
 </div>
 
 <!-- CoreUI and necessary plugins-->

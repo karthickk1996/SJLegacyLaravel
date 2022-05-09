@@ -1,4 +1,6 @@
-<div class="card card-accent-success" v-if="step==='gift_property'">
+<div class="card card-accent-success"
+     v-if="step==='gift_property'"
+>
     <div class="card-header h3"><strong>Gift of property/land</strong>: Please enter the details of property below</div>
     <div class="card-body" v-for="(property,i) in $v.giftProperty.$each.$iter">
         <div class="row">
@@ -73,6 +75,9 @@
             </div>
         </div>
         <div class="row" v-for="(bank,index) in property.persons.$each.$iter">
+            <input type="hidden" v-model="bank.id.$model = i">
+            <input type="hidden" v-model="bank.beneficiary.id.$model = i">
+            <input type="hidden" v-model="bank.beneficiary.personId.$model = index">
             <div class="col-sm-6 inner">
                 <label class="form-col-form-label h4 mt-3 inner">First Name (required)</label>
                 <input type="text" name="bank_first_name"
@@ -102,26 +107,25 @@
             <div class="col-sm-6 my-3">
                 <label class="form-col-form-label h4" for="property_share_fraction">Share fraction
                     (required)</label>
-                <select class="form-control form-control-lg" v-if="index > 0"
-                        v-model="giftProperty[i].persons[0].shareType">
+                <select class="form-control form-control-lg" v-if="index > 0">
                     <option value="share"
                             :selected="giftProperty[i].persons[0].shareType === 'share'"
                             :disabled="giftProperty[i].persons[0].shareType !== 'share'">Share
                     </option>
-                    <option value="fraction"
-                            :selected="giftProperty[i].persons[0].shareType === 'fraction'"
-                            :disabled="giftProperty[i].persons[0].shareType !== 'fraction'"
-                    >Fraction
+                    <option value="equal"
+                            :selected="giftProperty[i].persons[0].shareType === 'equal'"
+                            :disabled="giftProperty[i].persons[0].shareType !== 'equal'"
+                    >Equally Split
                     </option>
                 </select>
                 <select class="form-control form-control-lg" v-else
                         v-model.trim="bank.shareType.$model"
                 >
                     <option value="share">Share</option>
-                    <option value="fraction">Fraction</option>
+                    <option value="equal">Equally Split</option>
                 </select>
             </div>
-            <div class="col-sm-6 my-3">
+            <div class="col-sm-6 my-3" v-if="giftProperty[i].persons[0].shareType === 'share'">
                 <label class="form-col-form-label h4" for="property_share">Share/Fraction (required)</label>
                 <input type="number" v-model.trim="bank.share.$model"
                        :class="bank.share.$anyError ? 'is-invalid':''"
@@ -133,12 +137,10 @@
                 <label class="form-col-form-label h4" for="property_relation">
                     <span>@{{ bank.firstName.$model ? bank.firstName.$model : 'He/She' }} is</span>
                   </label>
-                <select class="form-control form-control-lg"
+                <relationship-selector
+                        @blur="bank.relation.$touch"
                         v-model.trim="bank.relation.$model"
-                        :class="bank.relation.$anyError ? 'is-invalid':''"
-                        @blur="bank.relation.$touch">
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        :class="bank.relation.$anyError ? 'is-invalid':''"></relationship-selector>
             </div>
             <div class="col-sm-6 inner" v-if="hasMirrorWill">
                 <label class="form-col-form-label h4 mt-3 inner" for="bank_second_relation">
@@ -146,13 +148,10 @@
                     @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                     (required)
                 </label>
-                <select class="form-control form-control-lg inner select2"
-                        v-model.trim="bank.secondApplicantRelation.$model"
-                        :class="bank.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                <relationship-selector
                         @blur="bank.secondApplicantRelation.$touch"
-                        name="bank_second_relation">
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        v-model.trim="bank.secondApplicantRelation.$model"
+                        :class="bank.secondApplicantRelation.$anyError ? 'is-invalid':''"></relationship-selector>
             </div>
             <div class="form-group col-sm-6 my-3">
                 <label class="form-col-form-label h4" for="property_predeceased">Upon first exec predeceased
@@ -160,11 +159,12 @@
                 <select class="form-control form-control-lg"
                         v-model.trim="bank.predeceased.$model"
                         :class="bank.predeceased.$anyError ? 'is-invalid':''"
+                        @change="touchValidation(bank)"
                         @blur="bank.predeceased.$touch">
                     @include('dashboard.willform.partials.gifting-details')
                 </select>
             </div>
-            <div class="col-sm-12" v-if="bank.predeceased.$model === 'Assign to named beneficiary'">
+            <div class="col-sm-12" v-if="bank.predeceased.$model === 'Assign to named beneficiary'" @change="touchValidation(bank)">
                 <div class="row">
                     <div class="col-sm-6 inner mt-3">
                         <label class="form-col-form-label h4"
@@ -213,10 +213,10 @@
             </div>
         </div>
         <div class="row col">
-            <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"
-                 v-if="finalPropertyShare"> Overall share values should be equal to @{{
-                maxPropertyShare(property.$model) }} current is @{{ property.finalShare.$model ?
-                property.finalShare.$model : '0' }}
+            <div class="row col" v-if="property.finalShare.$anyError">
+                <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"> Overall share values should be equal to @{{
+                    maxPropertyShare(property.$model) }} current is @{{ countShare(property.$model.persons) }}
+                </div>
             </div>
         </div>
 

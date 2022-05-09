@@ -40,12 +40,10 @@
                 <label class="form-col-form-label h4" for="residue_relation"><span>@{{ res.firstName.$model ? res.firstName.$model : 'He/She' }}</span>
                     is my
                     (required)</label>
-                <select class="form-control form-control-lg"
+                <relationship-selector
+                        @blur="res.relation.$touch"
                         v-model.trim="res.relation.$model"
-                        :class="res.relation.$anyError ? 'is-invalid':''"
-                        @blur="res.relation.$touch">
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        :class="res.relation.$anyError ? 'is-invalid':''"></relationship-selector>
             </div>
 
             <div class="col-sm-6 my-3" v-if="hasMirrorWill">
@@ -53,86 +51,79 @@
                     is <span
                         class="second_applicant"> @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}</span>'s
                     (required)</label>
-                <select class="form-control form-control-lg" v-model.trim="res.secondApplicantRelation.$model"
-                        :class="res.secondApplicantRelation.$anyError ? 'is-invalid':''"
-                        @blur="res.secondApplicantRelation.$touch">
-                    @include('dashboard.willform.partials.combo-options')
+                <relationship-selector
+                        @blur="res.secondApplicantRelation.$touch"
+                        v-model.trim="res.secondApplicantRelation.$model"
+                        :class="res.secondApplicantRelation.$anyError ? 'is-invalid':''"></relationship-selector>
+            </div>
+            <div class="col-sm-6 my-3">
+                <label class="form-col-form-label h4" for="property_share_fraction">Share fraction
+                    (required)</label>
+                <select class="form-control form-control-lg" v-if="i > 0"
+                >
+                    <option value="share"
+                            :selected="res.shareType.$model === 'share'"
+                            :disabled="res.shareType.$model !== 'share'">Share
+                    </option>
+                    <option value="fraction"
+                            :selected="res.shareType.$model === 'fraction'"
+                            :disabled="res.shareType.$model !== 'fraction'"
+                    >Fraction
+                    </option>
                 </select>
+                <select class="form-control form-control-lg" v-else
+                        v-model.trim="res.shareType.$model"
+                >
+                    <option value="share">Share</option>
+                    <option value="fraction">Fraction</option>
+                </select>
+
+            </div>
+            <div class="col-sm-6 my-3">
+                <label class="form-col-form-label h4" for="property_share">Share/Fraction (required)</label>
+                <input v-model.trim="res.share.$model"
+                       type="number"
+                       :class="res.share.$anyError ? 'is-invalid':''"
+                       @blur="res.share.$touch"
+                       class="form-control form-control-lg">
+                <div class="invalid-feedback"></div>
             </div>
             <div class="col-sm-6 my-3">
                 <label class="form-col-form-label h4" for="residue_predeceased">Up on first exec predeceased
                     (required)</label>
                 <select class="form-control form-control-lg"
-                v-model.trim="res.predeceased.$model">
+                        v-model.trim="res.predeceased.$model">
                     @include('dashboard.willform.partials.gifting-details')
                 </select>
             </div>
         </div>
         <section class="row" v-if="res.predeceased.$model === 'Assign to named beneficiary'">
-                <div class="col-sm-6">
-                    <label class="form-col-form-label h4" for="gift_predeceased_first">First Name of
-                        named beneficiary (required)</label>
-                    <input name="gift_predeceased_first" id="gift_predeceased_first"
-                           v-model.trim="res.beneficiary.firstName.$model"
-                           :class="res.beneficiary.firstName.$anyError ? 'is-invalid':''"
-                           @blur="res.beneficiary.firstName.$touch"
-                           class="form-control form-control-lg"></div>
-                <div class="col-sm-6"><label class="form-col-form-label h4" for="gift_predeceased_middle">Middle Name of
-                        named beneficiary (required)</label>
-                    <input name="gift_predeceased_middle"
-                           id="gift_predeceased_middle"
-                           v-model.trim="res.beneficiary.middleName.$model"
-                           :class="res.beneficiary.middleName.$anyError ? 'is-invalid':''"
-                           @blur="res.beneficiary.middleName.$touch"
-                           class="form-control form-control-lg"></div>
-                <div class="col-sm-6">
-                    <label class="form-col-form-label h4" for="gift_predeceased_last">Last Name of
-                        named beneficiary (required)</label>
-                    <input name="gift_predeceased_last"
-                           id="gift_predeceased_last"
-                           v-model.trim="res.beneficiary.lastName.$model"
-                           :class="res.beneficiary.lastName.$anyError ? 'is-invalid':''"
-                           @blur="res.beneficiary.lastName.$touch"
-                           class="form-control form-control-lg"></div>
-            </section>
-        <div class="row">
-            <div class="col-sm-12 my-3">
-                <section class="row">
-                    <div class="col-sm-6 my-3">
-                        <label class="form-col-form-label h4" for="property_share_fraction">Share fraction
-                            (required)</label>
-                        <select class="form-control form-control-lg" v-if="i > 0"
-                        >
-                            <option value="share"
-                                    :selected="res.shareType.$model === 'share'"
-                                    :disabled="res.shareType.$model !== 'share'">Share
-                            </option>
-                            <option value="fraction"
-                                    :selected="res.shareType.$model === 'fraction'"
-                                    :disabled="res.shareType.$model !== 'fraction'"
-                            >Fraction
-                            </option>
-                        </select>
-                        <select class="form-control form-control-lg" v-else
-                                v-model.trim="res.shareType.$model"
-                        >
-                            <option value="share">Share</option>
-                            <option value="fraction">Fraction</option>
-                        </select>
-
-                    </div>
-                    <div class="col-sm-6 my-3">
-                        <label class="form-col-form-label h4" for="property_share">Share/Fraction (required)</label>
-                        <input v-model.trim="res.share.$model"
-                               type="number"
-                               :class="res.share.$anyError ? 'is-invalid':''"
-                               @blur="res.share.$touch"
-                               class="form-control form-control-lg">
-                        <div class="invalid-feedback"></div>
-                    </div>
-                </section>
-            </div>
-        </div>
+            <div class="col-sm-6">
+                <label class="form-col-form-label h4" for="gift_predeceased_first">First Name of
+                    named beneficiary (required)</label>
+                <input name="gift_predeceased_first" id="gift_predeceased_first"
+                       v-model.trim="res.beneficiary.firstName.$model"
+                       :class="res.beneficiary.firstName.$anyError ? 'is-invalid':''"
+                       @blur="res.beneficiary.firstName.$touch"
+                       class="form-control form-control-lg"></div>
+            <div class="col-sm-6"><label class="form-col-form-label h4" for="gift_predeceased_middle">Middle Name of
+                    named beneficiary (required)</label>
+                <input name="gift_predeceased_middle"
+                       id="gift_predeceased_middle"
+                       v-model.trim="res.beneficiary.middleName.$model"
+                       :class="res.beneficiary.middleName.$anyError ? 'is-invalid':''"
+                       @blur="res.beneficiary.middleName.$touch"
+                       class="form-control form-control-lg"></div>
+            <div class="col-sm-6">
+                <label class="form-col-form-label h4" for="gift_predeceased_last">Last Name of
+                    named beneficiary (required)</label>
+                <input name="gift_predeceased_last"
+                       id="gift_predeceased_last"
+                       v-model.trim="res.beneficiary.lastName.$model"
+                       :class="res.beneficiary.lastName.$anyError ? 'is-invalid':''"
+                       @blur="res.beneficiary.lastName.$touch"
+                       class="form-control form-control-lg"></div>
+        </section>
         <div class="row">
             <div class="col-sm-12 text-center">
                 <div class="d-flex justify-content-center mt-3">
@@ -154,7 +145,8 @@
     <div class="card-body">
         <div class="row col">
             <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"
-                 v-if="finalResidueShare && (maxResidueShare != finalResidueShare)"> Overall share values should be equal to @{{ maxResidueShare }} current is @{{ finalResidueShare }}
+                 v-if="finalResidueShare && (maxResidueShare != finalResidueShare)"> Overall share values should be
+                equal to @{{ maxResidueShare }} current is @{{ finalResidueShare }}
             </div>
         </div>
     </div>

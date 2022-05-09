@@ -51,7 +51,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-body" id="will-print-{{$datum->id}}">
-                        @include('dashboard.willform.print.index',['data' => $datum])
+                            @include('dashboard.willform.print.single',$datum->toArray())
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

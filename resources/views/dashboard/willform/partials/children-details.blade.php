@@ -1,4 +1,6 @@
-<div class="card card-accent-primary" v-if="step==='children_details'">
+<div class="card card-accent-primary"
+     v-if="step==='children_details'"
+>
     <div class="card-header h3"><strong>Children Details</strong></div>
     <div class="card-body hide" v-if="hasMoreThanOneChildren">
         <div class="form-group">
@@ -56,11 +58,11 @@
                     <label class="form-col-form-label h4" for="first_name_guardian">First Name of Guardian
                         (required)</label>
                     <input class="form-control form-control-lg" name="first_name_second"
-                           v-model.trim="child.GuardianFirstName.$model"
-                           :class="child.GuardianFirstName.$anyError ? 'is-invalid':''"
-                           @blur="child.GuardianFirstName.$touch"
+                           v-model.trim="child.guardianFirstName.$model"
+                           :class="child.guardianFirstName.$anyError ? 'is-invalid':''"
+                           @blur="child.guardianFirstName.$touch"
                            type="text" placeholder="First Name" required data-parsley-trigger="change"/>
-                    <div class="invalid-feedback" v-if="child.GuardianFirstName.$anyError">Please provide first
+                    <div class="invalid-feedback" v-if="child.guardianFirstName.$anyError">Please provide first
                         name.
                     </div>
                 </div>
@@ -68,12 +70,12 @@
                     <label class="form-col-form-label h4" for="middle_name_guardian">Middle Name of Guardian
                         (optional)</label>
                     <input class="form-control form-control-lg" id="middle_name"
-                           v-model.trim="child.GuardianMiddleName.$model"
-                           :class="child.GuardianMiddleName.$anyError ? 'is-invalid':''"
-                           @blur="child.GuardianMiddleName.$touch"
+                           v-model.trim="child.guardianMiddleName.$model"
+                           :class="child.guardianMiddleName.$anyError ? 'is-invalid':''"
+                           @blur="child.guardianMiddleName.$touch"
                            type="text"
                            placeholder="Middle Name">
-                    <div class="invalid-feedback" v-if="child.GuardianMiddleName.$anyError">Please provide a valid
+                    <div class="invalid-feedback" v-if="child.guardianMiddleName.$anyError">Please provide a valid
                         middle name.
                     </div>
                 </div>
@@ -81,12 +83,12 @@
                     <label class="form-col-form-label h4" for="last_name_guardian">Last Name of Guardian
                         (required)</label>
                     <input class="form-control form-control-lg" id="last_name"
-                           v-model.trim="child.GuardianLastName.$model"
-                           :class="child.GuardianLastName.$anyError ? 'is-invalid':''"
-                           @blur="child.GuardianLastName.$touch"
+                           v-model.trim="child.guardianLastName.$model"
+                           :class="child.guardianLastName.$anyError ? 'is-invalid':''"
+                           @blur="child.guardianLastName.$touch"
                            placeholder="Last Name" required
                     />
-                    <div class="invalid-feedback" v-if="child.GuardianLastName.$anyError">Please provide last
+                    <div class="invalid-feedback" v-if="child.guardianLastName.$anyError">Please provide last
                         name.
                     </div>
                 </div>
@@ -94,13 +96,10 @@
                     <label class="form-col-form-label h4" for="guardian_relation">@{{ children[index].firstName ?
                         children[index].firstName : 'He/She' }}
                         is my (required)</label>
-                    <select class="form-control form-control-lg" id="guardian_relation" name="guardian_relation"
-                            v-model.trim="child.relation.$model"
-                            :class="child.relation.$anyError ? 'is-invalid':''"
+                    <relationship-selector
                             @blur="child.relation.$touch"
-                            data-my-validation="relation">
-                        @include('dashboard.willform.partials.combo-options')
-                    </select>
+                            v-model.trim="child.relation.$model"
+                            :class="child.relation.$anyError ? 'is-invalid':''"></relationship-selector>
                     <div class="invalid-feedback" v-if="child.relation.$anyError">Please choose an option</div>
                 </div>
                 <div class="form-group col-sm-6" v-if="hasMirrorWill">
@@ -109,19 +108,16 @@
                         is
                         @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                         (required)</label>
-                    <select class="form-control form-control-lg" id="guardian_second_relation"
-                            v-model.trim="child.secondApplicantRelation.$model"
-                            :class="child.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                    <relationship-selector
                             @blur="child.secondApplicantRelation.$touch"
-                            name="guardian_second_relation" data-my-validation="relation">
-                        @include('dashboard.willform.partials.combo-options')
-                    </select>
+                            v-model.trim="child.secondApplicantRelation.$model"
+                            :class="child.secondApplicantRelation.$anyError ? 'is-invalid':''"></relationship-selector>
                     <div class="invalid-feedback" v-if="child.secondApplicantRelation.$anyError">Please choose
                         an option
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label class="form-col-form-label h4" for="address_line1_guardian">Address Line1
+                    <label class="form-col-form-label h4" for="address_line1_guardian">Address Line 1
                         (required)</label>
                     <input class="form-control form-control-lg"
                            v-model.trim="child.line1.$model"
@@ -133,7 +129,7 @@
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label class="form-col-form-label h4" for="address_line2_guardian">Address Line2
+                    <label class="form-col-form-label h4" for="address_line2_guardian">Address Line 2
                         (required)</label>
                     <input class="form-control form-control-lg"
                            v-model.trim="child.line2.$model"

@@ -1,53 +1,104 @@
 <script>
-import {alphaNum, requiredIf, decimal, maxLength} from "vuelidate/lib/validators";
+import {requiredIf} from "vuelidate/lib/validators";
+import axios from 'axios';
+import moment from 'moment';
 
 const {required, alpha, minLength, email, helpers, maxValue, sameAs, numeric} = require('vuelidate/lib/validators')
 const postal = helpers.regex('required', /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$/)
 const ageValidation = (dateString) => {
-    const today = new Date();
-    const birthDate = new Date(dateString);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    return age > 18;
+  const today = new Date();
+  const birthDate = moment(dateString, "DD/MM/YYYY").toDate();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age > 18;
+}
+
+const maxShareValidation = (value, nested) => {
+  if (nested.shareType === 'share') {
+    return value <= 100
+  } else {
+    return true
+  }
 }
 
 const maxValueProperty = (value, nested) => {
-    if (nested.shareType === 'share') {
-        return value <= 100
-    } else {
-        return value <= 1
-    }
+  if (nested.shareType === 'share') {
+    return value <= 100
+  } else {
+    return value <= 1
+  }
 }
-
 
 const maxFinalValue = (value, nested) => {
-    if (nested.persons[0].shareType === 'share') {
-        var l = 0;
-        nested.persons.forEach(person => {
-            l = l + person.share
-        })
-        return l == 100
-    } else {
-        var l = 0.0;
-        nested.persons.forEach(person => {
-            l = l + person.share
-        })
-        return l == 1
-    }
+  if (nested.persons[0].shareType === 'share') {
+    var l = 0;
+    nested.persons.forEach(person => {
+      l = l + person.share
+    })
+    return l == 100
+  } else {
+    var l = 0.0;
+    nested.persons.forEach(person => {
+      l = l + person.share
+    })
+    return l == 1
+  }
 }
 
-import axios from 'axios';
+const maxBusinessShare = (value, nested) => {
+  if (!nested.business) {
+    return true;
+  }
+  if (nested.persons[0].shareType === 'share') {
+    var l = 0;
+    nested.persons.forEach(person => {
+      l = l + person.share
+    })
+    return l == 100
+  } else {
+    return true;
+  }
+}
+
+const maxBankShare = (value, nested) => {
+  if (!nested.bankName) {
+    return true;
+  }
+  if (nested.persons[0].shareType === 'share') {
+    var l = 0;
+    nested.persons.forEach(person => {
+      l = l + person.share
+    })
+    return l == 100
+  } else {
+    return true;
+  }
+}
+const maxPropertyShare = (value, nested) => {
+  if (!nested.name) {
+    return true;
+  }
+  if (nested.persons[0].shareType === 'share') {
+    var l = 0;
+    nested.persons.forEach(person => {
+      l = l + person.share
+    })
+    return l == 100
+  } else {
+    return true;
+  }
+}
+
 
 export default {
     name: "EditWillComponent",
-    props: ['data', 'id'],
+    props: ['data', 'id', 'activeStep'],
     data() {
         return {
-            id: null,
-            step: 1,
+            step: this.activeStep,
             form1: {
                 firstName: "",
                 middleName: "",
@@ -419,605 +470,744 @@ export default {
         }
     },
     validations() {
-        return {
-            form1: {
-                firstName: {
-                    required,
-                    minLength: minLength(2),
-                },
-                middleName: {
-                    minLength: minLength(2),
-                },
-                lastName: {
-                    minLength: minLength(2),
-                },
-                email: {
-                    required,
-                    email
-                },
-                dob: {
-                    required,
-                    ageValidation
-                },
-            },
-            addressSummary: {
-                line1: {
-                    required
-                },
-                line2: {},
-                city: {
-                    required
-                },
-                county: {
-                    required
-                },
-                country: {
-                    required
-                },
-                postal: {
-                    required,
-                    postal
-                }
-            },
-            secondApplicant: {
-                firstName: {
-                    required,
-                    minLength: minLength(2),
-                },
-                middleName: {
-                    minLength: minLength(2),
-                },
-                lastName: {
-                    minLength: minLength(2),
-                },
-                email: {
-                    required,
-                    email
-                },
-                dob: {
-                    required,
-                    ageValidation
-                },
-                relation: {
-                    required
-                },
-                line1: {
-                    required
-                },
-                line2: {},
-                city: {
-                    required
-                },
-                county: {
-                    required
-                },
-                country: {
-                    required
-                },
-                postal: {
-                    required,
-                    postal
-                },
-            },
-            executor: {
-                required,
-                $each: {
-                    firstName: {
-                        required,
-                        minLength: minLength(2),
-                    },
-                    middleName: {
-                        minLength: minLength(2),
-                    },
-                    lastName: {
-                        minLength: minLength(2),
-                    },
-                    email: {
-                        required,
-                        email
-                    },
-                    dob: {
-                        required,
-                        ageValidation
-                    },
-                    relation: {
-                        required
-                    },
-                    line1: {
-                        required
-                    },
-                    line2: {},
-                    city: {
-                        required
-                    },
-                    county: {
-                        required
-                    },
-                    country: {
-                        required
-                    },
-                    postal: {
-                        required,
-                        postal
-                    },
-                    secondApplicantRelation: {
-                        required: requiredIf(function () {
-                            return this.hasMirrorWill
-                        })
-                    }
-                }
-            },
-            reserveExecutor: {
-                required,
-                $each: {
-                    firstName: {
-                        required,
-                        minLength: minLength(2),
-                    },
-                    middleName: {
-                        minLength: minLength(2),
-                    },
-                    lastName: {
-                        minLength: minLength(2),
-                    },
-                    email: {
-                        required,
-                        email
-                    },
-                    dob: {
-                        required,
-                        ageValidation
-                    },
-                    relation: {
-                        required
-                    },
-                    line1: {
-                        required
-                    },
-                    line2: {},
-                    city: {
-                        required
-                    },
-                    county: {
-                        required
-                    },
-                    country: {
-                        required
-                    },
-                    postal: {
-                        required,
-                        postal
-                    },
-                    secondApplicantRelation: {
-                        required: requiredIf(function () {
-                            return this.hasMirrorWill
-                        })
-                    }
-                }
-            },
-            reserveGuardian: {
-                required,
-                $each: {
-                    firstName: {
-                        required,
-                        minLength: minLength(2),
-                    },
-                    middleName: {
-                        minLength: minLength(2),
-                    },
-                    lastName: {
-                        minLength: minLength(2),
-                    },
-                    email: {
-                        required,
-                        email
-                    },
-                    dob: {
-                        required,
-                    },
-                    relation: {
-                        required
-                    },
-                    line1: {
-                        required
-                    },
-                    line2: {},
-                    city: {
-                        required
-                    },
-                    county: {
-                        required
-                    },
-                    country: {
-                        required
-                    },
-                    postal: {
-                        required,
-                        postal
-                    },
-                    secondApplicantRelation: {
-                        required: requiredIf(function () {
-                            return this.hasMirrorWill
-                        })
-                    }
-                }
-            },
-            children: {
-                required,
-                $each: {
-                    firstName: {
-                        minLength: minLength(2),
-                    },
-                    middleName: {
-                        minLength: minLength(2),
-                    },
-                    lastName: {
-                        minLength: minLength(2),
-                    },
-                    GuardianFirstName: {
-                        minLength: minLength(2),
-                    },
-                    GuardianMiddleName: {
-                        minLength: minLength(2),
-                    },
-                    GuardianLastName: {
-                        minLength: minLength(2),
-                    },
-                    email: {
-                        required,
-                        email
-                    },
-                    dob: {
-                        required,
-                    },
-                    relation: {
-                        required
-                    },
-                    line1: {
-                        required
-                    },
-                    line2: {},
-                    city: {
-                        required
-                    },
-                    county: {
-                        required
-                    },
-                    country: {
-                        required
-                    },
-                    postal: {
-                        required,
-                        postal
-                    },
-                    secondApplicantRelation: {
-                        required: requiredIf(function () {
-                            return this.hasMirrorWill
-                        })
-                    }
-                }
-            },
-            giftDetails: {
-                required,
-                $each: {
-                    giftTo: {
-                        required
-                    },
-                    firstName: {
-                        required,
-                        minLength: minLength(2),
-                    },
-                    middleName: {
-                        minLength: minLength(2),
-                    },
-                    lastName: {
-                        minLength: minLength(2),
-                    },
-                    relation: {
-                        required
-                    },
-                    secondApplicantRelation: {
-                        required: requiredIf(function () {
-                            return this.hasMirrorWill
-                        })
-                    },
-                    predeceased: {
-                        required
-                    },
-                    beneficiary: {
-                        required,
-                        firstName: {
-                            minLength: minLength(2),
-                        },
-                        middleName: {
-                            minLength: minLength(2),
-                        },
-                        lastName: {
-                            minLength: minLength(2),
-                        }
-                    }
-                },
-
-            },
-            giftMoney: {
-                $each: {
-                    moneyDetails: {required},
-                    firstName: {required},
-                    middleName: {
-                        minLength: minLength(2),
-                    },
-                    lastName: {
-                        minLength: minLength(2),
-                    },
-                    relation: {
-                        required
-                    },
-                    secondApplicantRelation: {
-                        required: requiredIf(function () {
-                            return this.hasMirrorWill
-                        })
-                    },
-                    predeceased: {
-                        required
-                    },
-                    beneficiary: {
-                        required,
-                        firstName: {
-                            minLength: minLength(2),
-                        },
-                        middleName: {
-                            minLength: minLength(2),
-                        },
-                        lastName: {
-                            minLength: minLength(2),
-                        }
-                    }
-                }
-            },
-            giftCharity: {
-                name: {
-                    minLength: minLength(2),
-                },
-                reference: {
-                    minLength: minLength(2),
-                },
-                money: {
-                    numeric
-                },
-            },
-            giftBank: {
-                $each: {
-                    bankName: {},
-                    bankReference: {},
-                    persons: {
-                        $each: {
-                            firstName: {
-                                required: requiredIf(function (nested) {
-                                    return this.giftBank[nested.parent].bankName
-                                })
-                            },
-                            middleName: {
-                                minLength: minLength(2),
-                            },
-                            lastName: {
-                                minLength: minLength(2),
-                            },
-                            relation: {
-                                required: requiredIf(function (nested) {
-                                    return this.giftBank[nested.parent].bankName
-                                })
-                            },
-                            secondApplicantRelation: {
-                                required: requiredIf(function () {
-                                    return this.hasMirrorWill
-                                })
-                            },
-                            predeceased: {
-                                required: requiredIf(function (nested) {
-                                    return this.giftBank[nested.parent].bankName
-                                })
-                            },
-                            shareType: {
-                                required
-                            },
-                            share: {
-                                hasMaxBankShare: function (value, nested) {
-                                    return this.bankShareValue(value, nested)
-                                }
-                            },
-                            beneficiary: {
-                                required,
-                                firstName: {
-                                    minLength: minLength(2),
-                                },
-                                middleName: {
-                                    minLength: minLength(2),
-                                },
-                                lastName: {
-                                    minLength: minLength(2),
-                                }
-                            }
-
-                        }
-                    }
-                },
-            },
-            giftProperty: {
-                $each: {
-                    name: {},
-                    line1: {
-                        required
-                    },
-                    line2: {},
-                    city: {
-                        required
-                    },
-                    county: {
-                        required
-                    },
-                    country: {
-                        required
-                    },
-                    postal: {
-                        required,
-                        postal
-                    },
-                    finalShare: {},
-                    persons: {
-                        $each: {
-                            firstName: {required},
-                            middleName: {
-                                minLength: minLength(2),
-                            },
-                            lastName: {
-                                minLength: minLength(2),
-                            },
-                            relation: {
-                                required
-                            },
-                            secondApplicantRelation: {
-                                required: requiredIf(function () {
-                                    return this.hasMirrorWill
-                                })
-                            },
-                            predeceased: {
-                                required
-                            },
-                            shareType: {
-                                required
-                            },
-                            share: {
-                                maxValueProperty
-                            }
-                        }
-                    }
-                }
-            },
-            giftPet: {
-                $each: {
-                    petDetails: {},
-                    firstName: {required},
-                    middleName: {
-                        minLength: minLength(2),
-                    },
-                    lastName: {
-                        minLength: minLength(2),
-                    },
-                    predeceased: {
-                        required
-                    },
-                    beneficiary: {
-                        required,
-                        firstName: {
-                            required: requiredIf((nested) => {
-                                return this.giftMoney.predeceased === 'Assign to named beneficiary'
-                            })
-                        },
-                        middleName: {
-                            minLength: minLength(2),
-                        },
-                        lastName: {
-                            required: requiredIf((nested) => {
-                                return this.giftMoney.predeceased === 'Assign to named beneficiary'
-                            })
-                        }
-                    }
-                }
-            },
-            businessAssignment: {
-                $each: {
-                    business: {},
-                    firstName: {
-                        required,
-                        minLength: minLength(2),
-                    },
-                    middleName: {
-                        minLength: minLength(2),
-                    },
-                    lastName: {
-                        minLength: minLength(2),
-                    },
-                    relation: {
-                        required: requiredIf(function (nested) {
-                            return this.businessAssignment[nested.parent].business
-                        })
-                    },
-                    secondApplicantRelation: {
-                        required: requiredIf(function () {
-                            return this.hasMirrorWill
-                        })
-                    },
-                    finalShare: {
-                        maxFinalValue
-                    },
-                    persons: {
-                        $each: {
-                            firstName: {},
-                            middleName: {
-                                minLength: minLength(2),
-                            },
-                            lastName: {
-                                minLength: minLength(2),
-                            },
-                            relation: {
-                                required
-                            },
-                            secondApplicantRelation: {},
-                            shareType: {
-                                required
-                            },
-                            share: {
-                                maxValueProperty
-                            },
-                            predeceased: {
-                                required
-                            },
-                            beneficiary: {
-                                required,
-                                firstName: {
-                                    minLength: minLength(2),
-                                },
-                                middleName: {
-                                    minLength: minLength(2),
-                                },
-                                lastName: {
-                                    minLength: minLength(2),
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            residue: {
-                $each: {
-                    firstName: "",
-                    middleName: "",
-                    lastName: "",
-                    relation: "",
-                    secondApplicantRelation: {
-                        required: requiredIf(function () {
-                            return this.hasMirrorWill
-                        })
-                    },
-                    predeceased: "",
-                    shareType: "",
-                    share: "",
-                    beneficiary: {
-                        firstName: {
-                            minLength: minLength(2),
-                        },
-                        middleName: {
-                            minLength: minLength(2),
-                        },
-                        lastName: {
-                            minLength: minLength(2),
-                        }
-                    }
-                }
-            }
+    return {
+      form1: {
+        firstName: {
+          required,
+          minLength: minLength(2),
+        },
+        middleName: {
+          minLength: minLength(2),
+        },
+        lastName: {
+          required,
+          minLength: minLength(2),
+        },
+        email: {
+          required,
+          email
+        },
+        dob: {
+          required,
+          ageValidation
+        },
+      },
+      addressSummary: {
+        line1: {
+          required
+        },
+        line2: {},
+        city: {
+          required
+        },
+        county: {
+          required
+        },
+        country: {
+          required
+        },
+        postal: {
+          required,
+          postal
         }
-    },
+      },
+      secondApplicant: {
+        firstName: {
+          required,
+          minLength: minLength(2),
+        },
+        middleName: {
+          minLength: minLength(2),
+        },
+        lastName: {
+          required,
+          minLength: minLength(2),
+        },
+        email: {
+          required,
+          email
+        },
+        dob: {
+          required,
+          ageValidation
+        },
+        relation: {
+          required
+        },
+        line1: {
+          required
+        },
+        line2: {},
+        city: {
+          required
+        },
+        county: {
+          required
+        },
+        country: {
+          required
+        },
+        postal: {
+          required,
+          postal
+        },
+      },
+      executor: {
+        required,
+        $each: {
+          firstName: {
+            required,
+            minLength: minLength(2),
+          },
+          middleName: {
+            minLength: minLength(2),
+          },
+          lastName: {
+            required,
+            minLength: minLength(2),
+          },
+          email: {
+            required,
+            email
+          },
+          dob: {
+            required,
+            ageValidation
+          },
+          relation: {
+            required
+          },
+          line1: {
+            required
+          },
+          line2: {},
+          city: {
+            required
+          },
+          county: {
+            required
+          },
+          country: {
+            required
+          },
+          postal: {
+            required,
+            postal
+          },
+          secondApplicantRelation: {
+            required: requiredIf(function () {
+              return this.hasMirrorWill
+            })
+          }
+        }
+      },
+      reserveExecutor: {
+        required,
+        $each: {
+          firstName: {
+            required,
+            minLength: minLength(2),
+          },
+          middleName: {
+            minLength: minLength(2),
+          },
+          lastName: {
+            required,
+            minLength: minLength(2),
+          },
+          email: {
+            required,
+            email
+          },
+          dob: {
+            required,
+            ageValidation
+          },
+          relation: {
+            required
+          },
+          line1: {
+            required
+          },
+          line2: {},
+          city: {
+            required
+          },
+          county: {
+            required
+          },
+          country: {
+            required
+          },
+          postal: {
+            required,
+            postal
+          },
+          secondApplicantRelation: {
+            required: requiredIf(function () {
+              return this.hasMirrorWill
+            })
+          }
+        }
+      },
+      reserveGuardian: {
+        required,
+        $each: {
+          firstName: {
+            required,
+            minLength: minLength(2),
+          },
+          middleName: {
+            minLength: minLength(2),
+          },
+          lastName: {
+            required,
+            minLength: minLength(2),
+          },
+          email: {
+            required,
+            email
+          },
+          dob: {
+            required,
+          },
+          relation: {
+            required
+          },
+          line1: {
+            required
+          },
+          line2: {},
+          city: {
+            required
+          },
+          county: {
+            required
+          },
+          country: {
+            required
+          },
+          postal: {
+            required,
+            postal
+          },
+          secondApplicantRelation: {
+            required: requiredIf(function () {
+              return this.hasMirrorWill
+            })
+          }
+        }
+      },
+      children: {
+        required,
+        $each: {
+          firstName: {
+            required: requiredIf(nested => {
+              return !this.sameGuardianAllChildren
+            }),
+            minLength: minLength(2),
+          },
+          middleName: {
+            minLength: minLength(2),
+          },
+          lastName: {
+            required: requiredIf(nested => {
+              return !this.sameGuardianAllChildren
+            }),
+            minLength: minLength(2),
+          },
+          guardianFirstName: {
+            required,
+            minLength: minLength(2),
+          },
+          guardianMiddleName: {
+            minLength: minLength(2),
+          },
+          guardianLastName: {
+            required,
+            minLength: minLength(2),
+          },
+          relation: {
+            required
+          },
+          line1: {
+            required
+          },
+          line2: {},
+          city: {
+            required
+          },
+          county: {
+            required
+          },
+          country: {
+            required
+          },
+          postal: {
+            required,
+            postal
+          },
+          secondApplicantRelation: {
+            required: requiredIf(function () {
+              return this.hasMirrorWill
+            })
+          }
+        }
+      },
+      giftDetails: {
+        required,
+        $each: {
+          giftTo: {
+            minLength: minLength(2),
+          },
+          firstName: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.giftTo
+            }),
+            minLength: minLength(2),
+          },
+          middleName: {
+            minLength: minLength(2),
+          },
+          lastName: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.giftTo
+            }),
+            minLength: minLength(2),
+          },
+          relation: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.giftTo
+            }),
+          },
+          secondApplicantRelation: {
+            required: requiredIf(function (nestedModel) {
+              return this.hasMirrorWill && nestedModel.giftTo
+            })
+          },
+          predeceased: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.giftTo
+            }),
+          },
+          beneficiary: {
+            id: {
+              required: requiredIf(function (nestedModel) {
+                return this.$v.giftDetails.$each[nestedModel.id]?.$model.giftTo && this.$v.giftDetails.$each[nestedModel.id]?.$model.predeceased === 'Assign to named beneficiary'
+              }),
+            },
+            firstName: {
+              required: requiredIf(function (nestedModel) {
+                return this.$v.giftDetails.$each[nestedModel.id]?.$model.giftTo && this.$v.giftDetails.$each[nestedModel.id]?.$model.predeceased === 'Assign to named beneficiary'
+              }),
+              minLength: minLength(2),
+            },
+            middleName: {
+              minLength: minLength(2),
+            },
+            lastName: {
+              required: requiredIf(function (nestedModel) {
+                return this.$v.giftDetails.$each[nestedModel.id]?.$model.giftTo && this.$v.giftDetails.$each[nestedModel.id]?.$model.predeceased === 'Assign to named beneficiary'
+              }),
+              minLength: minLength(2),
+            }
+          }
+        },
+
+      },
+      giftMoney: {
+        $each: {
+          moneyDetails: {},
+          firstName: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.moneyDetails
+            }),
+            minLength: minLength(2),
+          },
+          middleName: {
+            minLength: minLength(2),
+          },
+          lastName: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.moneyDetails
+            }),
+            minLength: minLength(2),
+          },
+          relation: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.moneyDetails
+            }),
+            minLength: minLength(2),
+          },
+          secondApplicantRelation: {
+            required: requiredIf(function () {
+              return this.hasMirrorWill
+            })
+          },
+          predeceased: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.moneyDetails
+            }),
+            minLength: minLength(2),
+          },
+          beneficiary: {
+            required,
+            id: {},
+            firstName: {
+              required: requiredIf(function (nestedModel) {
+                return this.$v.giftMoney.$each[nestedModel.id]?.$model.moneyDetails && this.$v.giftMoney.$each[nestedModel.id]?.$model.predeceased === 'Assign to named beneficiary'
+              }),
+              minLength: minLength(2),
+            },
+            middleName: {
+              minLength: minLength(2),
+            },
+            lastName: {
+              required: requiredIf(function (nestedModel) {
+                return this.$v.giftMoney.$each[nestedModel.id]?.$model.moneyDetails && this.$v.giftMoney.$each[nestedModel.id]?.$model.predeceased === 'Assign to named beneficiary'
+              }),
+              minLength: minLength(2),
+            }
+          }
+        }
+      },
+      giftCharity: {
+        name: {
+          minLength: minLength(2),
+        },
+        reference: {
+          minLength: minLength(2),
+          required: requiredIf(function (nestedModel) {
+            return nestedModel.name
+          }),
+        },
+        money: {
+          numeric,
+          required: requiredIf(function (nestedModel) {
+            return nestedModel.name
+          }),
+        },
+      },
+      giftBank: {
+        $each: {
+          bankName: {},
+          bankReference: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.bankName
+            }),
+          },
+          finalShare: {
+            maxBankShare
+          },
+          persons: {
+            required,
+            $each: {
+              id: {},
+              firstName: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftBank.$each[nestedModel.id]?.$model.bankName
+                })
+              },
+              middleName: {
+                minLength: minLength(2),
+              },
+              lastName: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftBank.$each[nestedModel.id]?.$model.bankName
+                }),
+                minLength: minLength(2),
+              },
+              relation: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftBank.$each[nestedModel.id]?.$model.bankName
+                }),
+              },
+              secondApplicantRelation: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftBank.$each[nestedModel.id]?.$model.bankName && this.hasMirrorWill
+                }),
+              },
+              predeceased: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftBank.$each[nestedModel.id]?.$model.bankName
+                }),
+              },
+              shareType: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftBank.$each[nestedModel.id]?.$model.bankName
+                }),
+              },
+              maxShare: {},
+              share: {
+                checkMax: this.giftMaxBankShare
+              },
+              beneficiary: {
+                id: {},
+                personId: {},
+                firstName: {
+                  required: requiredIf(function (nestedModel) {
+                    return this.$v.giftBank.$each[nestedModel.id]?.$model.bankName && this.$v.giftBank.$each[nestedModel.id]?.$model.persons[nestedModel.personId].predeceased === 'Assign to named beneficiary'
+                  }),
+                  minLength: minLength(2),
+                },
+                middleName: {
+                  minLength: minLength(2),
+                },
+                lastName: {
+                  required: requiredIf(function (nestedModel) {
+                    return this.$v.giftBank.$each[nestedModel.id]?.$model.bankName && this.$v.giftBank.$each[nestedModel.id]?.$model.persons[nestedModel.personId].predeceased === 'Assign to named beneficiary'
+                  }),
+                  minLength: minLength(2),
+                }
+              }
+
+            }
+          }
+        },
+      },
+      giftProperty: {
+        $each: {
+          name: {},
+          line1: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.name
+            }),
+          },
+          line2: {},
+          city: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.name
+            }),
+          },
+          county: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.name
+            }),
+          },
+          country: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.name
+            }),
+          },
+          postal: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.name
+            }),
+            postal
+          },
+          finalShare: {
+            maxPropertyShare
+          },
+          persons: {
+            $each: {
+              id: {},
+              firstName: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftProperty.$each[nestedModel.id]?.$model.name
+                }),
+              },
+              middleName: {
+                minLength: minLength(2),
+              },
+              lastName: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftProperty.$each[nestedModel.id]?.$model.name
+                }),
+                minLength: minLength(2),
+              },
+              relation: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftProperty.$each[nestedModel.id]?.$model.name
+                }),
+              },
+              secondApplicantRelation: {
+                required: requiredIf(function (nestedModel) {
+                  return this.hasMirrorWill && this.$v.giftProperty.$each[nestedModel.id]?.$model.name
+                })
+              },
+              predeceased: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftProperty.$each[nestedModel.id]?.$model.name
+                })
+              },
+              shareType: {
+                required: requiredIf(function (nestedModel) {
+                  return this.$v.giftProperty.$each[nestedModel.id]?.$model.name
+                })
+              },
+              share: {},
+              beneficiary: {
+                id: {},
+                personId: {},
+                required,
+                firstName: {
+                  required: requiredIf(function (nestedModel) {
+                    return this.$v.giftProperty.$each[nestedModel.id]?.$model.name && this.$v.giftProperty.$each[nestedModel.id]?.$model.persons[nestedModel.personId].predeceased === 'Assign to named beneficiary'
+                  }),
+                  minLength: minLength(2),
+                },
+                middleName: {
+                  minLength: minLength(2),
+                },
+                lastName: {
+                  required: requiredIf(function (nestedModel) {
+                    return this.$v.giftProperty.$each[nestedModel.id]?.$model.name && this.$v.giftProperty.$each[nestedModel.id]?.$model.persons[nestedModel.personId].predeceased === 'Assign to named beneficiary'
+                  }),
+                  minLength: minLength(2),
+                }
+              }
+
+            }
+          }
+        }
+      },
+      giftPet: {
+        required,
+        $each: {
+          petDetails: {},
+          firstName: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.petDetails
+            }),
+          },
+          middleName: {
+            minLength: minLength(2),
+          },
+          lastName: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.petDetails
+            }),
+            minLength: minLength(2),
+          },
+          predeceased: {
+            required: requiredIf(function (nestedModel) {
+              return nestedModel.petDetails
+            })
+          },
+          beneficiary: {
+            id: {},
+            firstName: {
+              required: requiredIf(function (nestedModel) {
+                return nestedModel.petDetails && nestedModel.predeceased === 'Assign to named beneficiary'
+              }),
+            },
+            middleName: {
+              minLength: minLength(2),
+            },
+            lastName: {
+              required: requiredIf(function (nestedModel) {
+                return nestedModel.petDetails && nestedModel.predeceased === 'Assign to named beneficiary'
+              }),
+            }
+          }
+        }
+      },
+      businessAssignment: {
+        required,
+        $each: {
+          business: {},
+          finalShare: {
+            maxBusinessShare
+          },
+          persons: {
+            $each: {
+              id: {},
+              firstName: {
+                required: requiredIf((nestedModel) => {
+                  return this.$v.businessAssignment.$each[nestedModel.id]?.$model.business?.$model
+                })
+              },
+              middleName: {
+                minLength: minLength(2),
+              },
+              lastName: {
+                required: requiredIf((nestedModel) => {
+                  return this.$v.businessAssignment.$each[nestedModel.id]?.business?.$model
+                }),
+                minLength: minLength(2),
+              },
+              relation: {
+                required: requiredIf((nestedModel) => {
+                  return this.$v.businessAssignment.$each[nestedModel.id]?.business?.$model
+                }),
+              },
+              secondApplicantRelation: {
+                required: requiredIf((nestedModel) => {
+                  return this.$v.businessAssignment.$each[nestedModel.id]?.business?.$model && this.hasMirrorWill
+                }),
+              },
+              shareType: {
+                required: requiredIf((nestedModel) => {
+                  return this.$v.businessAssignment.$each[nestedModel.id]?.business?.$model
+                }),
+              },
+              share: {
+                maxShareValidation
+              },
+              predeceased: {
+                required: requiredIf((nestedModel) => {
+                  return this.$v.businessAssignment.$each[nestedModel.id]?.business?.$model
+                })
+              },
+              beneficiary: {
+                required,
+                firstName: {
+                  minLength: minLength(2),
+                },
+                middleName: {
+                  minLength: minLength(2),
+                },
+                lastName: {
+                  minLength: minLength(2),
+                }
+              }
+            }
+          }
+        }
+      },
+      residue: {
+        $each: {
+          firstName: "",
+          middleName: "",
+          lastName: "",
+          relation: "",
+          secondApplicantRelation: {
+            required: requiredIf(function () {
+              return this.hasMirrorWill
+            })
+          },
+          predeceased: "",
+          shareType: "",
+          share: "",
+          beneficiary: {
+            firstName: {
+              minLength: minLength(2),
+            },
+            middleName: {
+              minLength: minLength(2),
+            },
+            lastName: {
+              minLength: minLength(2),
+            }
+          }
+        }
+      }
+    }
+  },
     methods: {
+        notifyError() {
+            return this.$notify({
+                type: 'error',
+                title: 'Invalid Data',
+                text: 'Please check all the fields'
+            })
+        },
+        notifyUpdate() {
+            return this.$notify({
+                type: 'success',
+                title: 'Form Updated'
+            })
+        },
         backFromExecutor() {
             if (this.hasMirrorWill) {
                 this.step = 'second_applicant';
@@ -1215,129 +1405,188 @@ export default {
             this.giftBank.splice(i, 1)
         },
         submitForm(form) {
-            if (form === 1) {
-                this.$v.form1.$touch();
-                if (this.$v.form1.$invalid) {
-                    console.log('invalid entry')
-                } else {
-                    this.step = 'mirror_select'
-                }
-            } else if (form === 'mirror_select') {
-                this.step = 'address'
-            } else if (form === 'address') {
-                this.$v.addressSummary.$touch();
-                if (this.$v.addressSummary.$invalid) {
-                    console.log('invalid entry')
-                } else {
-                    if (this.hasMirrorWill) {
-                        this.step = 'second_applicant';
-                    } else {
-                        this.step = 'executor_summary'
-                    }
-                }
-            } else if (form === 'second_applicant') {
-                this.$v.secondApplicant.$touch();
-                if (this.$v.secondApplicant.$invalid) {
-                    console.log(this.$v.secondApplicant)
-                } else {
-                    this.step = 'executor_details'
-                }
-            } else if (form === 'executor_details') {
-                if (this.secondExecutor) {
-                    this.step = 'reserve_executor_details';
-                } else {
-                    this.step = 'executor_summary';
-                }
-            } else if (form === 'executor_summary') {
-                this.$v.executor.$touch()
-                if (this.$v.executor.$invalid) {
-                    console.log('Invalid Details in executor form')
-                } else {
-                    this.step = 'reserve_executor_details';
-                }
-            } else if (form === 'reserve_executor_details') {
-                this.$v.reserveExecutor.$touch();
-                if (this.$v.reserveExecutor.$invalid) {
-                    console.log('Invalid details in reserve executor form')
-                } else {
-                    if (this.hasChildrenUnderEighteen) {
-                        this.step = 'guardian';
-                    } else {
-                        this.step = 'gift_options';
-                    }
-                }
-            } else if (form === 'guardian') {
-                if (this.appointGuardian) {
-                    this.step = 'children_details';
-                } else {
-                    this.step = 'gift_options';
-                }
-            } else if (form === 'children_details') {
-                this.step = 'reserve_guardian';
-            } else if (form === 'reserve_guardian') {
-                this.step = 'gift_options'
-            } else if (form === 'gift_options') {
-                this.$v.giftDetails.$touch();
-                if (this.$v.giftDetails.invalid) {
-                    console.log('Error in gift details')
-                } else
-                    this.step = 'gift_money';
-            } else if (form === 'gift_money') {
-                this.$v.giftMoney.$touch();
-                if (this.$v.giftMoney.invalid) {
-                    console.log('Error in gift money')
-                } else
-                    this.step = 'gift_charity';
-            } else if (form === 'gift_charity') {
-                this.$v.giftCharity.$touch();
-                if (this.$v.giftCharity.invalid) {
-                    console.log('Error in gift charity')
-                } else {
-                    this.step = 'gift_bank'
-                }
-            } else if (form === 'gift_bank') {
-                this.giftBank.maxShare = this.finalShare;
-                this.$v.giftBank.$touch();
-                if (this.$v.giftBank.$invalid) {
-                    console.log('Error in gift bank')
-                } else {
-                    this.step = 'gift_property'
-                }
-            } else if (form === 'gift_property') {
-                this.$v.giftProperty.$touch();
-                if (this.$v.giftProperty.$invalid) {
-                    console.log('Error in gift property')
-                } else {
-                    this.step = 'gift_pet'
-                }
-            } else if (form === 'gift_pet') {
-                this.$v.giftBank.$touch();
-                if (this.$v.giftProperty.$invalid) {
-                    console.log('Error in gift bank')
-                } else {
-                    this.step = 'business_assignment';
-                }
-            } else if (form === 'business_assignment') {
-                this.$v.businessAssignment.$touch();
-                if (this.$v.businessAssignment.$invalid) {
-                    console.log('Error in business assignment')
-                } else {
-                    this.step = 'residue';
-                }
-            } else if (form === 'residue') {
-                this.$v.residue.$touch();
-                if (this.$v.residue.$invalid) {
-                    console.log('Error in residue')
-                } else {
-                    if (this.finalResidueShare && (this.maxResidueShare != this.finalResidueShare)) {
-                        console.log('Error in residue')
-                    } else
-                        this.step = 'request';
-                }
-            } else if (form === 'request') {
-                this.saveWillForm();
+        switch (form) {
+          case 1:
+            this.$v.form1.$touch();
+            if (this.$v.form1.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'mirror_select'
             }
-        },
+            return;
+          case 'mirror_select':
+            this.step = 'address'
+            return;
+          case 'address':
+            this.$v.addressSummary.$touch();
+            if (this.$v.addressSummary.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              if (this.hasMirrorWill) {
+                this.step = 'second_applicant';
+              } else {
+                this.step = 'executor_summary'
+              }
+            }
+            return;
+          case 'second_applicant':
+            this.$v.secondApplicant.$touch();
+            if (this.$v.secondApplicant.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'executor_details'
+            }
+            return;
+          case 'executor_details':
+            if (this.secondExecutor) {
+              this.step = 'reserve_executor_details';
+            } else {
+              this.step = 'executor_summary';
+            }
+            return;
+          case 'executor_summary':
+            this.$v.executor.$touch()
+            if (this.$v.executor.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'reserve_executor_details';
+            }
+            return;
+          case 'reserve_executor_details':
+            this.$v.reserveExecutor.$touch();
+            if (this.$v.reserveExecutor.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              if (this.hasChildrenUnderEighteen) {
+                this.step = 'guardian';
+              } else {
+                this.step = 'gift_options';
+              }
+            }
+            return;
+          case 'guardian':
+            this.step = this.appointGuardian ? 'children_details' : 'gift_options'
+            return;
+          case 'children_details':
+            this.$v.children.$touch();
+            if (this.$v.children.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'reserve_guardian';
+            }
+            return;
+          case 'reserve_guardian':
+            this.$v.reserveGuardian.$touch();
+            if (this.$v.reserveGuardian.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'gift_options';
+            }
+            return;
+          case 'gift_options':
+            this.$v.giftDetails.$touch();
+            if (this.$v.giftDetails.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'gift_money';
+            }
+            return;
+          case 'gift_money':
+            this.$v.giftMoney.$touch();
+            if (this.$v.giftMoney.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'gift_charity';
+            }
+            return;
+          case 'gift_bank':
+            this.giftBank.maxShare = this.finalShare;
+            this.$v.giftBank.$touch();
+            if (this.$v.giftBank.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'gift_property'
+            }
+            return;
+          case 'gift_charity':
+            this.$v.giftCharity.$touch();
+            if (this.$v.giftCharity.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'gift_bank'
+            }
+            return;
+          case 'gift_property':
+            this.$v.giftProperty.$touch();
+            if (this.$v.giftProperty.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'gift_pet'
+            }
+            return;
+          case 'gift_pet':
+            this.$v.giftPet.$touch();
+            if (this.$v.giftPet.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'business_assignment';
+            }
+            return;
+          case 'business_assignment':
+            this.$v.businessAssignment.$touch();
+            if (this.$v.businessAssignment.$invalid) {
+              this.notifyError()
+            } else {
+              this.saveWillForm()
+              this.notifyUpdate()
+              this.step = 'residue';
+            }
+            return;
+          case 'residue':
+            this.$v.residue.$touch();
+            if (this.$v.residue.$invalid) {
+              this.notifyError()
+            } else {
+              if (this.finalResidueShare && (this.maxResidueShare != this.finalResidueShare)) {
+                this.notifyError()
+              } else {
+                this.saveWillForm()
+                this.notifyUpdate()
+                this.step = 'request';
+              }
+            }
+            return;
+          case 'request':
+            this.saveWillForm();
+            return;
+        }
+      },
         addBankProperty() {
             this.giftProperty.push({
                 name: "",
@@ -1379,7 +1628,7 @@ export default {
             this.giftProperty.splice(index, 1)
         },
         saveWillForm() {
-            axios.post(`/willform/${this.id}`, {
+            const data = {
                 firstName: this.form1.firstName,
                 lastName: this.form1.lastName,
                 middleName: this.form1.middleName,
@@ -1409,6 +1658,12 @@ export default {
                 residue: this.residue,
                 request: this.request,
                 giftProperty: this.giftProperty,
+                step: this.step
+            }
+            axios({
+                method: this.id ? 'put' : 'post',
+                url: this.id ? `/willform/${this.id}` : '/willform',
+                data: data
             }).then(response => {
                 if (response.data.success) {
                     this.$notify({
@@ -1417,9 +1672,9 @@ export default {
                         text: response.data.message
                     })
                     this.id = response.data.will.id
-                    setTimeout(() => {
+                    if (response.data.status === 'pending_payment') {
                         this.step = 'payment';
-                    }, 1000);
+                    }
                 } else {
                     console.log(response.data);
                     this.$notify({
@@ -1428,13 +1683,11 @@ export default {
                         text: 'Error in the form'
                     })
                 }
-            }).catch(err => {
-                this.$notify({
-                    type: 'error',
-                    title: 'Error',
-                    text: 'Error in the form submissions'
-                })
-            })
+            }).catch(() => this.$notify({
+                type: 'error',
+                title: 'Error',
+                text: 'Error in the form submissions'
+            }))
         },
         submitFinalForm(args) {
             axios.patch(`/willform/${this.id}/payment`, {
@@ -1593,11 +1846,13 @@ export default {
     },
     mounted() {
         this.form1 = this.data.form1
+        if(this.step === 1)return;
+        this.addressSummary = this.data.addressSummary
+        if(this.step === 'address')return;
         this.hasPartner = this.data.hasPartner
         this.hasChildrenUnderEighteen = this.data.hasChildrenUnderEighteen
         this.hasMirrorWill = this.data.hasMirrorWill
         this.ownProperty = this.data.ownProperty
-        this.addressSummary = this.data.addressSummary
         this.secondApplicant = this.data.secondApplicant
         this.secondExecutor = this.data.secondExecutor
         this.executor = this.data.executor

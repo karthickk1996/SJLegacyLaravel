@@ -1,4 +1,4 @@
-<div class="card card-accent-success" v-if="step==='gift_options'">
+<div class="card card-accent-success" v-if="step === 'gift_options'">
     <div class="card-header h3">
         <strong>Gift of specific items </strong>
         <a class="card-header-action" href="#">
@@ -48,13 +48,10 @@
                 <label class="form-col-form-label h4" for="gift_relation">
                     <span>@{{ gift.firstName.$model ? gift.firstName.$model : 'He/She' }}'s</span> is my
                     (required)</label>
-                <select class="form-control form-control-lg" id="gift_relation"
-                        v-model.trim="gift.relation.$model"
-                        :class="gift.relation.$anyError ? 'is-invalid':''"
+                <relationship-selector
                         @blur="gift.relation.$touch"
-                        name="gift_relation">
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        v-model.trim="gift.relation.$model"
+                        :class="gift.relation.$anyError ? 'is-invalid':''"></relationship-selector>
                 <div class="invalid-feedback" v-if="gift.relation.$anyError">Please choose an option</div>
             </div>
         </div>
@@ -63,13 +60,10 @@
                 <label class="form-col-form-label h4" for="gift_exec_relation"><span>@{{ gift.firstName.$model ? gift.firstName.$model : 'He/She' }} is</span>
                     @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                     (required)</label>
-                <select class="form-control form-control-lg"
-                        v-model.trim="gift.secondApplicantRelation.$model"
-                        :class="gift.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                <relationship-selector
                         @blur="gift.secondApplicantRelation.$touch"
-                        id="gift_exec_relation" name="gift_exec_relation">
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        v-model.trim="gift.secondApplicantRelation.$model"
+                        :class="gift.secondApplicantRelation.$anyError ? 'is-invalid':''"></relationship-selector>
             </div>
             <div class="invalid-feedback" v-if="gift.secondApplicantRelation.$anyError">Please choose an
                 option
@@ -77,13 +71,21 @@
             <div class="col-sm-6">
                 <label class="form-col-form-label h4" for="gift_predeceased">Up on first exec predeceased
                     (required)</label>
-                <select class="form-control form-control-lg" v-model="gift.predeceased.$model">
+                <select class="form-control form-control-lg"
+                        v-model="gift.predeceased.$model"
+                        :class="gift.predeceased.$anyError ? 'is-invalid':''"
+                        @change="touchValidation(gift)"
+                        @blur="gift.beneficiary.$touch">
                     @include('dashboard.willform.partials.gifting-details')
                 </select>
+                <div class="invalid-feedback" v-if="gift.predeceased.$anyError">Please choose an
+                    option
+                </div>
             </div>
         </div>
-        <section class="row" v-if="gift.predeceased.$model === 'Assign to named beneficiary'">
+        <section class="row" v-if="gift.predeceased.$model === 'Assign to named beneficiary'" @change="touchValidation(gift)">
             <div class="col-sm-6">
+                <input type="hidden" v-model="gift.beneficiary.id.$model = index">
                 <label class="form-col-form-label h4" for="gift_predeceased_first">First Name of
                     named beneficiary (required)</label>
                 <input name="gift_predeceased_first" id="gift_predeceased_first"
@@ -112,11 +114,13 @@
         <div class="row mt-3">
             <div class="col">
                 <div class="form-group d-flex justify-content-between">
-                    <button class="btn btn-lg btn-warning" @click.prevent="AddGiftDetails"><i class="fa fa-plus-circle"></i>
+                    <button class="btn btn-lg btn-warning" @click.prevent="AddGiftDetails"><i
+                            class="fa fa-plus-circle"></i>
                         Add
                     </button>
                     <div v-if="index > 0">
-                        <button class="btn btn-lg btn-danger" v-if="giftDetails.length > 1" @click.prevent="removeGiftDetails(index)">
+                        <button class="btn btn-lg btn-danger" v-if="giftDetails.length > 1"
+                                @click.prevent="removeGiftDetails(index)">
                             <i class="fa fa-minus-circle"></i>
                             Remove
                         </button>
@@ -128,7 +132,7 @@
     <div class="card-footer ">
         <div class="form-group d-flex justify-content-between">
             <button class="btn btn-lg btn-primary"
-            @click.prevent="backFromGift()">
+                    @click.prevent="backFromGift()">
                 <i class="fa fa-arrow-left"></i>
                 Go Back
             </button>

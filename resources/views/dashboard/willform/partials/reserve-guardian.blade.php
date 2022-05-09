@@ -1,4 +1,6 @@
-<div class="card card-accent-success" v-if="step==='reserve_guardian'">
+<div class="card card-accent-success"
+     v-if="step==='reserve_guardian'"
+>
     <div class="card-header h3">
         <strong>Reserve guardian Details</strong></div>
     <div class="card-body" v-for="(guardian,index) in $v.reserveGuardian.$each.$iter">
@@ -41,33 +43,26 @@
                     name.
                 </div>
             </div>
-            <div class="form-group col-sm-6 align-self-start" v-if="hasMirrorWill">
+            <div class="form-group col-sm-6 align-self-start">
                 <label class="form-col-form-label h4" for="second_applicant_relation"><span
-                        class="second_applicant">@{{ reserveGuardian[index].firstName ? reserveGuardian[index].firstName : 'Second Applicant' }}</span>
+                        class="second_applicant">@{{ reserveGuardian[index].firstName ? reserveGuardian[index].firstName : 'He/She ' }}</span>
                     is my</label>
-                <select class="form-control form-control-lg" id="second_applicant_relation"
-                        required
-                        v-model.trim="guardian.relation.$model"
-                        :class="guardian.relation.$anyError ? 'is-invalid':''"
+                <relationship-selector
                         @blur="guardian.relation.$touch"
-                >
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        v-model.trim="guardian.relation.$model"
+                        :class="guardian.relation.$anyError ? 'is-invalid':''"></relationship-selector>
                 <div class="invalid-feedback" v-if="guardian.relation.$anyError">Please choose an option
                 </div>
             </div>
-            <div class="form-group col-sm-6 align-self-start universal_mirror hide">
-                <label class="form-col-form-label h4" for="second_applicant_relation"><span
-                        class="second_applicant">Reserve guardian is @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s</span>
+            <div class="form-group col-sm-6 align-self-start" v-if="hasMirrorWill">
+                <label class="form-col-form-label h4" for="second_applicant_relation">
+                    <span class="second_applicant">@{{ reserveGuardian[index].firstName ? reserveGuardian[index].firstName : 'Reserve guardian' }} is @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s</span>
+
                 </label>
-                <select class="form-control form-control-lg" id="second_applicant_relation"
-                        required
-                        v-model.trim="guardian.secondApplicantRelation.$model"
-                        :class="guardian.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                <relationship-selector
                         @blur="guardian.secondApplicantRelation.$touch"
-                >
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        v-model.trim="guardian.secondApplicantRelation.$model"
+                        :class="guardian.secondApplicantRelation.$anyError ? 'is-invalid':''"></relationship-selector>
                 <div class="invalid-feedback" v-if="guardian.secondApplicantRelation.$anyError">Please choose an option
                 </div>
             </div>
@@ -75,7 +70,7 @@
         <div class="row d-flex">
             <div class="form-group col-sm-6 align-self-end">
                 <label class="form-col-form-label h4" for="email_second">What is <span
-                        class="second_applicant">@{{ reserveGuardian[index].firstName ? reserveGuardian[index].firstName : 'Second Applicant' }}
+                        class="second_applicant">@{{ reserveGuardian[index].firstName ? reserveGuardian[index].firstName : 'Reserve guardian' }}
                         </span>'s email? (required)</label>
                 <input class="form-control form-control-lg"
                        v-model.trim="guardian.email.$model"
@@ -89,15 +84,17 @@
             <div class="form-group col-sm-6 align-self-end">
                 <label class="form-col-form-label h4" for="dob_second">What is <span
                         class="second_applicants_names"></span>
-                    @{{ reserveGuardian[index].firstName ? reserveGuardian[index].firstName : 'Second Applicant' }}'s
+                    @{{ reserveGuardian[index].firstName ? reserveGuardian[index].firstName : 'Reserve guardian' }}'s
                     date of
                     birth? (required)</label>
-                <input class="form-control form-control-lg datepicker" id="dob_second" name="dob_second"
-                       placeholder=" dd/mm/yyyy" required data-parsley-minimumage="18"
-                       v-model.trim="guardian.dob.$model"
-                       :class="guardian.dob.$anyError ? 'is-invalid':''"
-                       @blur="guardian.dob.$touch"
-                />
+                <date-picker v-model="guardian.dob.$model"
+                             format="DD/MM/YYYY"
+                             value-type="DD/MM/YYYY"
+                             placeholder="DD/MM/YYYY"
+                             @blur="guardian.dob.$touch"
+                             input-class="form-control form-control-lg"
+                             :input-class="guardian.dob.$anyError ? 'form-control form-control-lg is-invalid':''"
+                ></date-picker>
                 <div class="invalid-feedback" v-if="guardian.dob.$anyError">Please provide a valid date of
                     birth
                 </div>
@@ -152,9 +149,9 @@
             <div class="form-group col-sm-6">
                 <label for="country_second" class="h4 d-block">Country</label>
                 <select name="country_second" id="country_second" class="form-control form-control-lg" required
-                        v-model.trim="guardian.county.$model"
-                        @blur="guardian.county.$touch"
-                        :class="guardian.county.$anyError ? 'is-invalid':''"
+                        v-model.trim="guardian.country.$model"
+                        @blur="guardian.country.$touch"
+                        :class="guardian.country.$anyError ? 'is-invalid':''"
                         data-parsley-trigger="change">
                     <option value="United_Kingdom" selected>United Kingdom</option>
                     <option value="England">England</option>

@@ -24,6 +24,9 @@
                 </div>
             </div>
             <div v-for="(bank,index) in account.persons.$each.$iter">
+                <input type="hidden" v-model="bank.id.$model = i">
+                <input type="hidden" v-model="bank.beneficiary.id.$model = i">
+                <input type="hidden" v-model="bank.beneficiary.personId.$model = index">
                 <div class="inner row mt-3">
                     <div class="col-sm-6 inner">
                         <label class="form-col-form-label h4 mt-3 inner">First Name (required)</label>
@@ -56,26 +59,54 @@
                             is my
                             (required)
                         </label>
-                        <select type="text" class="form-control form-control-lg inner select2"
-                                v-model.trim="bank.relation.$model"
-                                :class="bank.relation.$anyError ? 'is-invalid':''"
+                        <relationship-selector
                                 @blur="bank.relation.$touch"
-                                name="bank_relation">
-                            @include('dashboard.willform.partials.combo-options')
-                        </select>
+                                v-model.trim="bank.relation.$model"
+                                :class="bank.relation.$anyError ? 'is-invalid':''"></relationship-selector>
                     </div>
                     <div class="col-sm-6 inner" v-if="hasMirrorWill">
                         <label class="form-col-form-label h4 mt-3 inner" for="bank_second_relation">
                             <span>@{{ bank.firstName.$model ? bank.firstName.$model : 'He/She' }} is</span>
                             @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                             (required)</label>
-                        <select class="form-control form-control-lg inner select2"
-                                v-model.trim="bank.secondApplicantRelation.$model"
-                                :class="bank.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                        <relationship-selector
                                 @blur="bank.secondApplicantRelation.$touch"
-                                name="bank_second_relation">
-                            @include('dashboard.willform.partials.combo-options')
+                                v-model.trim="bank.secondApplicantRelation.$model"
+                                :class="bank.secondApplicantRelation.$anyError ? 'is-invalid':''"></relationship-selector>
+                    </div>
+                    <div class="col-sm-6 inner">
+                        <label class="form-col-form-label h4 mt-3 inner"
+                               for="bank_share_fraction">Share/
+                            Fraction
+                            (required) </label>
+                        <select class="form-control form-control-lg" v-if="index > 0">
+                            <option value="share"
+                                    :selected="giftBank[i].persons[0].shareType === 'share'"
+                                    :disabled="giftBank[i].persons[0].shareType !== 'share'">Share
+                            </option>
+                            <option value="equal"
+                                    :selected="giftBank[i].persons[0].shareType === 'equal'"
+                                    :disabled="giftBank[i].persons[0].shareType !== 'equal'"
+                            >Equally Split
+                            </option>
                         </select>
+                        <select class="form-control form-control-lg" v-else
+                                v-model.trim="bank.shareType.$model"
+                        >
+                            <option value="share">Share</option>
+                            <option value="equal">Equally Split</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 inner" v-if="giftBank[i].persons[0].shareType === 'share'">
+                        <label class="form-col-form-label h4 mt-3 inner"
+                               for="bank_share">Share in
+                            Percentage / Fraction
+                            (required)</label>
+                        <input type="number" name="bank_share"
+                               v-model.trim="bank.share.$model"
+                               :class="bank.share.$anyError ? 'is-invalid':''"
+                               @blur="bank.share.$touch"
+                               class="form-control form-control-lg inner"/>
                     </div>
                     <div class="col-sm-6 inner">
                         <label class="form-col-form-label h4 mt-3 inner" for="bank_predeceased">Up on
@@ -86,47 +117,12 @@
                                 v-model.trim="bank.predeceased.$model"
                                 :class="bank.predeceased.$anyError ? 'is-invalid':''"
                                 @blur="bank.predeceased.$touch"
+                                @change="touchValidation(bank)"
                                 name="bank_predeceased">
                             @include('dashboard.willform.partials.gifting-details')
                         </select>
                     </div>
-                    <div class="col-sm-6 inner">
-                        <label class="form-col-form-label h4 mt-3 inner"
-                               for="bank_share_fraction">Share/
-                            Fraction
-                            (required) </label>
-                        <select class="form-control form-control-lg inner bank_share_fraction"
-                                :class="bank.shareType.$anyError ? 'is-invalid':''"
-                                @blur="bank.shareType.$touch" v-if="index > 0">
-                            <option value="share"
-                                    :selected="giftBank[i].persons[0].shareType === 'share'"
-                                    :disabled="giftBank[i].persons[0].shareType !== 'share'"
-                            >Share
-                            </option>
-                            <option value="fraction"
-                                    :selected="giftBank[i].persons[0].shareType === 'fraction'"
-                                    :disabled="giftBank[i].persons[0].shareType !== 'fraction'"
-                            >Fraction
-                            </option>
-                        </select>
-                        <select class="form-control form-control-lg" v-else
-                                v-model.trim="bank.shareType.$model">
-                            <option value="share">Share</option>
-                            <option value="fraction">Fraction</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-6 inner">
-                        <label class="form-col-form-label h4 mt-3 inner" for="bank_share">Share in
-                            Percentage / Fraction
-                            (required)</label>
-                        <input type="number" name="bank_share"
-                               v-model.trim="bank.share.$model"
-                               :class="bank.share.$anyError ? 'is-invalid':''"
-                               @blur="bank.share.$touch"
-                               @change="giftBank.maxShare = finalShare"
-                               class="form-control form-control-lg inner"/>
-                    </div>
-                    <div class="col-sm-12" v-if="bank.predeceased.$model === 'Assign to named beneficiary'">
+                    <div class="col-sm-12" v-if="bank.predeceased.$model === 'Assign to named beneficiary'"  @change="touchValidation(bank)">
                         <div class="row">
                             <div class="col-sm-6 inner mt-3">
                                 <label class="form-col-form-label h4"
@@ -191,12 +187,13 @@
                     </button>
                 </div>
             </div>
+            <div class="row col" v-if="account.finalShare.$anyError">
+                <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"
+                     > Overall share values should be equal to
+                    @{{ maxBankShare(account) }} current is @{{ countShare(account.$model.persons) }}
+                </div>
+            </div>
 
-            {{--            <div class="row col">--}}
-            {{--                <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"--}}
-            {{--                     v-if="account.maxShare.$anyError"> Overall share values should be equal to @{{ maxBankShare(account) }} current is @{{ account.maxShare.$model }}--}}
-            {{--                </div>--}}
-            {{--            </div>--}}
         </div>
     </div>
     <div class="card-footer">

@@ -25,4 +25,10 @@ class HomeController extends Controller
     {
         return view('dashboard.homepage');
     }
+
+    public function upload(Request $request){
+        $fileName = $request->file('file')->getClientOriginalName();
+        $path = $request->file('file')->storeAs('uploads', $fileName, 'public');
+        return response()->json(['location'=>"/storage/$path"]);
+    }
 }

@@ -1,4 +1,4 @@
-<div class="card card-accent-success" v-if="step==='gift_money'">
+<div class="card card-accent-success" v-if="step === 'gift_money'">
     <div class="card-header h3"><strong>Gift of money</strong></div>
     <div class="card-body" v-for="(money,index) in $v.giftMoney.$each.$iter">
         <div class="row mt-3">
@@ -40,12 +40,10 @@
                 <label class="form-col-form-label h4" for="gift_relation">
                     <span>@{{ money.firstName.$model ? money.firstName.$model : 'He/She' }}'s</span> is my
                     (required)</label>
-                <select class="form-control form-control-lg" id="gift_relation"
+                <relationship-selector
+                        @blur="money.relation.$touch"
                         v-model.trim="money.relation.$model"
-                        :class="money.relation.$anyError ? 'is-invalid':''"
-                        @blur="money.relation.$touch">
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        :class="money.relation.$anyError ? 'is-invalid':''"></relationship-selector>
                 <div class="invalid-feedback" v-if="money.relation.$anyError">Please choose an option</div>
             </div>
         </div>
@@ -55,12 +53,10 @@
                     <span>@{{ money.firstName.$model ? money.firstName.$model : 'He/She' }} is</span>
                     @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                     (required)</label>
-                <select class="form-control form-control-lg"
+                <relationship-selector
+                        @blur="money.secondApplicantRelation.$touch"
                         v-model.trim="money.secondApplicantRelation.$model"
-                        :class="money.secondApplicantRelation.$anyError ? 'is-invalid':''"
-                        @blur="money.secondApplicantRelation.$touch">
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        :class="money.secondApplicantRelation.$anyError ? 'is-invalid':''"></relationship-selector>
                 <div class="invalid-feedback" v-if="money.secondApplicantRelation.$anyError">Please choose an
                     option
                 </div>
@@ -68,13 +64,18 @@
             <div class="col-sm-6">
                 <label class="form-col-form-label h4" for="gift_predeceased">Up on first exec predeceased
                     (required)</label>
-                <select class="form-control form-control-lg" v-model="money.predeceased.$model">
+                <select class="form-control form-control-lg"
+                        :class="money.predeceased.$anyError ? 'is-invalid':''"
+                        @blur="money.predeceased.$touch"
+                        @change="touchValidation(money)"
+                        v-model="money.predeceased.$model">
                     @include('dashboard.willform.partials.gifting-details')
                 </select>
             </div>
         </div>
-        <section class="row" v-if="money.predeceased.$model === 'Assign to named beneficiary'">
+        <section class="row" v-if="money.predeceased.$model === 'Assign to named beneficiary'" @change="touchValidation(money)">
             <div class="col-sm-6">
+                <input type="hidden" v-model="money.beneficiary.id.$model = index">
                 <label class="form-col-form-label h4" for="gift_predeceased_first">First Name of
                     named beneficiary (required)</label>
                 <input name="gift_predeceased_first" id="gift_predeceased_first"

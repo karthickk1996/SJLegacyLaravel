@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -87,7 +88,15 @@ class Will extends Model
     use HasFactory;
 
     const DRAFT = 'draft';
+    const PENDING_PAYMENT = 'pending_payment';
     const COMPLETE = 'complete';
+
+    protected $appends = [
+        'fullName',
+        'Address',
+        'secondApplicantName',
+        'secondApplicantAddress'
+    ];
 
     protected $fillable = [
         'user_id', 'firstName', 'middleName', 'lastName', 'email', 'dob',
@@ -96,7 +105,7 @@ class Will extends Model
         'executor', 'reserveExecutor', 'giftOptions', 'giftMoney', 'giftCharity',
         'giftBank', 'giftProperty', 'giftPet', 'businessAssignment', 'residueDetails',
         'requestDetails', 'appointGuardian', 'hasMoreThanOneChildren', 'sameGuardianAllChildren',
-        'children', 'reserveGuardian', 'wills', 'status', 'payment_id',
+        'children', 'reserveGuardian', 'wills', 'status', 'payment_id', 'step'
     ];
 
     protected $casts = [
@@ -128,5 +137,31 @@ class Will extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getAddressAttribute()
+    {
+        return $this->addressSummary['line1'] . ' ' . $this->addressSummary['line2'] . ' ' . $this->addressSummary['country'] . ' ' . $this->addressSummary['postal'];
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->firstName . ' ' . $this->middleName . ' ' . $this->lastName;
+    }
+
+    public function getSecondApplicantNameAttribute()
+    {
+        if ($this->hasMirrorWill) {
+            return $this->secondApplicant['firstName'] . ' ' . $this->secondApplicant['middleName'] . ' ' . $this->secondApplicant['lastName'];
+        }
+        return null;
+    }
+
+    public function getSecondApplicantAddressAttribute()
+    {
+        if ($this->hasMirrorWill) {
+            return $this->secondApplicant['line1'] . ' ' . $this->secondApplicant['line2'] . ' ' . $this->secondApplicant['country'] . ' ' . $this->secondApplicant['postal'];
+        }
+        return null;
     }
 }

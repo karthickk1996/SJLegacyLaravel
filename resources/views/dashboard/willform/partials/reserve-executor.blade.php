@@ -46,13 +46,10 @@
                 <label class="form-col-form-label h4" for="second_applicant_relation"><span
                         class="second_applicant">@{{ reserveExecutor[index].firstName ? reserveExecutor[index].firstName : 'Reserve Executor' }}</span>
                     is my</label>
-                <select class="form-control form-control-lg" id="second_applicant_relation"
-                        v-model.trim="resExec.relation.$model"
-                        :class="resExec.relation.$anyError ? 'is-invalid':''"
+                <relationship-selector
                         @blur="resExec.relation.$touch"
-                >
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        v-model.trim="resExec.relation.$model"
+                        :class="resExec.relation.$anyError ? 'is-invalid':''"></relationship-selector>
                 <div class="invalid-feedback" v-if="resExec.relation.$anyError">Please choose an option
                 </div>
             </div>
@@ -60,14 +57,10 @@
                 <label class="form-col-form-label h4" for="second_applicant_relation"><span
                         class="second_applicant">@{{ reserveExecutor[index].firstName ? reserveExecutor[index].firstName : 'Reserve Executor' }} is @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s</span>
                 </label>
-                <select class="form-control form-control-lg" id="second_applicant_relation"
-                        required
-                        v-model.trim="resExec.secondApplicantRelation.$model"
-                        :class="resExec.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                <relationship-selector
                         @blur="resExec.secondApplicantRelation.$touch"
-                >
-                    @include('dashboard.willform.partials.combo-options')
-                </select>
+                        v-model.trim="resExec.secondApplicantRelation.$model"
+                        :class="resExec.secondApplicantRelation.$anyError ? 'is-invalid':''"></relationship-selector>
                 <div class="invalid-feedback" v-if="resExec.secondApplicantRelation.$anyError">Please choose an
                     option
                 </div>
@@ -94,9 +87,9 @@
                     }}'s date of
                     birth? (required)</label>
                 <date-picker v-model="resExec.dob.$model"
-                             format="DD-MM-YYYY"
-                             type="date"
-                             placeholder="DD-MM-YYYY"
+                             format="DD/MM/YYYY"
+                             value-type="DD/MM/YYYY"
+                             placeholder="DD/MM/YYYY"
                              @blur="resExec.dob.$touch"
                              input-class="form-control form-control-lg"
                              :input-class="resExec.dob.$anyError ? 'form-control form-control-lg is-invalid':''"

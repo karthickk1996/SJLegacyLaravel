@@ -2,27 +2,6 @@
     $form = \App\Models\Form::where('form_type',$data->hasMirrorWill ? 'mirror-will' : 'single-will' )->first();
     $content = $form->content;
 
-    if(strpos($content, '{1}') !== false){
-       $content = str_replace('{1}',$data->firstName . ' ' . $data->middleName . ' ' . $data->lastName,$content);
-    }
-
-    if(strpos($content, '{2}') !== false){
-       $content = str_replace('{2}',$data->email,$content);
-    }
-
-    if(strpos($content, '{7}') !== false){
-       $content = str_replace('{7}',\Carbon\Carbon::parse($data->dob)->toFormattedDateString(),$content);
-    }
-
-    if(strpos($content, '{8}') !== false){
-        $address = $data->addressSummary['line1'].' '.$data->addressSummary['line2'].' '.$data->addressSummary['country'].' '.$data->addressSummary['postal'];
-       $content = str_replace('{8}',$address,$content);
-    }
-
-    if(strpos($content, '{9}') !== false){
-        $name = $data->secondApplicant['firstName'].' '.$data->secondApplicant['middleName'].' '.$data->secondApplicant['lastName'];
-       $content = str_replace('{9}',$name,$content);
-    }
 
     if(strpos($content, '{10}') !== false){
         $relation = $data->secondApplicant['relation'];

@@ -1,4 +1,4 @@
-<div class="card card-accent-success" v-if="step==='gift_pet'">
+<div class="card card-accent-success" v-if="step === 'gift_pet'">
     <div class="card-header h3"><strong>Gift of pet</strong></div>
     <div class="card-body" v-for="(pet,i) in $v.giftPet.$each.$iter">
         <div class="row my-3">
@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-sm-6 my-3">
                 <label class="form-col-form-label h4" for="pet_first_name">First Name (required)</label>
-                <input type="text" name="bank_first_name"
+                <input type="text"
                        v-model.trim="pet.firstName.$model"
                        :class="pet.firstName.$anyError ? 'is-invalid':''"
                        @blur="pet.firstName.$touch"
@@ -40,6 +40,8 @@
                     (required)</label>
                 <select class="form-control form-control-lg"
                         v-model="pet.predeceased.$model"
+                        :class="pet.predeceased.$anyError ? 'is-invalid':''"
+                        @blur="pet.predeceased.$touch"
                 >
                     @include('dashboard.willform.partials.gifting-details')
                 </select>
@@ -49,6 +51,7 @@
             <div class="col-sm-6">
                 <label class="form-col-form-label h4" for="gift_predeceased_first">First Name of
                     named beneficiary (required)</label>
+                <input type="hidden" v-model="pet.beneficiary.id.$model = i">
                 <input name="gift_predeceased_first" id="gift_predeceased_first"
                        v-model.trim="pet.beneficiary.firstName.$model"
                        :class="pet.beneficiary.firstName.$anyError ? 'is-invalid':''"

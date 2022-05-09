@@ -8,7 +8,7 @@
                     <div class="card">
                         <div class="card-header">Edit Single Will</div>
                         <div class="card-body">
-                            <tiny-editor data="{{$data->content}}"></tiny-editor>
+                            <tiny-editor data="{{$data}}"></tiny-editor>
                         </div>
                     </div>
                 </div>

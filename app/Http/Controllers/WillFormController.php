@@ -16,7 +16,7 @@ class WillFormController extends Controller
 {
     public function show(Request $request)
     {
-        $stripeCustomer = $request->user()->createOrGetStripeCustomer();
+        $request->user()->createOrGetStripeCustomer();
         $setup_intent = $request->user()->createSetupIntent();
         return view('dashboard.willform.create', [
             'intent' => $setup_intent
@@ -33,7 +33,7 @@ class WillFormController extends Controller
                     'middleName' => $will->middleName,
                     'lastName' => $will->lastName,
                     'email' => $will->email,
-                    'dob' => Carbon::parse($will->dob)->toIso8601String(),
+                    'dob' => $will->dob,
                 ],
                 'hasPartner' => $will->hasPartner,
                 'hasChildrenUnderEighteen' => $will->hasChildrenUnderEighteen,
@@ -58,9 +58,11 @@ class WillFormController extends Controller
                 'residue' => $will->residueDetails,
                 'request' => $will->requestDetails,
                 'giftProperty' => $will->giftProperty,
+                'step' => $will->step
             ],
             'intent' => $setup_intent,
-            'id' => $will->id
+            'id' => $will->id,
+            'step' => $will->step,
         ]);
     }
 
@@ -83,7 +85,7 @@ class WillFormController extends Controller
                 'eachOtherExecutor' => $request->get('secondExecutor'),
                 'executor' => $request->get('executor'),
                 'reserveExecutor' => $request->get('reserveExecutor'),
-                'giftOptions' => $request->get('giftOptions'),
+                'giftOptions' => $request->get('giftDetails'),
                 'giftMoney' => $request->get('giftMoney'),
                 'giftCharity' => $request->get('giftCharity'),
                 'giftBank' => $request->get('giftBank'),
@@ -98,11 +100,13 @@ class WillFormController extends Controller
                 'children' => $request->get('children'),
                 'reserveGuardian' => $request->get('reserveGuardian'),
                 'status' => Will::DRAFT,
+                'step' => $request->get('step')
             ]);
             return response()->json([
                 'success' => true,
                 'will' => $will,
-                'message' => 'Will saved successfully'
+                'message' => 'Will saved successfully',
+                'status' => $will->status
             ]);
         } catch (\Exception $exception) {
             return response()->json([
@@ -191,7 +195,7 @@ class WillFormController extends Controller
 
     public function singleWillEdit()
     {
-        $formContent = Form::where('form_type', 'single-will')->first();
+        $formContent = file_get_contents(base_path() . '/resources/views/dashboard/willform/print/single.blade.php');
         return view('dashboard.willform.templates.single-will-template', [
             'data' => $formContent
         ]);
@@ -199,7 +203,7 @@ class WillFormController extends Controller
 
     public function mirrorWillEdit()
     {
-        $formContent = Form::where('form_type', 'mirror-will')->first();
+        $formContent = file_get_contents(base_path() . '/resources/views/dashboard/willform/print/mirror.blade.php');
         return view('dashboard.willform.templates.mirror-will-template', [
             'data' => $formContent
         ]);
@@ -207,15 +211,21 @@ class WillFormController extends Controller
 
     public function willFormUpdate(Request $request)
     {
-        Form::updateOrCreate([
-            'form_type' => $request->get('form')
-        ], [
-            'user_id' => 1,
-            'content' => $request->get('content')
-        ]);
+        if ($request->get('form') == 'single-will') {
+            $file = fopen(base_path() . '/resources/views/dashboard/willform/print/single.blade.php', "w");
+            fwrite($file, $request->get('content'));
+            fclose($file);
+            $storage = 'written';
+        } else {
+            $file = fopen(base_path() . '/resources/views/dashboard/willform/print/mirror.blade.php', "w");
+            fwrite($file, $request->get('content'));
+            fclose($file);
+            $storage = 'written';
+        }
 
         return response()->json([
-            'success' => true
+            'success' => true,
+            'storage' => $storage
         ]);
     }
 
@@ -229,8 +239,58 @@ class WillFormController extends Controller
         ]);
     }
 
-    public function updateWill(){
+    public function getFormVariables()
+    {
+        $will = Will::first();
+        $variables = array_keys($will->toArray());
 
+        return response()->json([
+            'variables' => $variables
+        ]);
+    }
+
+    public function autoSaveForm(Request $request, Will $will)
+    {
+
+        $will->update([
+            'firstName' => $request->get('firstName'),
+            'middleName' => $request->get('middleName'),
+            'lastName' => $request->get('lastName'),
+            'email' => $request->get('email'),
+            'dob' => $request->get('dob'),
+            'hasPartner' => $request->get('hasPartner'),
+            'hasChildrenUnderEighteen' => $request->get('hasChildrenUnderEighteen'),
+            'hasMirrorWill' => $request->get('hasMirrorWill'),
+            'ownProperty' => $request->get('ownProperty'),
+            'addressSummary' => $request->get('addressSummary'),
+            'secondApplicant' => $request->get('secondApplicant'),
+            'eachOtherExecutor' => $request->get('secondExecutor'),
+            'executor' => $request->get('executor'),
+            'reserveExecutor' => $request->get('reserveExecutor'),
+            'giftOptions' => $request->get('giftDetails'),
+            'giftMoney' => $request->get('giftMoney'),
+            'giftCharity' => $request->get('giftCharity'),
+            'giftBank' => $request->get('giftBank'),
+            'giftProperty' => $request->get('giftProperty'),
+            'giftPet' => $request->get('giftPet'),
+            'businessAssignment' => $request->get('businessAssignment'),
+            'residueDetails' => $request->get('residue'),
+            'requestDetails' => $request->get('request'),
+            'appointGuardian' => $request->get('appointGuardian'),
+            'hasMoreThanOneChildren' => $request->get('hasMoreThanOneChildren'),
+            'sameGuardianAllChildren' => $request->get('sameGuardianAllChildren'),
+            'children' => $request->get('children'),
+            'reserveGuardian' => $request->get('reserveGuardian'),
+            'status' => $request->get('step') === 'request' ? Will::PENDING_PAYMENT : Will::DRAFT,
+            'step' => $request->get('step')
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'will' => $will,
+            'message' => 'Will saved successfully',
+            'status' => $will->status
+        ]);
     }
 
 }

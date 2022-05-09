@@ -1,5 +1,5 @@
 <div class="card card-accent-success"
-     v-if="step==='business_assignment'"
+     v-if="step === 'business_assignment'"
 >
     <div class="card-header h3"><strong>Business Assignment</strong></div>
     <div class="card-body" v-for="(business,i) in $v.businessAssignment.$each.$iter">
@@ -18,6 +18,7 @@
                 <section v-for="(bank,index) in business.persons.$each.$iter">
                     <div class="row">
                         <div class="col-sm-6 mt-3">
+                            <input type="hidden" v-model="bank.id.$model = i">
                             <label class="form-col-form-label h4" for="business_first_name">First Name (required)</label>
                             <input type="text" name="bank_first_name"
                                    v-model.trim="bank.firstName.$model"
@@ -46,25 +47,20 @@
                             <label class="form-col-form-label h4" for="business_relation">
                                 <span>@{{ bank.firstName.$model ? bank.firstName.$model : 'He/She' }}'s</span> is my
                                 (required)</label>
-                            <select class="form-control form-control-lg"
+                            <relationship-selector
+                                    @blur="bank.relation.$touch"
                                     v-model.trim="bank.relation.$model"
-                                    :class="bank.relation.$anyError ? 'is-invalid':''"
-                                    @blur="bank.relation.$touch">
-                                @include('dashboard.willform.partials.combo-options')
-                            </select>
+                                    :class="bank.relation.$anyError ? 'is-invalid':''"></relationship-selector>
                         </div>
                         <div class="col-sm-6 mt-3" v-if="hasMirrorWill">
                             <label class="form-col-form-label h4" for="business_exec_relation">
                                 <span>@{{ bank.firstName.$model ? bank.firstName.$model : 'He/She' }} is</span>
                                 @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                                 (required)</label>
-                            <select class="form-control form-control-lg"
-                                    v-model.trim="bank.secondApplicantRelation.$model"
-                                    :class="bank.secondApplicantRelation.$anyError ? 'is-invalid':''"
+                            <relationship-selector
                                     @blur="bank.secondApplicantRelation.$touch"
-                            >
-                                @include('dashboard.willform.partials.combo-options')
-                            </select>
+                                    v-model.trim="bank.secondApplicantRelation.$model"
+                                    :class="bank.secondApplicantRelation.$anyError ? 'is-invalid':''"></relationship-selector>
                         </div>
                         <div class="col-sm-6 my-3">
                             <label class="form-col-form-label h4" for="property_share_fraction">Share fraction
@@ -74,20 +70,20 @@
                                         :selected="businessAssignment[i].persons[0].shareType === 'share'"
                                         :disabled="businessAssignment[i].persons[0].shareType !== 'share'">Share
                                 </option>
-                                <option value="fraction"
-                                        :selected="businessAssignment[i].persons[0].shareType === 'fraction'"
-                                        :disabled="businessAssignment[i].persons[0].shareType !== 'fraction'"
-                                >Fraction
+                                <option value="equal"
+                                        :selected="businessAssignment[i].persons[0].shareType === 'equal'"
+                                        :disabled="businessAssignment[i].persons[0].shareType !== 'equal'"
+                                >Equally Split
                                 </option>
                             </select>
                             <select class="form-control form-control-lg" v-else
                                     v-model.trim="bank.shareType.$model"
                             >
                                 <option value="share">Share</option>
-                                <option value="fraction">Fraction</option>
+                                <option value="equal">Equally Split</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 my-3">
+                        <div class="col-sm-6 my-3" v-if="businessAssignment[i].persons[0].shareType === 'share'">
                             <label class="form-col-form-label h4" for="property_share">Share/Fraction (required)</label>
                             <input v-model.trim="bank.share.$model"
                                    type="number"
@@ -156,10 +152,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row col">
-                        <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"
-                             v-if="business.finalShare.$anyError"> Overall share values should be equal to @{{
-                            maxPropertyShare(business.$model) }} current is @{{ business.finalShare.$model }}
+                    <div class="row col" v-if="business.finalShare.$anyError">
+                        <div style="{width: 100%;margin-top: 0.25rem;font-size: 80%;color: #e55353;}"> Overall share values should be equal to @{{
+                            maxPropertyShare(business.$model) }} current is @{{ countShare(business.$model.persons) }}
                         </div>
                     </div>
                 </section>
