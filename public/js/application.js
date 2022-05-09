@@ -3731,9 +3731,7 @@ var maxFinalValue = function maxFinalValue(value, nested) {
       },
       giftMoney: {
         $each: {
-          moneyDetails: {
-            required: required
-          },
+          moneyDetails: {},
           firstName: {
             required: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__.requiredIf)(function (nestedModel) {
               return nestedModel.moneyDetails;
@@ -3756,8 +3754,8 @@ var maxFinalValue = function maxFinalValue(value, nested) {
             minLength: minLength(2)
           },
           secondApplicantRelation: {
-            required: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__.requiredIf)(function () {
-              return this.hasMirrorWill;
+            required: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__.requiredIf)(function (nestedModel) {
+              return nestedModel.moneyDetails && this.hasMirrorWill;
             })
           },
           predeceased: {
@@ -3768,13 +3766,24 @@ var maxFinalValue = function maxFinalValue(value, nested) {
           },
           beneficiary: {
             required: required,
+            id: {},
             firstName: {
+              required: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__.requiredIf)(function (nestedModel) {
+                var _this$$v$giftMoney$$e, _this$$v$giftMoney$$e2;
+
+                return ((_this$$v$giftMoney$$e = this.$v.giftMoney.$each[nestedModel.id]) === null || _this$$v$giftMoney$$e === void 0 ? void 0 : _this$$v$giftMoney$$e.$model.moneyDetails) && ((_this$$v$giftMoney$$e2 = this.$v.giftMoney.$each[nestedModel.id]) === null || _this$$v$giftMoney$$e2 === void 0 ? void 0 : _this$$v$giftMoney$$e2.$model.predeceased) === 'Assign to named beneficiary';
+              }),
               minLength: minLength(2)
             },
             middleName: {
               minLength: minLength(2)
             },
             lastName: {
+              required: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__.requiredIf)(function (nestedModel) {
+                var _this$$v$giftMoney$$e3, _this$$v$giftMoney$$e4;
+
+                return ((_this$$v$giftMoney$$e3 = this.$v.giftMoney.$each[nestedModel.id]) === null || _this$$v$giftMoney$$e3 === void 0 ? void 0 : _this$$v$giftMoney$$e3.$model.moneyDetails) && ((_this$$v$giftMoney$$e4 = this.$v.giftMoney.$each[nestedModel.id]) === null || _this$$v$giftMoney$$e4 === void 0 ? void 0 : _this$$v$giftMoney$$e4.$model.predeceased) === 'Assign to named beneficiary';
+              }),
               minLength: minLength(2)
             }
           }
@@ -5531,7 +5540,7 @@ var maxPropertyShare = function maxPropertyShare(value, nested) {
       }],
       appointGuardian: false,
       hasMoreThanOneChildren: false,
-      sameGuardianAllChildren: false,
+      sameGuardianAllChildren: true,
       children: [{
         guardianFirstName: "",
         guardianMiddleName: "",
@@ -6217,8 +6226,8 @@ var maxPropertyShare = function maxPropertyShare(value, nested) {
             minLength: minLength(2)
           },
           secondApplicantRelation: {
-            required: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__.requiredIf)(function () {
-              return this.hasMirrorWill;
+            required: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__.requiredIf)(function (nestedModel) {
+              return nestedModel.moneyDetails && this.hasMirrorWill;
             })
           },
           predeceased: {

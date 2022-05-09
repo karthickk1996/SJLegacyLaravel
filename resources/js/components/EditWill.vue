@@ -774,9 +774,7 @@ export default {
             },
             giftMoney: {
                 $each: {
-                    moneyDetails: {
-                        required
-                    },
+                    moneyDetails: {},
                     firstName: {
                         required: requiredIf(function (nestedModel) {
                             return nestedModel.moneyDetails
@@ -799,8 +797,8 @@ export default {
                         minLength: minLength(2),
                     },
                     secondApplicantRelation: {
-                        required: requiredIf(function () {
-                            return this.hasMirrorWill
+                        required: requiredIf(function (nestedModel) {
+                            return nestedModel.moneyDetails && this.hasMirrorWill
                         })
                     },
                     predeceased: {
@@ -811,13 +809,20 @@ export default {
                     },
                     beneficiary: {
                         required,
+                        id: {},
                         firstName: {
+                            required: requiredIf(function (nestedModel) {
+                                return this.$v.giftMoney.$each[nestedModel.id]?.$model.moneyDetails && this.$v.giftMoney.$each[nestedModel.id]?.$model.predeceased === 'Assign to named beneficiary'
+                            }),
                             minLength: minLength(2),
                         },
                         middleName: {
                             minLength: minLength(2),
                         },
                         lastName: {
+                            required: requiredIf(function (nestedModel) {
+                                return this.$v.giftMoney.$each[nestedModel.id]?.$model.moneyDetails && this.$v.giftMoney.$each[nestedModel.id]?.$model.predeceased === 'Assign to named beneficiary'
+                            }),
                             minLength: minLength(2),
                         }
                     }

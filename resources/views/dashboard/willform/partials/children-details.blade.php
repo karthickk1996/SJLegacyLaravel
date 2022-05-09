@@ -93,8 +93,8 @@
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label class="form-col-form-label h4" for="guardian_relation">@{{ children[index].firstName ?
-                        children[index].firstName : 'He/She' }}
+                    <label class="form-col-form-label h4" for="guardian_relation">@{{ children[index].GuardianFirstName ?
+                        children[index].GuardianFirstName : 'He/She' }}
                         is my (required)</label>
                     <relationship-selector
                             @blur="child.relation.$touch"
@@ -104,7 +104,7 @@
                 </div>
                 <div class="form-group col-sm-6" v-if="hasMirrorWill">
                     <label class="form-col-form-label h4" for="guardian_second_relation">
-                        @{{ children[index].firstName ? children[index].firstName : 'He/She' }}
+                        @{{ children[index].GuardianFirstName ? children[index].GuardianFirstName : 'He/She' }}
                         is
                         @{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}'s
                         (required)</label>

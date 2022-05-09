@@ -1,5 +1,5 @@
 <template>
-  <v-select :options="options" v-model="relation"></v-select>
+  <v-select  :options="options" v-model="relation"></v-select>
 </template>
 
 <script>
