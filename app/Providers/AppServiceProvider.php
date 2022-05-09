@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\TestController;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,8 +25,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
-        $this->app->bind(HomeController::class,function (){
-            return new TestController();
-        });
     }
 }
