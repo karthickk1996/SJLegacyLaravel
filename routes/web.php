@@ -33,7 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 });
 
-Route::group(['middleware' => ['role:user|admin', 'verified']], function () {
+Route::group(['middleware' => ['auth','role:user|admin', 'verified']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('dashboard.index');
     Route::get('willform/create', [WillFormController::class, 'show'])->name('willform.create');
     Route::get('willform/{will}/edit', [WillFormController::class, 'edit'])->name('willform.edit');
