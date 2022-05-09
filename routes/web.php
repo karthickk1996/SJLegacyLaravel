@@ -43,9 +43,12 @@ Route::group(['middleware' => ['role:user|admin', 'verified']], function () {
     Route::get('form/single-will', [WillFormController::class, 'singleWillEdit'])->name('singleWill.form');
     Route::get('form/mirror-will', [WillFormController::class, 'mirrorWillEdit'])->name('mirrorWill.form');
     Route::post('form/update', [WillFormController::class, 'willFormUpdate'])->name('form.update');
+    Route::get('form/variables', [WillFormController::class, 'getFormVariables'])->name('form.variables');
     Route::resource('users', UsersController::class);
     Route::get('will/submissions', [WillFormController::class, 'submissions'])->name('willform.submissions');
     Route::delete('will', [WillFormController::class, 'deleteWill'])->name('willform.deleteWill');
     Route::get('profile/{id}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('upload', [HomeController::class, 'upload'])->name('image.upload');
+    Route::put('willform/{will}', [WillFormController::class, 'autoSaveForm']);
 });
