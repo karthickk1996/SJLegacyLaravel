@@ -44,25 +44,31 @@
                                     <div class="col-6">
                                         <button class="btn btn-primary px-4" type="submit">{{ __('Login') }}</button>
                                     </div>
+                                    <div class="col-6 text-right">
+                                        <a href="{{ route('password.request') }}"
+                                           class="btn btn-link px-0">{{ __('Forgot Your Password?') }}</a>
+                                    </div>
+                                    <div class="col-6 d-block d-sm-none">
+                                        <a class="btn btn-light mt-3" type="button"
+                                           href="{{route('register')}}">Register
+                                            Now!</a>
+                                    </div>
+                                </div>
                             </form>
-                            <div class="col-6 text-right">
-                                <a href="{{ route('password.request') }}"
-                                   class="btn btn-link px-0">{{ __('Forgot Your Password?') }}</a>
-                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
-                    <div class="card-body text-center">
-                        <div>
-                            <div id="login_logo">
-                                <img src="{{asset('images/sj_logo_main.png')}}" alt="SJ Legacy"
-                                     style="width:100%;height:auto">
+                    <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
+                        <div class="card-body text-center">
+                            <div>
+                                <div id="login_logo">
+                                    <img src="{{asset('images/sj_logo_main.png')}}" alt="SJ Legacy"
+                                         style="width:100%;height:auto">
+                                </div>
+                                <h5 class="mt-2">Click below to register</h5>
+                                <a class="btn btn-light mt-3" type="button" value=""
+                                   href="{{route('register')}}">Register
+                                    Now!</a>
                             </div>
-                            <h5 class="mt-2">Click below to register</h5>
-                            <a class="btn btn-light mt-3" type="button" value=""
-                               href="{{route('register')}}">Register
-                                Now!</a>
                         </div>
                     </div>
                 </div>
