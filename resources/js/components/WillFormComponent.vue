@@ -176,6 +176,7 @@ export default {
                 postal: "",
             },
             giftDetails: [{
+                id:null,
                 giftTo: "",
                 firstName: "",
                 middleName: "",
@@ -190,6 +191,7 @@ export default {
                 }
             }],
             giftMoney: [{
+                id:null,
                 moneyDetails: "",
                 firstName: "",
                 middleName: "",
@@ -207,6 +209,7 @@ export default {
             hasMoreThanOneChildren: false,
             sameGuardianAllChildren: true,
             children: [{
+                id:null,
                 guardianFirstName: "",
                 guardianMiddleName: "",
                 guardianLastName: "",
@@ -225,6 +228,7 @@ export default {
                 secondApplicantRelation: ""
             }],
             reserveGuardian: [{
+                id:null,
                 firstName: "",
                 middleName: "",
                 lastName: "",
@@ -245,6 +249,7 @@ export default {
                 money: ""
             },
             giftBank: [{
+                id:null,
                 bankName: "",
                 bankReference: "",
                 maxShare: "",
@@ -267,6 +272,7 @@ export default {
                 }]
             }],
             giftPet: [{
+                id:null,
                 petDetails: "",
                 firstName: "",
                 middleName: "",
@@ -279,6 +285,7 @@ export default {
                 },
             }],
             businessAssignment: [{
+                id:null,
                 business: "",
                 firstName: "",
                 middleName: "",
@@ -304,6 +311,7 @@ export default {
                 }]
             }],
             residue: [{
+                id:null,
                 firstName: "",
                 middleName: "",
                 lastName: "",
@@ -329,6 +337,7 @@ export default {
                 secondApplicantFuneralPlanType: ""
             },
             giftProperty: [{
+                id:null,
                 name: "",
                 line1: "",
                 line2: "",
@@ -813,14 +822,10 @@ export default {
                         }),
                     },
                     beneficiary: {
-                        id: {
-                            required: requiredIf(function (nestedModel) {
-                                return this.$v.giftDetails.$each[nestedModel.id]?.$model.giftTo && this.$v.giftDetails.$each[nestedModel.id]?.$model.predeceased === 'Assign to named beneficiary'
-                            }),
-                        },
+                        id: {},
                         firstName: {
                             required: requiredIf(function (nestedModel) {
-                                return this.$v.giftDetails.$each[nestedModel.id]?.$model.giftTo && this.$v.giftDetails.$each[nestedModel.id]?.$model.predeceased === 'Assign to named beneficiary'
+                                return this.$v.giftDetails.$each[nestedModel.id]?.$model.giftTo && this.$v.giftDetails.$each[nestedModel.id].$model.predeceased === 'Assign to named beneficiary'
                             }),
                             minLength: minLength(2),
                         },
@@ -1226,7 +1231,6 @@ export default {
                     model.beneficiary.$model.lastName = null
                 }
             }, 200)
-
         },
         countShare(arr) {
             let value = 0;
@@ -1364,6 +1368,7 @@ export default {
         },
         AddGiftDetails() {
             this.giftDetails.push({
+                id:null,
                 giftTo: "",
                 firstName: "",
                 middleName: "",
@@ -1383,6 +1388,7 @@ export default {
         },
         AddGiftMoney() {
             this.giftMoney.push({
+                id:null,
                 moneyDetails: "",
                 firstName: "",
                 middleName: "",
@@ -1402,6 +1408,7 @@ export default {
         },
         addBankPerson(i, index) {
             this.giftBank[i].persons.push({
+                id:null,
                 parent: i,
                 firstName: "",
                 middleName: "",
@@ -1421,6 +1428,7 @@ export default {
         },
         addBank() {
             this.giftBank.push({
+                id:null,
                 bankName: "",
                 bankReference: "",
                 maxShare: "",

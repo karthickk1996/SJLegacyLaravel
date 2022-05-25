@@ -1,4 +1,6 @@
-<div class="card card-accent-success" v-if="step === 'gift_options'">
+<div class="card card-accent-success"
+     v-if="step === 'gift_options'"
+>
     <div class="card-header h3">
         <strong>Gift of specific items </strong>
         <a class="card-header-action" href="#">
@@ -7,6 +9,7 @@
                 data-original-title="<strong>Help Text : </strong> A gift can be:<br><ul><li>a <strong>one-off item</strong> e.g. wedding ring, a watch or piece of art.</li><li><strong>a collection of items</strong> e.g. Record collection, jewellery collection.</li><li><strong>a vehicle,</strong> car, motorbike, boat.</ul><p>Leave blank and select next if you have no specific items to gift</p>">?</small></a>
     </div>
     <div class="card-body" v-for="(gift,index) in $v.giftDetails.$each.$iter">
+        <input type="hidden" v-model="gift.beneficiary.id.$model = index">
         <div class="row mt-3">
             <div class="col-sm-12">
                 <label class="form-col-form-label h4" for="gift_data">I would like to gift my</label>
@@ -83,9 +86,8 @@
                 </div>
             </div>
         </div>
-        <section class="row" v-if="gift.predeceased.$model === 'Assign to named beneficiary'" @change="touchValidation(gift)">
+        <section class="row" v-if="gift.predeceased.$model === 'Assign to named beneficiary'">
             <div class="col-sm-6">
-                <input type="hidden" v-model="gift.beneficiary.id.$model = index">
                 <label class="form-col-form-label h4" for="gift_predeceased_first">First Name of
                     named beneficiary (required)</label>
                 <input name="gift_predeceased_first" id="gift_predeceased_first"

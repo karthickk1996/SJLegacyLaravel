@@ -122,7 +122,7 @@
                             @include('dashboard.willform.partials.gifting-details')
                         </select>
                     </div>
-                    <div class="col-sm-12" v-if="bank.predeceased.$model === 'Assign to named beneficiary'"  @change="touchValidation(bank)">
+                    <div class="col-sm-12" v-if="bank.predeceased.$model === 'Assign to named beneficiary'">
                         <div class="row">
                             <div class="col-sm-6 inner mt-3">
                                 <label class="form-col-form-label h4"

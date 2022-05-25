@@ -1,4 +1,6 @@
-<div class="card card-accent-success" v-if="step === 'gift_pet'">
+<div class="card card-accent-success"
+{{--     v-if="step === 'gift_pet'"--}}
+>
     <div class="card-header h3"><strong>Gift of pet</strong></div>
     <div class="card-body" v-for="(pet,i) in $v.giftPet.$each.$iter">
         <div class="row my-3">
@@ -41,6 +43,7 @@
                 <select class="form-control form-control-lg"
                         v-model="pet.predeceased.$model"
                         :class="pet.predeceased.$anyError ? 'is-invalid':''"
+                        @change="touchValidation(pet)"
                         @blur="pet.predeceased.$touch"
                 >
                     @include('dashboard.willform.partials.gifting-details')

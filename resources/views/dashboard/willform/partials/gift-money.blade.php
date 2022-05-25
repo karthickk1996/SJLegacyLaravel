@@ -1,4 +1,6 @@
-<div class="card card-accent-success" v-if="step === 'gift_money'">
+<div class="card card-accent-success"
+     v-if="step === 'gift_money'"
+>
     <div class="card-header h3"><strong>Gift of money</strong></div>
     <div class="card-body" v-for="(money,index) in $v.giftMoney.$each.$iter">
         <div class="row mt-3">
@@ -73,7 +75,7 @@
                 </select>
             </div>
         </div>
-        <section class="row" v-if="money.predeceased.$model === 'Assign to named beneficiary'" @change="touchValidation(money)">
+        <section class="row" v-if="money.predeceased.$model === 'Assign to named beneficiary'">
             <div class="col-sm-6">
                 <input type="hidden" v-model="money.beneficiary.id.$model = index">
                 <label class="form-col-form-label h4" for="gift_predeceased_first">First Name of

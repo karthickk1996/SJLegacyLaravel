@@ -1,4 +1,6 @@
-<div class="card card-accent-success" v-if="step==='reserve_executor_details'">
+<div class="card card-accent-success"
+     v-if="step==='reserve_executor_details'"
+>
     <div class="card-header h3">
         <strong>Reserve Executor Details</strong>
     </div>

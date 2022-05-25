@@ -1,4 +1,6 @@
-<div class="card card-accent-success hide" v-if="step==='second_applicant'">
+<div class="card card-accent-success hide"
+     v-if="step==='second_applicant'"
+>
     <div class="card-header h3"><strong>Second Applicant Details</strong></div>
     <div class="card-body">
         <div class="row">
@@ -44,10 +46,15 @@
                 <label class="form-col-form-label h4" for="second_applicant_relation"><span
                         class="second_applicant">@{{ secondApplicant.firstName ? secondApplicant.firstName : 'Second Applicant' }}</span>
                     is my</label>
-                <relationship-selector
+                <select class="form-control form-control-lg"
                         @blur="$v.secondApplicant.relation.$touch"
                         v-model.trim="$v.secondApplicant.relation.$model"
-                        :class="$v.secondApplicant.relation.$anyError ? 'is-invalid':''"></relationship-selector>
+                        :class="$v.secondApplicant.relation.$anyError ? 'is-invalid':''"
+                >
+                    <option>Spouse</option>
+                    <option>Civil Partner</option>
+                    <option>Common Law Partner</option>
+                </select>
                 <div class="invalid-feedback" v-if="$v.secondApplicant.relation.$anyError">Please choose an option
                 </div>
             </div>
